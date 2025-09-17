@@ -138,7 +138,7 @@ const DailyMemoryMoments: React.FC = () => {
       <div className="mb-6 p-4 bg-white rounded-lg border border-amber-200">
         <div className="flex items-center space-x-2 mb-2">
           <Star className="w-4 h-4 text-amber-600" />
-          <span className="font-medium text-amber-900">Today's Reflection Prompt</span>
+          <span className="font-medium text-amber-900">Today's Prompt</span>
         </div>
         <p className="text-amber-800 italic">"{dailyPrompt}"</p>
       </div>
@@ -220,7 +220,7 @@ const DailyMemoryMoments: React.FC = () => {
                `Amazing ${streak}-day streak! You're a memory master.`}
             </p>
           </div>
-          <div className="text-2xl font-bold text-emerald-600">{streak}</div>
+          <p className="text-sm text-gray-600">{getTimeOfDayGreeting()}! What made today special?</p>
         </div>
       </div>
     </div>

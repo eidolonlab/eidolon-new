@@ -127,7 +127,7 @@ const RealWorldImpactTracker: React.FC = () => {
           </div>
           <div>
             <h2 className="text-xl font-semibold text-gray-900">Real-World Impact</h2>
-            <p className="text-sm text-gray-600">Track how memory training helps in real situations</p>
+            <p className="text-sm text-gray-600">See how your training helps in real life</p>
           </div>
         </div>
         
@@ -214,15 +214,15 @@ const RealWorldImpactTracker: React.FC = () => {
       ) : (
         <div className="text-center py-8">
           <TrendingUp className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Track Your Success</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Ready to Track Success?</h3>
           <p className="text-gray-600 mb-4">
-            Record how your memory training helps in real-world situations
+            After you use your memory training in real situations, come back and record how it helped!
           </p>
           <button
             onClick={() => setShowAddForm(true)}
             className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
-            Add Your First Success Story
+            I Used My Training!
           </button>
         </div>
       )}

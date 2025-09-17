@@ -215,7 +215,7 @@ const ProgressiveChallenges: React.FC = () => {
           </div>
           <div>
             <h2 className="text-xl font-semibold text-gray-900">Progressive Challenges</h2>
-            <p className="text-sm text-gray-600">Build skills and unlock advanced techniques</p>
+            <p className="text-sm text-gray-600">Weekly goals to build your memory skills</p>
           </div>
         </div>
         
@@ -227,20 +227,20 @@ const ProgressiveChallenges: React.FC = () => {
       </div>
 
       {/* Weekly Theme */}
-      <div className={`mb-6 p-4 bg-${currentTheme.color}-50 rounded-lg border border-${currentTheme.color}-200`}>
+      <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
         <div className="flex items-center space-x-3 mb-3">
-          <div className={`w-8 h-8 bg-${currentTheme.color}-100 rounded-lg flex items-center justify-center`}>
-            <ThemeIcon className={`w-4 h-4 text-${currentTheme.color}-600`} />
+          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <ThemeIcon className="w-4 h-4 text-blue-600" />
           </div>
           <div>
-            <h3 className={`font-medium text-${currentTheme.color}-900`}>This Week's Theme</h3>
-            <p className={`text-sm text-${currentTheme.color}-700`}>{currentTheme.theme}</p>
+            <h3 className="font-medium text-blue-900">This Week's Theme</h3>
+            <p className="text-sm text-blue-700">{currentTheme.theme}</p>
           </div>
         </div>
-        <p className={`text-sm text-${currentTheme.color}-800`}>{currentTheme.prompt}</p>
+        <p className="text-sm text-blue-800">{currentTheme.prompt}</p>
         
         <div className="mt-3 flex items-center justify-between">
-          <div className={`text-xs text-${currentTheme.color}-600`}>
+          <div className="text-xs text-blue-600">
             {weaves.filter(w => {
               const weekStart = new Date();
               weekStart.setDate(weekStart.getDate() - weekStart.getDay());
@@ -249,7 +249,7 @@ const ProgressiveChallenges: React.FC = () => {
           </div>
           <button
             onClick={() => setActiveChallenge('weekly-warrior')}
-            className={`px-3 py-1.5 bg-${currentTheme.color}-600 text-white text-sm rounded-lg hover:bg-${currentTheme.color}-700 transition-colors`}
+            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
           >
             Join Challenge
           </button>
@@ -257,7 +257,7 @@ const ProgressiveChallenges: React.FC = () => {
       </div>
 
       {/* Challenge Grid */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-1 gap-4 max-w-2xl mx-auto">
         {challenges.map((challenge) => {
           const IconComponent = challenge.icon;
           const progressPercentage = (challenge.progress / challenge.maxProgress) * 100;
@@ -268,17 +268,17 @@ const ProgressiveChallenges: React.FC = () => {
               className={`p-4 rounded-lg border transition-all cursor-pointer ${
                 challenge.unlocked
                   ? challenge.completed
-                    ? `border-${challenge.color}-500 bg-${challenge.color}-50`
-                    : `border-gray-300 hover:border-${challenge.color}-300 hover:bg-${challenge.color}-50`
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-gray-300 hover:border-indigo-300 hover:bg-indigo-50'
                   : 'border-gray-200 bg-gray-50 opacity-60'
               }`}
               onClick={() => challenge.unlocked && setActiveChallenge(challenge.id)}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 bg-${challenge.color}-100 rounded-lg flex items-center justify-center`}>
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
                     {challenge.unlocked ? (
-                      <IconComponent className={`w-5 h-5 text-${challenge.color}-600`} />
+                      <IconComponent className="w-5 h-5 text-indigo-600" />
                     ) : (
                       <div className="w-5 h-5 bg-gray-400 rounded" />
                     )}
@@ -290,7 +290,7 @@ const ProgressiveChallenges: React.FC = () => {
                 </div>
                 
                 {challenge.completed && (
-                  <CheckCircle className={`w-5 h-5 text-${challenge.color}-600`} />
+                  <CheckCircle className="w-5 h-5 text-emerald-600" />
                 )}
               </div>
 
@@ -302,7 +302,7 @@ const ProgressiveChallenges: React.FC = () => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
-                    className={`bg-${challenge.color}-500 h-2 rounded-full transition-all duration-500`}
+                    className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
                     style={{ width: `${Math.min(progressPercentage, 100)}%` }}
                   />
                 </div>
@@ -313,7 +313,7 @@ const ProgressiveChallenges: React.FC = () => {
                 {challenge.requirements.map((req, index) => (
                   <div key={index} className="flex items-center space-x-2 text-xs text-gray-600">
                     <div className={`w-2 h-2 rounded-full ${
-                      challenge.progress > index ? `bg-${challenge.color}-500` : 'bg-gray-300'
+                      challenge.progress > index ? 'bg-indigo-500' : 'bg-gray-300'
                     }`} />
                     <span>{req}</span>
                   </div>
@@ -331,7 +331,7 @@ const ProgressiveChallenges: React.FC = () => {
                       e.stopPropagation();
                       claimReward(challenge.id);
                     }}
-                    className={`px-2 py-1 bg-${challenge.color}-600 text-white text-xs rounded hover:bg-${challenge.color}-700 transition-colors`}
+                    className="px-2 py-1 bg-emerald-600 text-white text-xs rounded hover:bg-emerald-700 transition-colors"
                   >
                     Claim
                   </button>
