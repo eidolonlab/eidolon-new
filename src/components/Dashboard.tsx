@@ -3,6 +3,17 @@ import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, 
 import { useWeave } from '../contexts/WeaveContext';
 import MemoryInsights from './MemoryInsights';
 import PMARDashboard from './PMARDashboard';
+import DailyMemoryMoments from './DailyMemoryMoments';
+import SmartNotifications from './SmartNotifications';
+import ProgressiveChallenges from './ProgressiveChallenges';
+import RealWorldImpactTracker from './RealWorldImpactTracker';
+import CommunityFeatures from './CommunityFeatures';
+import AdaptiveDifficulty from './AdaptiveDifficulty';
+import CognitiveHealthDashboard from './CognitiveHealthDashboard';
+import MicroLearning from './MicroLearning';
+import MemoryNetworkMapping from './MemoryNetworkMapping';
+import HabitFormation from './HabitFormation';
+import PreventiveMemoryHealth from './PreventiveMemoryHealth';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'retrieval') => void;
@@ -40,6 +51,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           Build richer memories, rehearse future scenarios, and track your cognitive progress with evidence-based techniques.
         </p>
       </div>
+      
+      {/* Daily Memory Moments - Top Priority */}
+      <DailyMemoryMoments />
+      
+      {/* Micro Learning */}
+      <MicroLearning />
 
       {/* Quick Actions */}
       <div className="grid md:grid-cols-3 gap-6">
@@ -210,6 +227,33 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       
       {/* PMAR Dashboard */}
       <PMARDashboard />
+      
+      {/* Progressive Challenges */}
+      <ProgressiveChallenges />
+      
+      {/* Real-World Impact Tracker */}
+      <RealWorldImpactTracker />
+      
+      {/* Cognitive Health Dashboard */}
+      <CognitiveHealthDashboard />
+      
+      {/* Adaptive Difficulty */}
+      <AdaptiveDifficulty />
+      
+      {/* Smart Notifications */}
+      <SmartNotifications />
+      
+      {/* Community Features */}
+      <CommunityFeatures />
+      
+      {/* Memory Network Mapping */}
+      <MemoryNetworkMapping />
+      
+      {/* Habit Formation */}
+      <HabitFormation />
+      
+      {/* Preventive Memory Health */}
+      <PreventiveMemoryHealth />
 
       {/* Recent Activity */}
       <div className="grid md:grid-cols-2 gap-8">
