@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useSupabaseSync } from '../hooks/useSupabaseSync';
 
 export interface Weave {
   id: string;
@@ -83,6 +84,7 @@ export const useWeave = () => {
 export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [weaves, setWeaves] = useState<Weave[]>([]);
   const [retrievalSessions, setRetrievalSessions] = useState<RetrievalSession[]>([]);
+  const { trackEvent } = useSupabaseSync();
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -137,6 +139,14 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
     
     setWeaves(prev => [newWeave, ...prev]);
+    
+    // Track weave creation
+    trackEvent('weave_created', {
+      type: newWeave.type,
+      coherence_score: newWeave.coherenceScore,
+      difficulty_level: newWeave.difficultyLevel,
+      errorless_mode: newWeave.errorlessMode
+    });
   };
 
   const updateWeave = (id: string, updates: Partial<Weave>) => {
@@ -173,6 +183,14 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     updateWeave(sessionData.weaveId, {
       lastRetrieved: sessionData.startTime,
       retrievalCount: (getWeaveById(sessionData.weaveId)?.retrievalCount || 0) + 1,
+    });
+    
+    // Track retrieval session
+    trackEvent('retrieval_session', {
+      latency_ms: sessionData.latencyMs,
+      accuracy: sessionData.accuracy,
+      difficulty: sessionData.difficulty,
+      details_recalled: sessionData.detailsRecalled
     });
   };
 

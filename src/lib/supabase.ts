@@ -1,0 +1,226 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Types for our database
+export interface DatabaseUser {
+  id: string;
+  email?: string;
+  created_at: string;
+  last_active: string;
+  consent_analytics: boolean;
+  consent_research: boolean;
+  is_anonymous: boolean;
+  user_hash: string;
+}
+
+export interface DatabaseMemoryWeave {
+  id: string;
+  user_hash: string;
+  weave_type: 'past' | 'future';
+  coherence_score: number;
+  sensory_richness_score: number;
+  narrative_length: number;
+  tags: string[];
+  difficulty_level: 'easy' | 'medium' | 'hard';
+  errorless_mode: boolean;
+  created_at: string;
+  completed: boolean;
+  scheduled_for?: string;
+  retrieval_count: number;
+  last_retrieved?: string;
+}
+
+export interface DatabaseRetrievalSession {
+  id: string;
+  user_hash: string;
+  weave_id: string;
+  start_time: string;
+  end_time?: string;
+  latency_ms: number;
+  details_recalled: number;
+  accuracy_score: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  errorless_mode: boolean;
+  created_at: string;
+}
+
+export interface AdminStats {
+  total_users: number;
+  total_weaves: number;
+  total_sessions: number;
+  avg_coherence_score: number;
+  avg_recall_latency: number;
+  active_users_7d: number;
+  completion_rate: number;
+}
+
+export interface CohortData {
+  cohort_week: string;
+  users_count: number;
+  avg_coherence: number;
+  avg_sessions: number;
+  retention_rate: number;
+}
+
+// Admin functions
+export const adminAPI = {
+  async getStats(): Promise<AdminStats> {
+    const { data, error } = await supabase.rpc('get_admin_stats');
+    if (error) throw error;
+    return data;
+  },
+
+  async getCohortAnalysis(daysBack = 30): Promise<CohortData[]> {
+    const { data, error } = await supabase.rpc('get_cohort_analysis', { days_back: daysBack });
+    if (error) throw error;
+    return data;
+  },
+
+  async getRecentWeaves(limit = 50): Promise<DatabaseMemoryWeave[]> {
+    const { data, error } = await supabase
+      .from('memory_weaves')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async getRecentSessions(limit = 100): Promise<DatabaseRetrievalSession[]> {
+    const { data, error } = await supabase
+      .from('retrieval_sessions')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    
+    if (error) throw error;
+    return data;
+  }
+};
+
+// User data sync functions
+export const userAPI = {
+  async createOrUpdateUser(userData: {
+    email?: string;
+    consent_analytics: boolean;
+    consent_research: boolean;
+    is_anonymous: boolean;
+  }): Promise<DatabaseUser> {
+    // Generate a privacy-preserving hash for the user
+    const userHash = await generateUserHash();
+    
+    const { data, error } = await supabase
+      .from('users')
+      .upsert({
+        ...userData,
+        user_hash: userHash,
+        last_active: new Date().toISOString()
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async syncMemoryWeave(weave: any, userHash: string): Promise<void> {
+    if (!userHash) return; // Skip if user hasn't consented
+    
+    const weaveData: Partial<DatabaseMemoryWeave> = {
+      user_hash: userHash,
+      weave_type: weave.type,
+      coherence_score: weave.coherenceScore,
+      sensory_richness_score: calculateSensoryRichness(weave.sensoryDetails),
+      narrative_length: weave.narrative?.length || 0,
+      tags: weave.tags || [],
+      difficulty_level: weave.difficultyLevel || 'medium',
+      errorless_mode: weave.errorlessMode || false,
+      completed: weave.completed || false,
+      scheduled_for: weave.scheduledFor?.toISOString(),
+      retrieval_count: weave.retrievalCount || 0,
+      last_retrieved: weave.lastRetrieved?.toISOString()
+    };
+
+    const { error } = await supabase
+      .from('memory_weaves')
+      .upsert(weaveData);
+    
+    if (error) throw error;
+  },
+
+  async syncRetrievalSession(session: any, userHash: string): Promise<void> {
+    if (!userHash) return; // Skip if user hasn't consented
+    
+    const sessionData: Partial<DatabaseRetrievalSession> = {
+      user_hash: userHash,
+      weave_id: session.weaveId,
+      start_time: session.startTime.toISOString(),
+      end_time: session.endTime?.toISOString(),
+      latency_ms: session.latencyMs,
+      details_recalled: session.detailsRecalled,
+      accuracy_score: session.accuracy,
+      difficulty: session.difficulty,
+      errorless_mode: session.errorlessMode || false
+    };
+
+    const { error } = await supabase
+      .from('retrieval_sessions')
+      .insert(sessionData);
+    
+    if (error) throw error;
+  },
+
+  async trackAnalyticsEvent(eventType: string, eventData: any, userHash: string): Promise<void> {
+    if (!userHash) return; // Skip if user hasn't consented
+    
+    const { error } = await supabase
+      .from('analytics_events')
+      .insert({
+        user_hash: userHash,
+        event_type: eventType,
+        event_data: eventData,
+        session_id: getSessionId()
+      });
+    
+    if (error) console.warn('Analytics tracking failed:', error);
+  }
+};
+
+// Utility functions
+async function generateUserHash(): Promise<string> {
+  const timestamp = Date.now().toString();
+  const random = Math.random().toString(36).substring(2);
+  const data = new TextEncoder().encode(timestamp + random);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+}
+
+function calculateSensoryRichness(sensoryDetails: any): number {
+  if (!sensoryDetails) return 0;
+  
+  const senses = ['visual', 'auditory', 'olfactory', 'tactile', 'emotional'];
+  const filledSenses = senses.filter(sense => 
+    sensoryDetails[sense] && sensoryDetails[sense].length > 10
+  );
+  
+  return Math.round((filledSenses.length / senses.length) * 100);
+}
+
+function getSessionId(): string {
+  let sessionId = sessionStorage.getItem('eidolon-session-id');
+  if (!sessionId) {
+    sessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+    sessionStorage.setItem('eidolon-session-id', sessionId);
+  }
+  return sessionId;
+}

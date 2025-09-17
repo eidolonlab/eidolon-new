@@ -10,12 +10,38 @@ import ConsentBanner from './components/ConsentBanner';
 import SettingsPanel from './components/SettingsPanel';
 import { WeaveProvider } from './contexts/WeaveContext';
 import MemoryInsights from './components/MemoryInsights';
+import AdminDashboard from './components/AdminDashboard';
+import { supabase } from './lib/supabase';
 
-type View = 'dashboard' | 'weave' | 'scenario' | 'retrieval' | 'insights' | 'settings';
+type View = 'dashboard' | 'weave' | 'scenario' | 'retrieval' | 'insights' | 'settings' | 'admin';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [showSettings, setShowSettings] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check admin status
+  useEffect(() => {
+    checkAdminStatus();
+  }, []);
+
+  const checkAdminStatus = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.email) {
+        const { data } = await supabase
+          .from('admin_users')
+          .select('role')
+          .eq('email', user.email)
+          .single();
+        
+        setIsAdmin(!!data);
+      }
+    } catch (error) {
+      // Not an admin or not authenticated
+      setIsAdmin(false);
+    }
+  };
 
   const renderView = () => {
     switch (currentView) {
@@ -43,6 +69,8 @@ function App() {
             <MemoryInsights />
           </div>
         );
+      case 'admin':
+        return <AdminDashboard />;
       default:
         return <Dashboard onNavigate={setCurrentView} />;
     }
@@ -133,6 +161,19 @@ function App() {
                   <Settings className="w-4 h-4 inline mr-2" />
                   Settings
                 </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => setCurrentView('admin')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      currentView === 'admin'
+                        ? 'bg-red-100 text-red-700'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <BarChart3 className="w-4 h-4 inline mr-2" />
+                    <span>Admin</span>
+                  </button>
+                )}
               </nav>
             </div>
           </div>

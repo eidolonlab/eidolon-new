@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Cookie, X, Settings, Shield } from 'lucide-react';
+import { useSupabaseSync } from '../hooks/useSupabaseSync';
 
 const ConsentBanner: React.FC = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -9,6 +10,7 @@ const ConsentBanner: React.FC = () => {
     analytics: false,
     research: false,
   });
+  const { updateConsent } = useSupabaseSync();
 
   useEffect(() => {
     const consent = localStorage.getItem('eidolon-consent');
@@ -25,6 +27,7 @@ const ConsentBanner: React.FC = () => {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem('eidolon-consent', JSON.stringify(consent));
+    updateConsent(true, true);
     setShowBanner(false);
   };
 
@@ -34,6 +37,7 @@ const ConsentBanner: React.FC = () => {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem('eidolon-consent', JSON.stringify(consent));
+    updateConsent(preferences.analytics, preferences.research);
     setShowBanner(false);
   };
 
@@ -45,6 +49,7 @@ const ConsentBanner: React.FC = () => {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem('eidolon-consent', JSON.stringify(consent));
+    updateConsent(false, false);
     setShowBanner(false);
   };
 
