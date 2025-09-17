@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import WeaveCanvas from './components/WeaveCanvas';
@@ -61,6 +61,23 @@ function App() {
     checkAdminStatus();
   };
 
+
+  const InsightsPage = () => (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to Dashboard</span>
+        </button>
+        <h1 className="text-2xl font-bold text-gray-900">Memory Insights</h1>
+      </div>
+      <MemoryInsights />
+    </div>
+  );
+
   // Admin route component
   const AdminRoute = () => {
     // Show loading while checking auth
@@ -96,34 +113,14 @@ function App() {
     );
   };
 
-  const InsightsPage = () => (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Dashboard</span>
-        </button>
-        <h1 className="text-2xl font-bold text-gray-900">Memory Insights</h1>
-      </div>
-      <MemoryInsights />
-    </div>
-  );
-
-  const isAdminRoute = currentPath === '/admin';
-
-  // Don't show main layout for admin route
-  if (isAdminRoute) {
+  // If we're on admin route, show only admin content
+  if (currentPath === '/admin') {
     return (
       <WeaveProvider>
-        <Routes>
-          <Route path="/admin" element={<AdminRoute />} />
-        </Routes>
+        <AdminRoute />
       </WeaveProvider>
     );
-  };
+  }
 
   return (
     <WeaveProvider>
@@ -236,7 +233,7 @@ function App() {
             <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
             <Route path="/retrieval" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
             <Route path="/insights" element={<InsightsPage />} />
-            <Route path="/admin" element={<AdminRoute />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
         
