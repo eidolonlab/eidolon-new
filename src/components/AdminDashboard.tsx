@@ -326,7 +326,7 @@ const AdminDashboard: React.FC = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Privacy & Compliance Status</h3>
               <p className="text-sm text-gray-600">
-                {localStorage.getItem('eidolon-admin-demo') === 'true' ? 'Demo Mode - Sample Data' : 'GDPR-compliant, anonymized analytics'}
+                Demo Mode - Sample Data for Demonstration
               </p>
             </div>
           </div>
