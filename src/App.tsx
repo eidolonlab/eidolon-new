@@ -128,7 +128,7 @@ function App() {
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
                       <Brain className="w-6 h-6 text-white" />
-                      onClick={() => onNavigate('scenario')}
+                    </div>
                     <div>
                       <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
                       <p className="text-sm text-gray-600">Memory Training & Recall</p>
@@ -229,7 +229,7 @@ function App() {
                 <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
                 <Route path="/retrieval" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
                 <Route path="/insights" element={<InsightsPage />} />
-                <Route path="/training" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
             
