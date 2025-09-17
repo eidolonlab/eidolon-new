@@ -11,6 +11,7 @@ import SettingsPanel from './components/SettingsPanel';
 import { WeaveProvider } from './contexts/WeaveContext';
 import MemoryInsights from './components/MemoryInsights';
 import AdminDashboard from './components/AdminDashboard';
+import AdminAuth from './components/AdminAuth';
 import { supabase } from './lib/supabase';
 
 type View = 'dashboard' | 'weave' | 'scenario' | 'retrieval' | 'insights' | 'settings' | 'admin';
@@ -19,6 +20,8 @@ function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [showSettings, setShowSettings] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   // Check admin status
   useEffect(() => {
@@ -26,9 +29,11 @@ function App() {
   }, []);
 
   const checkAdminStatus = async () => {
+    setCheckingAuth(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user?.email) {
+        setIsAuthenticated(true);
         const { data } = await supabase
           .from('admin_users')
           .select('role')
@@ -36,13 +41,40 @@ function App() {
           .single();
         
         setIsAdmin(!!data);
+      } else {
+        setIsAuthenticated(false);
+        setIsAdmin(false);
       }
     } catch (error) {
       // Not an admin or not authenticated
+      setIsAuthenticated(false);
       setIsAdmin(false);
+    } finally {
+      setCheckingAuth(false);
     }
   };
 
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    checkAdminStatus();
+  };
+
+  // Show admin auth if trying to access admin and not authenticated
+  if (currentView === 'admin' && !isAuthenticated && !checkingAuth) {
+    return <AdminAuth onAuthSuccess={handleAuthSuccess} />;
+  }
+
+  // Show loading while checking auth
+  if (checkingAuth && currentView === 'admin') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex items-center space-x-3">
+          <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-lg text-gray-600">Checking authentication...</span>
+        </div>
+      </div>
+    );
+  }
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
@@ -70,7 +102,14 @@ function App() {
           </div>
         );
       case 'admin':
-        return <AdminDashboard />;
+        return isAdmin ? <AdminDashboard /> : (
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
+              <p className="text-gray-600">You don't have admin privileges.</p>
+            </div>
+          </div>
+        );
       default:
         return <Dashboard onNavigate={setCurrentView} />;
     }
