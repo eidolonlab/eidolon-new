@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - Eidolon Memory Training</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.6; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            color: #333; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        h1 { 
+            color: #4f46e5; 
+            border-bottom: 3px solid #e5e7eb; 
+            padding-bottom: 15px; 
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 { 
+            color: #374151; 
+            margin-top: 40px; 
+            font-size: 1.8em;
+            border-left: 4px solid #4f46e5;
+            padding-left: 15px;
+        }
+        h3 { 
+            color: #4f46e5; 
+            margin-top: 25px; 
+            font-size: 1.3em;
+        }
+        .toc { 
+            background: #f8fafc; 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin: 30px 0; 
+            border: 2px solid #e2e8f0;
+        }
+        .toc h3 { margin-top: 0; color: #1e293b; }
+        .toc ul { margin: 0; padding-left: 20px; }
+        .toc li { margin: 8px 0; }
+        .toc a { 
+            color: #4f46e5; 
+            text-decoration: none; 
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .toc a:hover { color: #6366f1; }
+        .feature-box { 
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin: 20px 0; 
+            border: 1px solid #c7d2fe;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .metric-card h4 { margin: 0 0 10px 0; color: #1e293b; }
+        .metric-card .value { font-size: 1.5em; font-weight: bold; color: #4f46e5; }
+        .metric-card .desc { font-size: 0.9em; color: #64748b; }
+        .warning { 
+            background: #fef3c7; 
+            padding: 15px; 
+            border-radius: 10px; 
+            border-left: 4px solid #f59e0b; 
+            margin: 20px 0;
+        }
+        .success { 
+            background: #d1fae5; 
+            padding: 15px; 
+            border-radius: 10px; 
+            border-left: 4px solid #10b981; 
+            margin: 20px 0;
+        }
+        .code { 
+            background: #1e293b; 
+            color: #e2e8f0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Monaco', 'Menlo', monospace; 
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+        .emoji { font-size: 1.2em; margin-right: 8px; }
+        ul { padding-left: 25px; }
+        li { margin: 8px 0; }
+        .back-to-app {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4f46e5;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+        .back-to-app:hover {
+            background: #6366f1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 20px; margin: 10px 0; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            .back-to-app { 
+                position: static; 
+                display: block; 
+                text-align: center; 
+                margin: 20px 0; 
+            }
+            .metric-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-to-app">← Back to App</a>
+    
+    <div class="container">
+        <h1>🧠 Eidolon Memory Training App</h1>
+        <p style="text-align: center; font-size: 1.2em; color: #6b7280; margin-bottom: 30px;">
+            Complete User Guide - Everything You Need to Know
+        </p>
+
+        <div class="toc">
+            <h3>📋 Quick Navigation</h3>
+            <ul>
+                <li><a href="#what-is-eidolon">🎯 What is Eidolon?</a></li>
+                <li><a href="#getting-started">🚀 Getting Started</a></li>
+                <li><a href="#core-features">🎨 Core Features Walkthrough</a></li>
+                <li><a href="#admin-dashboard">👨‍💼 Admin Dashboard</a></li>
+                <li><a href="#technical">🏗️ Technical Architecture</a></li>
+                <li><a href="#privacy">🔒 Data & Privacy</a></li>
+                <li><a href="#clinical">🧪 Clinical Foundation</a></li>
+                <li><a href="#troubleshooting">🛠️ Troubleshooting</a></li>
+            </ul>
+        </div>
+
+        <div id="what-is-eidolon">
+            <h2>🎯 What is Eidolon?</h2>
+            <p>Eidolon is a <strong>Progressive Web App (PWA)</strong> for evidence-based memory training that combines:</p>
+            
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h4>🧠 Memory Weaving</h4>
+                    <div class="desc">Transform simple seeds into rich, multi-sensory memories</div>
+                </div>
+                <div class="metric-card">
+                    <h4>🔮 Future Rehearsal</h4>
+                    <div class="desc">Practice upcoming events with if-then planning</div>
+                </div>
+                <div class="metric-card">
+                    <h4>📊 Spaced Training</h4>
+                    <div class="desc">Evidence-based retrieval practice</div>
+                </div>
+                <div class="metric-card">
+                    <h4>📈 Clinical Analytics</h4>
+                    <div class="desc">Track progress with research metrics</div>
+                </div>
+            </div>
+
+            <div class="success">
+                <strong>✅ Key Benefits:</strong>
+                <ul>
+                    <li><strong>Offline-capable</strong> - Works without internet</li>
+                    <li><strong>Privacy-first</strong> - Data stored locally on your device</li>
+                    <li><strong>Research-backed</strong> - Based on cognitive science</li>
+                    <li><strong>Cross-platform</strong> - Works on any device with a browser</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="getting-started">
+            <h2>🚀 Getting Started</h2>
+            
+            <h3>Access Methods</h3>
+            <div class="code">
+Local Development: http://localhost:5173
+Live Website: https://tryeidolon.com
+Admin Panel: Add /admin to either URL
+            </div>
+
+            <h3>First Time Setup</h3>
+            <ol>
+                <li><strong>Visit the app</strong> - No account required for basic use</li>
+                <li><strong>Review privacy settings</strong> - Choose your data sharing preferences</li>
+                <li><strong>Install as PWA</strong> (optional) - Add to home screen for app-like experience</li>
+                <li><strong>Create your first memory weave</strong> - Start with something simple</li>
+            </ol>
+        </div>
+
+        <div id="core-features">
+            <h2>🎨 Core Features Walkthrough</h2>
+
+            <h3>1. Dashboard (Home Page)</h3>
+            <div class="feature-box">
+                <p><strong>What you see:</strong></p>
+                <ul>
+                    <li>Welcome message and quick action cards</li>
+                    <li>Recent memory weaves and upcoming scenarios</li>
+                    <li>Progress metrics (NCS scores, PMAR rates, recall speed)</li>
+                    <li>Weekly training activity chart</li>
+                    <li>AI-powered memory insights</li>
+                </ul>
+                
+                <p><strong>Key Metrics Explained:</strong></p>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <h4>NCS Score</h4>
+                        <div class="desc">Narrative Coherence/Specificity (0-100)</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>PMAR</h4>
+                        <div class="desc">% of completed future scenarios</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Recall Speed</h4>
+                        <div class="desc">Clinical memory retrieval time</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2. Memory Weaving (Create Past Memories)</h3>
+            <div class="feature-box">
+                <p><strong>Purpose:</strong> Transform simple memory seeds into rich, multi-sensory experiences</p>
+                
+                <p><strong>The Process:</strong></p>
+                <ol>
+                    <li><strong>Choose Type:</strong> Past memory reconstruction</li>
+                    <li><strong>Plant Seed:</strong> Enter a simple word/phrase (e.g., "grandmother's kitchen")</li>
+                    <li><strong>Add Title:</strong> Give your memory a memorable name</li>
+                    <li><strong>Training Options:</strong> Difficulty level, errorless mode</li>
+                </ol>
+
+                <p><strong>Sensory Expansion (5 Senses):</strong></p>
+                <ul>
+                    <li><span class="emoji">👁️</span><strong>Visual:</strong> Colors, lighting, objects, scenes</li>
+                    <li><span class="emoji">👂</span><strong>Auditory:</strong> Sounds, voices, music, ambient noise</li>
+                    <li><span class="emoji">👃</span><strong>Olfactory:</strong> Scents, aromas, air quality</li>
+                    <li><span class="emoji">✋</span><strong>Tactile:</strong> Textures, temperatures, physical sensations</li>
+                    <li><span class="emoji">❤️</span><strong>Emotional:</strong> Feelings, moods, body sensations</li>
+                </ul>
+
+                <p><strong>AI Assistance Features:</strong></p>
+                <ul>
+                    <li><strong>Interactive Cue Engine:</strong> Context-aware suggestions</li>
+                    <li><strong>Live Memory Analyzer:</strong> Real-time feedback on memory strength</li>
+                    <li><strong>Smart Narrative Builder:</strong> AI-generated story variations</li>
+                    <li><strong>Contextual Hints:</strong> Intelligent prompts based on your content</li>
+                </ul>
+
+                <p><strong>Enhancement Tools:</strong></p>
+                <ul>
+                    <li><strong>Cue Library:</strong> Add audio, colors, scents, location anchors</li>
+                    <li><strong>Bridge Back:</strong> Add factual anchors and verification quizzes</li>
+                </ul>
+            </div>
+
+            <h3>3. Scenario Studio (Future Planning)</h3>
+            <div class="feature-box">
+                <p><strong>Purpose:</strong> Rehearse upcoming events with implementation intentions</p>
+                
+                <p><strong>The Process:</strong></p>
+                <ol>
+                    <li><strong>Create Scenario:</strong> Title, seed phrase, scheduled date/time</li>
+                    <li><strong>If-Then Planning:</strong> Create specific "If X happens, then I will Y" plans</li>
+                    <li><strong>Rehearsal Narrative:</strong> Visualize successful outcomes</li>
+                    <li><strong>AI Suggestions:</strong> Context-aware if-then plans</li>
+                </ol>
+
+                <p><strong>Example If-Then Plans:</strong></p>
+                <ul>
+                    <li>"If I feel nervous, then I will take three deep breaths"</li>
+                    <li>"If they ask a difficult question, then I will pause and think before answering"</li>
+                    <li>"If technology fails, then I will continue confidently without slides"</li>
+                </ul>
+
+                <p><strong>PMAR Tracking:</strong> Measures how often you follow through on planned scenarios</p>
+            </div>
+
+            <h3>4. Retrieval Training (Memory Practice)</h3>
+            <div class="feature-box">
+                <p><strong>Purpose:</strong> Strengthen memories through spaced retrieval practice</p>
+                
+                <p><strong>Training Modes:</strong></p>
+                <ul>
+                    <li><strong>Standard Retrieval:</strong> Free recall with AI coaching</li>
+                    <li><strong>Errorless Mode:</strong> Gentle hints prevent incorrect responses</li>
+                    <li><strong>Clinical Timer:</strong> Measures recall latency (speed)</li>
+                </ul>
+
+                <p><strong>AI Coaching Features:</strong></p>
+                <ul>
+                    <li><strong>Real-time Analysis:</strong> Tracks word count, sensory elements, coherence</li>
+                    <li><strong>Smart Hints:</strong> Progressive, context-aware guidance</li>
+                    <li><strong>Encouragement:</strong> Motivational feedback based on progress</li>
+                    <li><strong>Performance Metrics:</strong> Accuracy, detail level, emotional depth</li>
+                </ul>
+
+                <p><strong>Session Results:</strong></p>
+                <ul>
+                    <li>Recall time (clinical latency measurement)</li>
+                    <li>Details recalled (quantity of specific information)</li>
+                    <li>Accuracy score (comparison to original memory)</li>
+                </ul>
+            </div>
+
+            <h3>5. Memory Insights (Analytics)</h3>
+            <div class="feature-box">
+                <p><strong>AI-Powered Analysis:</strong></p>
+                <ul>
+                    <li><strong>Pattern Detection:</strong> Identifies trends in your training</li>
+                    <li><strong>Strengths:</strong> What you excel at in memory formation</li>
+                    <li><strong>Recommendations:</strong> Personalized improvement suggestions</li>
+                    <li><strong>Progress Tracking:</strong> Long-term cognitive development</li>
+                </ul>
+
+                <p><strong>Clinical Metrics:</strong></p>
+                <ul>
+                    <li>Memory strength scores</li>
+                    <li>Sensory integration patterns</li>
+                    <li>Narrative coherence trends</li>
+                    <li>Retrieval speed improvements</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="admin-dashboard">
+            <h2>👨‍💼 Admin Dashboard</h2>
+            
+            <div class="warning">
+                <strong>🔐 Access:</strong> Visit <code>https://tryeidolon.com/admin</code> or <code>http://localhost:5173/admin</code>
+                <br><strong>Authentication:</strong> Email/password (create admin account on first visit)
+            </div>
+
+            <h3>Admin Features</h3>
+            <div class="feature-box">
+                <p><strong>User Analytics:</strong></p>
+                <ul>
+                    <li>Total users, memory weaves, training sessions</li>
+                    <li>Average coherence scores and recall latency</li>
+                    <li>User cohort analysis and retention rates</li>
+                    <li>Clinical outcome measurements</li>
+                </ul>
+
+                <p><strong>Research Data:</strong></p>
+                <ul>
+                    <li>Anonymized usage patterns</li>
+                    <li>Memory training effectiveness metrics</li>
+                    <li>Cognitive improvement trends</li>
+                    <li>GDPR-compliant data export</li>
+                </ul>
+
+                <p><strong>Privacy Controls:</strong></p>
+                <ul>
+                    <li>All data is anonymized with user hashes</li>
+                    <li>No personal memory content is stored</li>
+                    <li>Consent-based data collection only</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="technical">
+            <h2>🏗️ Technical Architecture</h2>
+            
+            <h3>Frontend Stack</h3>
+            <ul>
+                <li><strong>React 18</strong> with TypeScript</li>
+                <li><strong>Tailwind CSS</strong> for styling</li>
+                <li><strong>Lucide React</strong> for icons</li>
+                <li><strong>React Router</strong> for navigation</li>
+                <li><strong>Vite</strong> for build tooling</li>
+            </ul>
+
+            <h3>Data Storage</h3>
+            <ul>
+                <li><strong>Local Storage:</strong> All personal data stays on your device</li>
+                <li><strong>Supabase</strong> (optional): Anonymous analytics and admin features</li>
+                <li><strong>PWA Capabilities:</strong> Offline functionality, installable</li>
+            </ul>
+
+            <h3>PWA Features</h3>
+            <ul>
+                <li><strong>Service Worker:</strong> Enables offline functionality</li>
+                <li><strong>Web App Manifest:</strong> Makes app installable</li>
+                <li><strong>Responsive Design:</strong> Works on all screen sizes</li>
+                <li><strong>Push Notifications:</strong> Spaced retrieval reminders</li>
+            </ul>
+        </div>
+
+        <div id="privacy">
+            <h2>🔒 Data & Privacy</h2>
+            
+            <h3>Local-First Architecture</h3>
+            <div class="success">
+                <ul>
+                    <li><strong>Your Memory Content:</strong> Never leaves your device</li>
+                    <li><strong>Personal Data:</strong> Stored in browser's local storage</li>
+                    <li><strong>Offline Capable:</strong> Full functionality without internet</li>
+                </ul>
+            </div>
+
+            <h3>Optional Data Sharing</h3>
+            <p>Users can opt-in to share:</p>
+            <ul>
+                <li><strong>Usage Analytics:</strong> Anonymous app usage patterns</li>
+                <li><strong>Research Data:</strong> Anonymized training effectiveness metrics</li>
+            </ul>
+
+            <h3>GDPR Compliance</h3>
+            <ul>
+                <li><strong>Consent Management:</strong> Clear opt-in/opt-out controls</li>
+                <li><strong>Data Export:</strong> Download all your data anytime</li>
+                <li><strong>Right to Deletion:</strong> Permanently delete all data</li>
+                <li><strong>Transparency:</strong> Clear privacy policy and terms</li>
+            </ul>
+        </div>
+
+        <div id="clinical">
+            <h2>🧪 Clinical Foundation</h2>
+            
+            <h3>Evidence-Based Techniques</h3>
+            
+            <div class="feature-box">
+                <p><strong>Multi-Sensory Memory Weaving</strong></p>
+                <ul>
+                    <li>Based on research showing multi-modal encoding creates stronger memories</li>
+                    <li>Visual, auditory, tactile, olfactory, and emotional elements</li>
+                    <li>Increases retrieval pathways and memory durability</li>
+                </ul>
+            </div>
+
+            <div class="feature-box">
+                <p><strong>Spaced Retrieval Training</strong></p>
+                <ul>
+                    <li>Implements the spacing effect for memory consolidation</li>
+                    <li>Optimal intervals between practice sessions</li>
+                    <li>Prevents forgetting curve degradation</li>
+                </ul>
+            </div>
+
+            <div class="feature-box">
+                <p><strong>Implementation Intentions (If-Then Planning)</strong></p>
+                <ul>
+                    <li>Proven strategy for goal achievement</li>
+                    <li>Increases follow-through on planned actions</li>
+                    <li>Reduces cognitive load during execution</li>
+                </ul>
+            </div>
+
+            <h3>Clinical Metrics</h3>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h4>NCS</h4>
+                    <div class="value">0-100</div>
+                    <div class="desc">Narrative Coherence Score - measures autobiographical memory specificity</div>
+                </div>
+                <div class="metric-card">
+                    <h4>PMAR</h4>
+                    <div class="value">%</div>
+                    <div class="desc">Prospective Memory Adherence Rate - real-world follow-through measure</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Recall Latency</h4>
+                    <div class="value">ms</div>
+                    <div class="desc">Time from cue to memory retrieval - cognitive assessment standard</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="troubleshooting">
+            <h2>🛠️ Troubleshooting</h2>
+            
+            <h3>Common Issues</h3>
+            
+            <div class="warning">
+                <p><strong>App Won't Load</strong></p>
+                <ul>
+                    <li>Check internet connection for initial load</li>
+                    <li>Clear browser cache and reload</li>
+                    <li>Try incognito/private browsing mode</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <p><strong>Admin Panel Not Working</strong></p>
+                <ul>
+                    <li>Ensure you're using the correct URL: <code>/admin</code></li>
+                    <li>Check if Supabase is configured (for full functionality)</li>
+                    <li>Try creating a new admin account</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <p><strong>Data Not Saving</strong></p>
+                <ul>
+                    <li>Check browser storage permissions</li>
+                    <li>Ensure you're not in private/incognito mode</li>
+                    <li>Try refreshing the page</li>
+                </ul>
+            </div>
+
+            <h3>Performance Tips</h3>
+            <ul>
+                <li><strong>Regular Training:</strong> Use spaced intervals for best results</li>
+                <li><strong>Detailed Memories:</strong> More sensory details = stronger recall</li>
+                <li><strong>Consistent Practice:</strong> Regular sessions improve outcomes</li>
+                <li><strong>Varied Content:</strong> Mix past memories and future scenarios</li>
+            </ul>
+
+            <h3>Getting Help</h3>
+            <ul>
+                <li><strong>Privacy Questions:</strong> privacy@tryeidolon.com</li>
+                <li><strong>Technical Support:</strong> support@tryeidolon.com</li>
+                <li><strong>Research Inquiries:</strong> partnerships@tryeidolon.com</li>
+            </ul>
+        </div>
+
+        <div id="best-practices">
+            <h2>🎯 Best Practices</h2>
+            
+            <h3>For Memory Weaving</h3>
+            <ol>
+                <li><strong>Start Simple:</strong> Begin with clear, specific memory seeds</li>
+                <li><strong>Be Detailed:</strong> Include multiple sensory modalities</li>
+                <li><strong>Stay Truthful:</strong> Accuracy strengthens neural pathways</li>
+                <li><strong>Use Emotions:</strong> Emotional content enhances retention</li>
+            </ol>
+
+            <h3>For Scenario Planning</h3>
+            <ol>
+                <li><strong>Be Specific:</strong> Detailed if-then plans work better</li>
+                <li><strong>Practice Regularly:</strong> Mental rehearsal builds confidence</li>
+                <li><strong>Plan Contingencies:</strong> Prepare for multiple outcomes</li>
+                <li><strong>Follow Through:</strong> Complete scenarios to build PMAR</li>
+            </ol>
+
+            <h3>For Retrieval Training</h3>
+            <ol>
+                <li><strong>Regular Practice:</strong> Consistent sessions prevent forgetting</li>
+                <li><strong>Progressive Difficulty:</strong> Start easy, increase challenge</li>
+                <li><strong>Use Errorless Mode:</strong> When building confidence</li>
+                <li><strong>Track Progress:</strong> Monitor improvement over time</li>
+            </ol>
+        </div>
+
+        <div id="understanding-progress">
+            <h2>📊 Understanding Your Progress</h2>
+            
+            <h3>Dashboard Metrics</h3>
+            <div class="metric-grid">
+                <div class="metric-card" style="background: #d1fae5;">
+                    <h4>Green Scores (80+)</h4>
+                    <div class="desc">Excellent performance</div>
+                </div>
+                <div class="metric-card" style="background: #fef3c7;">
+                    <h4>Yellow Scores (60-79)</h4>
+                    <div class="desc">Good with room for improvement</div>
+                </div>
+                <div class="metric-card" style="background: #fee2e2;">
+                    <h4>Red Scores (<60)</h4>
+                    <div class="desc">Focus area for development</div>
+                </div>
+            </div>
+
+            <h3>Training Insights</h3>
+            <ul>
+                <li><strong>Consistency:</strong> Regular practice shows in weekly charts</li>
+                <li><strong>Improvement:</strong> Watch coherence scores increase over time</li>
+                <li><strong>Balance:</strong> Mix memory types for comprehensive training</li>
+            </ul>
+
+            <h3>Clinical Relevance</h3>
+            <ul>
+                <li><strong>NCS Scores:</strong> Higher scores indicate better autobiographical memory</li>
+                <li><strong>PMAR Rates:</strong> Higher rates show better executive function</li>
+                <li><strong>Recall Speed:</strong> Faster times indicate stronger consolidation</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
+            <h3 style="color: white; margin-top: 0;">🧠✨ Ready to Strengthen Your Memories?</h3>
+            <p style="margin-bottom: 20px;">This guide covers everything you need to know about Eidolon's current functionality.</p>
+            <a href="/" style="background: white; color: #4f46e5; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.2s;">
+                Launch Eidolon App →
+            </a>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 0.9em;">
+            <p><strong>Version:</strong> Current deployment (January 2025)</p>
+            <p><strong>Last Updated:</strong> Today</p>
+            <p><strong>For Support:</strong> Visit <a href="https://tryeidolon.com" style="color: #4f46e5;">tryeidolon.com</a> or contact support@tryeidolon.com</p>
+        </div>
+    </div>
+</body>
+</html>
