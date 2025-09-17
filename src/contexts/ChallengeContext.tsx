@@ -109,7 +109,7 @@ export const ChallengeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     ];
     const currentTheme = weeklyThemes[weekNumber % weeklyThemes.length];
     
-    const newChallenges: Challenge[] = [
+    let newChallenges: Challenge[] = [
       // Beginner Milestone
       {
         id: 'first-memory',
@@ -396,7 +396,7 @@ export const ChallengeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     newChallenges = newChallenges.filter(challenge => {
       // Remove duplicates and ensure proper filtering
       return challenge.unlocked;
-    ];
+    });
 
     setChallenges(newChallenges);
   };
