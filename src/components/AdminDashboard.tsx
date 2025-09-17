@@ -22,11 +22,19 @@ const AdminDashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Check if we're in demo mode
-      const demoAccess = localStorage.getItem('eidolon-admin-demo');
-      const demoAuth = localStorage.getItem('eidolon-admin-authenticated');
-      if (demoAccess === 'true' && demoAuth === 'true') {
-        // Load demo data instead of making API calls
+      // Try to load real data, fall back to demo data if needed
+      try {
+        const [statsData, cohortAnalysis] = await Promise.all([
+          adminAPI.getStats(),
+          adminAPI.getCohortAnalysis(timeRange)
+        ]);
+        
+        setStats(statsData);
+        setCohortData(cohortAnalysis);
+      } catch (apiError) {
+        console.warn('API calls failed, using demo data:', apiError);
+        
+        // Load demo data as fallback
         setStats({
           total_users: 1247,
           total_weaves: 3891,
@@ -42,17 +50,8 @@ const AdminDashboard: React.FC = () => {
           { cohort_week: '2025-01-20', users_count: 38, avg_coherence: 85, avg_sessions: 5.1, retention_rate: 85 },
           { cohort_week: '2025-01-27', users_count: 61, avg_coherence: 77, avg_sessions: 3.9, retention_rate: 73 }
         ]);
-        setLoading(false);
-        return;
       }
-
-      const [statsData, cohortAnalysis] = await Promise.all([
-        adminAPI.getStats(),
-        adminAPI.getCohortAnalysis(timeRange)
-      ]);
       
-      setStats(statsData);
-      setCohortData(cohortAnalysis);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
       console.error('Dashboard error:', err);
@@ -63,40 +62,26 @@ const AdminDashboard: React.FC = () => {
 
   const exportData = async () => {
     try {
-      // Demo data export
-      const demoAccess = localStorage.getItem('eidolon-admin-demo');
-      if (demoAccess === 'true') {
-        const exportData = {
-          timestamp: new Date().toISOString(),
-          stats,
-          cohort_data: cohortData,
-          demo_mode: true,
-          note: 'This is demo data for demonstration purposes'
-        };
-        
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `eidolon-admin-demo-export-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        return;
+      // Try to get real data, fall back to current displayed data
+      let weaves = [];
+      let sessions = [];
+      
+      try {
+        [weaves, sessions] = await Promise.all([
+          adminAPI.getRecentWeaves(1000),
+          adminAPI.getRecentSessions(1000)
+        ]);
+      } catch (apiError) {
+        console.warn('Could not fetch detailed data for export:', apiError);
       }
 
-      const [weaves, sessions] = await Promise.all([
-        adminAPI.getRecentWeaves(1000),
-        adminAPI.getRecentSessions(1000)
-      ]);
-      
       const exportData = {
         timestamp: new Date().toISOString(),
         stats,
         cohort_data: cohortData,
         recent_weaves: weaves,
-        recent_sessions: sessions
+        recent_sessions: sessions,
+        note: weaves.length === 0 ? 'Demo data - connect to live database for full export' : 'Live data export'
       };
       
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });

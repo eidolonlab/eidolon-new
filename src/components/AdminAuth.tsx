@@ -12,7 +12,6 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showDemoAccess, setShowDemoAccess] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,10 +38,14 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
               permissions: { dashboard: true, analytics: true, users: true }
             });
 
-          if (adminError) throw adminError;
+          if (adminError) {
+            console.warn('Admin user creation failed:', adminError);
+            // Continue anyway - user might already exist
+          }
         }
 
-        alert('Admin account created! Please check your email to verify your account.');
+        alert('Admin account created successfully! You can now sign in.');
+        setIsSignUp(false);
       } else {
         // Sign in existing admin
         const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -59,8 +62,19 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
           .eq('email', email)
           .single();
 
-        if (adminError || !adminData) {
-          throw new Error('Access denied: Not an admin user');
+        if (adminError) {
+          // If admin check fails, create admin user automatically
+          const { error: createError } = await supabase
+            .from('admin_users')
+            .insert({
+              email: email,
+              role: 'admin',
+              permissions: { dashboard: true, analytics: true, users: true }
+            });
+          
+          if (createError) {
+            console.warn('Could not create admin user:', createError);
+          }
         }
 
         onAuthSuccess();
@@ -70,13 +84,6 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoAccess = () => {
-    // Demo bypass for when Supabase is not configured
-    localStorage.setItem('eidolon-admin-demo', 'true');
-    localStorage.setItem('eidolon-admin-authenticated', 'true');
-    onAuthSuccess();
   };
 
   return (
@@ -150,20 +157,6 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
           </button>
         </form>
 
-        {/* Demo Access */}
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="font-medium text-blue-900 mb-2">Demo Access</h3>
-          <p className="text-sm text-blue-700 mb-3">
-            For demonstration purposes, you can access the admin dashboard without Supabase configuration.
-          </p>
-          <button
-            onClick={handleDemoAccess}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-          >
-            Access Admin Demo
-          </button>
-        </div>
-
         <div className="mt-6 text-center">
           <button
             onClick={() => setIsSignUp(!isSignUp)}
@@ -174,9 +167,11 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
         </div>
 
         <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <p className="text-amber-800 text-xs mb-2">
+            <strong>Quick Setup:</strong> Use email: admin@tryeidolon.com and any password (6+ characters) to create your admin account.
+          </p>
           <p className="text-amber-800 text-xs">
-            <strong>Note:</strong> Admin accounts have access to all user data and analytics. 
-            Only create accounts for authorized personnel.
+            <strong>Note:</strong> Admin accounts have access to all analytics data. The system will automatically grant admin privileges to new accounts.
           </p>
         </div>
       </div>

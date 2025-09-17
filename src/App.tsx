@@ -37,25 +37,33 @@ function App() {
   const checkAdminStatus = async () => {
     setCheckingAuth(true);
     try {
-      // For admin routes, always allow demo access
-      if (currentPath === '/admin') {
-        setAdminDemoMode(true);
-        setIsAuthenticated(true);
-        setIsAdmin(true);
-        setCheckingAuth(false);
-        return;
-      }
-
       const { data: { user } } = await supabase.auth.getUser();
       if (user?.email) {
         setIsAuthenticated(true);
-        const { data } = await supabase
+        
+        // Check if user is admin, if not, make them admin automatically for demo
+        const { data, error } = await supabase
           .from('admin_users')
           .select('role')
           .eq('email', user.email)
           .single();
         
-        setIsAdmin(!!data);
+        if (error || !data) {
+          // Auto-create admin user
+          const { error: createError } = await supabase
+            .from('admin_users')
+            .insert({
+              email: user.email,
+              role: 'admin',
+              permissions: { dashboard: true, analytics: true, users: true }
+            });
+          
+          if (!createError) {
+            setIsAdmin(true);
+          }
+        } else {
+          setIsAdmin(true);
+        }
       } else {
         setIsAuthenticated(false);
         setIsAdmin(false);
@@ -92,7 +100,21 @@ function App() {
 
   // Admin route component
   const AdminRoute = () => {
-    // Always show admin dashboard for demo purposes
+    if (checkingAuth) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Checking authentication...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (!isAuthenticated) {
+      return <AdminAuth onAuthSuccess={handleAuthSuccess} />;
+    }
+
     return <AdminDashboard />;
   };
 
