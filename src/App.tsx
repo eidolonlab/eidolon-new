@@ -61,7 +61,6 @@ function App() {
     checkAdminStatus();
   };
 
-
   const InsightsPage = () => (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -113,170 +112,169 @@ function App() {
     );
   };
 
-  // If we're on admin route, show only admin content
-  if (currentPath === '/admin') {
-    return (
-      <WeaveProvider>
-        <AdminRoute />
-      </WeaveProvider>
-    );
-  }
-
   return (
     <WeaveProvider>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
-                  <p className="text-sm text-gray-600">Memory Training & Recall</p>
+      <Routes>
+        {/* Admin route - completely separate */}
+        <Route path="/admin" element={<AdminRoute />} />
+        
+        {/* Main app routes */}
+        <Route path="/*" element={
+          <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+            {/* Header */}
+            <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+              <div className="max-w-6xl mx-auto px-4 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+                      <Brain className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
+                      <p className="text-sm text-gray-600">Memory Training & Recall</p>
+                    </div>
+                  </div>
+                  
+                  {/* Navigation */}
+                  <nav className="hidden md:flex items-center space-x-1">
+                    <button
+                      onClick={() => navigate('/')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPath === '/'
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Home className="w-4 h-4 inline mr-2" />
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => navigate('/weave')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPath === '/weave'
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Plus className="w-4 h-4 inline mr-2" />
+                      New Weave
+                    </button>
+                    <button
+                      onClick={() => navigate('/scenario')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPath === '/scenario'
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Calendar className="w-4 h-4 inline mr-2" />
+                      Scenarios
+                    </button>
+                    <button
+                      onClick={() => navigate('/retrieval')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPath === '/retrieval'
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <BarChart3 className="w-4 h-4 inline mr-2" />
+                      Training
+                    </button>
+                    <button
+                      onClick={() => navigate('/insights')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPath === '/insights'
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <TrendingUp className="w-4 h-4 inline mr-2" />
+                      Insights
+                    </button>
+                    <button
+                      onClick={() => setShowSettings(true)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        showSettings
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Settings className="w-4 h-4 inline mr-2" />
+                      Settings
+                    </button>
+                    {isAdmin && (
+                      <button
+                        onClick={() => navigate('/admin')}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          currentPath === '/admin'
+                            ? 'bg-red-100 text-red-700'
+                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        }`}
+                      >
+                        <BarChart3 className="w-4 h-4 inline mr-2" />
+                        <span>Admin</span>
+                      </button>
+                    )}
+                  </nav>
                 </div>
               </div>
-              
-              {/* Navigation */}
-              <nav className="hidden md:flex items-center space-x-1">
-                <button
-                  onClick={() => navigate('/')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPath === '/'
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <Home className="w-4 h-4 inline mr-2" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => navigate('/weave')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPath === '/weave'
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <Plus className="w-4 h-4 inline mr-2" />
-                  New Weave
-                </button>
-                <button
-                  onClick={() => navigate('/scenario')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPath === '/scenario'
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <Calendar className="w-4 h-4 inline mr-2" />
-                  Scenarios
-                </button>
-                <button
-                  onClick={() => navigate('/retrieval')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPath === '/retrieval'
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <BarChart3 className="w-4 h-4 inline mr-2" />
-                  Training
-                </button>
-                <button
-                  onClick={() => navigate('/insights')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPath === '/insights'
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <TrendingUp className="w-4 h-4 inline mr-2" />
-                  Insights
-                </button>
-                <button
-                  onClick={() => setShowSettings(true)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    showSettings
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <Settings className="w-4 h-4 inline mr-2" />
-                  Settings
-                </button>
-                {isAdmin && (
+            </header>
+
+            {/* Main Content */}
+            <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
+              <Routes>
+                <Route path="/" element={<Dashboard onNavigate={(view) => navigate(`/${view}`)} />} />
+                <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
+                <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
+                <Route path="/retrieval" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
+                <Route path="/insights" element={<InsightsPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </main>
+            
+            {/* Legal Footer */}
+            <LegalFooter />
+
+            {/* Mobile Navigation */}
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+              <div className="flex items-center justify-around py-2">
+                {[
+                  { path: '/', icon: Home, label: 'Home' },
+                  { path: '/weave', icon: Plus, label: 'Weave' },
+                  { path: '/scenario', icon: Calendar, label: 'Future' },
+                  { path: '/retrieval', icon: BarChart3, label: 'Train' },
+                  { path: '/insights', icon: TrendingUp, label: 'Insights' },
+                ].map(({ path, icon: Icon, label }) => (
                   <button
-                    onClick={() => navigate('/admin')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPath === '/admin'
-                        ? 'bg-red-100 text-red-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    key={path}
+                    onClick={() => navigate(path)}
+                    className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
+                      currentPath === path
+                        ? 'text-indigo-600'
+                        : 'text-gray-600'
                     }`}
                   >
-                    <BarChart3 className="w-4 h-4 inline mr-2" />
-                    <span>Admin</span>
+                    <Icon className="w-5 h-5" />
+                    <span className="text-xs mt-1">{label}</span>
                   </button>
-                )}
-              </nav>
-            </div>
+                ))}
+              </div>
+            </nav>
+            
+            {/* PWA Install Prompt */}
+            <InstallPrompt />
+            
+            {/* Consent Banner */}
+            <ConsentBanner />
+            
+            {/* Settings Panel */}
+            {showSettings && (
+              <SettingsPanel onClose={() => setShowSettings(false)} />
+            )}
           </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
-          <Routes>
-            <Route path="/" element={<Dashboard onNavigate={(view) => navigate(`/${view}`)} />} />
-            <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
-            <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
-            <Route path="/retrieval" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
-            <Route path="/insights" element={<InsightsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        
-        {/* Legal Footer */}
-        <LegalFooter />
-
-        {/* Mobile Navigation */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-          <div className="flex items-center justify-around py-2">
-            {[
-              { path: '/', icon: Home, label: 'Home' },
-              { path: '/weave', icon: Plus, label: 'Weave' },
-              { path: '/scenario', icon: Calendar, label: 'Future' },
-              { path: '/retrieval', icon: BarChart3, label: 'Train' },
-              { path: '/insights', icon: TrendingUp, label: 'Insights' },
-            ].map(({ path, icon: Icon, label }) => (
-              <button
-                key={path}
-                onClick={() => navigate(path)}
-                className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
-                  currentPath === path
-                    ? 'text-indigo-600'
-                    : 'text-gray-600'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-xs mt-1">{label}</span>
-              </button>
-            ))}
-          </div>
-        </nav>
-        
-        {/* PWA Install Prompt */}
-        <InstallPrompt />
-        
-        {/* Consent Banner */}
-        <ConsentBanner />
-        
-        {/* Settings Panel */}
-        {showSettings && (
-          <SettingsPanel onClose={() => setShowSettings(false)} />
-        )}
-      </div>
+        } />
+      </Routes>
     </WeaveProvider>
   );
 }
