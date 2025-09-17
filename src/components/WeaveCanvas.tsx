@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Sparkles, Eye, Ear, DoorClosed as Nose, Hand, Heart, Save, Wand2, Music, Palette, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Sparkles, Eye, Ear, DoorClosed as Nose, Hand, Heart, Save, Wand2, Music, Palette, HelpCircle, Brain, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import CueLibrary from './CueLibrary';
 import BridgeBack from './BridgeBack';
