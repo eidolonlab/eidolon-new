@@ -12,6 +12,7 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showDemoAccess, setShowDemoAccess] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,6 +70,12 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoAccess = () => {
+    // Demo bypass for when Supabase is not configured
+    localStorage.setItem('eidolon-admin-demo', 'true');
+    onAuthSuccess();
   };
 
   return (
@@ -141,6 +148,20 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
             )}
           </button>
         </form>
+
+        {/* Demo Access */}
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="font-medium text-blue-900 mb-2">Demo Access</h3>
+          <p className="text-sm text-blue-700 mb-3">
+            For demonstration purposes, you can access the admin dashboard without Supabase configuration.
+          </p>
+          <button
+            onClick={handleDemoAccess}
+            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+          >
+            Access Admin Demo
+          </button>
+        </div>
 
         <div className="mt-6 text-center">
           <button

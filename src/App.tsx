@@ -36,6 +36,15 @@ function App() {
   const checkAdminStatus = async () => {
     setCheckingAuth(true);
     try {
+      // Check for demo admin access first
+      const demoAccess = localStorage.getItem('eidolon-admin-demo');
+      if (demoAccess === 'true') {
+        setIsAuthenticated(true);
+        setIsAdmin(true);
+        setCheckingAuth(false);
+        return;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (user?.email) {
         setIsAuthenticated(true);
