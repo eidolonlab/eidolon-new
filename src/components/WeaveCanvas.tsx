@@ -39,6 +39,11 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const [showContextualHints, setShowContextualHints] = useState(true);
   const [aiInteractionCount, setAiInteractionCount] = useState(0);
   const [useSimplifiedFlow, setUseSimplifiedFlow] = useState(true);
+  const [tempCues, setTempCues] = useState<any>({});
+  const [tempBridgeData, setTempBridgeData] = useState<any>({
+    factualAnchors: [],
+    peopleInvolved: [],
+  });
 
   const sensoryPrompts = {
     visual: [
@@ -114,6 +119,8 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
       ifThenPlans: weaveType === 'future' ? [] : undefined,
       scheduledFor: weaveType === 'future' ? undefined : undefined,
       completed: false,
+      cues: tempCues,
+      bridgeData: tempBridgeData,
     };
 
     addWeave(newWeave);
@@ -500,20 +507,6 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             <div className="grid md:grid-cols-2 gap-4">
               <button
                 onClick={() => {
-                  // Create a temporary weave to work with cues
-                  const tempWeave = {
-                    type: weaveType,
-                    seed,
-                    title,
-                    narrative,
-                    sensoryDetails,
-                    tags,
-                    errorlessMode,
-                    difficultyLevel,
-                  };
-                  const tempId = 'temp-' + Date.now();
-                  setTempWeaveId(tempId);
-                  // Store temp weave in context for cue library
                   setShowCueLibrary(true);
                 }}
                 className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition-colors"
@@ -524,19 +517,6 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
               
               <button
                 onClick={() => {
-                  // Create a temporary weave to work with bridge data
-                  const tempWeave = {
-                    type: weaveType,
-                    seed,
-                    title,
-                    narrative,
-                    sensoryDetails,
-                    tags,
-                    errorlessMode,
-                    difficultyLevel,
-                  };
-                  const tempId = 'temp-' + Date.now();
-                  setTempWeaveId(tempId);
                   setShowBridgeBack(true);
                 }}
                 className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-emerald-300 hover:bg-emerald-50 transition-colors"
@@ -647,18 +627,259 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
       
       {/* Modals */}
       {showCueLibrary && (
-        <CueLibrary
-          weaveId="temp-weave"
+        <TempCueLibrary
+          cues={tempCues}
+          onCuesUpdate={setTempCues}
           onClose={() => setShowCueLibrary(false)}
         />
       )}
       
       {showBridgeBack && (
-        <BridgeBack
-          weaveId="temp-weave"
+        <TempBridgeBack
+          bridgeData={tempBridgeData}
+          onBridgeDataUpdate={setTempBridgeData}
+          weaveTitle={title}
+          weaveSeed={seed}
+          weaveNarrative={narrative}
           onClose={() => setShowBridgeBack(false)}
         />
       )}
+    </div>
+  );
+};
+
+// Temporary Cue Library component for weave creation
+const TempCueLibrary: React.FC<{
+  cues: any;
+  onCuesUpdate: (cues: any) => void;
+  onClose: () => void;
+}> = ({ cues, onCuesUpdate, onClose }) => {
+  const [activeTab, setActiveTab] = useState<'music' | 'colors' | 'scents' | 'location'>('music');
+
+  const updateCues = (newCues: Partial<typeof cues>) => {
+    onCuesUpdate({ ...cues, ...newCues });
+  };
+
+  const colorPalettes = [
+    { name: 'Warm Sunset', colors: ['#FF6B6B', '#FFE66D', '#FF8E53', '#C7CEEA'] },
+    { name: 'Ocean Breeze', colors: ['#4ECDC4', '#44A08D', '#096DD9', '#B8E6B8'] },
+    { name: 'Forest Walk', colors: ['#52C41A', '#73D13D', '#95DE64', '#D9F7BE'] },
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'music':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Music or Ambient Sound
+              </label>
+              <input
+                type="text"
+                value={cues.music || ''}
+                onChange={(e) => updateCues({ music: e.target.value })}
+                placeholder="Enter song name or ambient sound"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        );
+      case 'colors':
+        return (
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Color Palettes</h4>
+            <div className="space-y-3">
+              {colorPalettes.map((palette) => (
+                <button
+                  key={palette.name}
+                  onClick={() => updateCues({ colors: palette.colors })}
+                  className="w-full p-3 border rounded-lg transition-colors border-gray-200 hover:border-gray-300"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">{palette.name}</span>
+                  </div>
+                  <div className="flex space-x-1">
+                    {palette.colors.map((color, index) => (
+                      <div
+                        key={index}
+                        className="w-8 h-8 rounded-lg"
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 'location':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Location Name
+              </label>
+              <input
+                type="text"
+                value={cues.location?.name || ''}
+                onChange={(e) => updateCues({ 
+                  location: { ...cues.location, name: e.target.value } 
+                })}
+                placeholder="e.g., Central Park, Mom's Kitchen"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900">Add Sensory Cues</h2>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="flex border-b border-gray-200">
+          {[
+            { id: 'music', label: 'Music & Sound' },
+            { id: 'colors', label: 'Colors' },
+            { id: 'location', label: 'Location' },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id as any)}
+              className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
+                activeTab === id
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="p-6 overflow-y-auto max-h-96">
+          {renderTabContent()}
+        </div>
+        
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
+          <button
+            onClick={onClose}
+            className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Save Cues
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Temporary Bridge Back component for weave creation
+const TempBridgeBack: React.FC<{
+  bridgeData: any;
+  onBridgeDataUpdate: (data: any) => void;
+  weaveTitle: string;
+  weaveSeed: string;
+  weaveNarrative: string;
+  onClose: () => void;
+}> = ({ bridgeData, onBridgeDataUpdate, weaveTitle, weaveSeed, weaveNarrative, onClose }) => {
+  const [newFactualAnchor, setNewFactualAnchor] = useState('');
+
+  const updateBridgeData = (newData: Partial<typeof bridgeData>) => {
+    onBridgeDataUpdate({ ...bridgeData, ...newData });
+  };
+
+  const addFactualAnchor = () => {
+    if (!newFactualAnchor.trim()) return;
+    updateBridgeData({
+      factualAnchors: [...(bridgeData.factualAnchors || []), newFactualAnchor.trim()]
+    });
+    setNewFactualAnchor('');
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900">Add Factual Anchors</h2>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium text-gray-900 mb-2">{weaveTitle}</h3>
+            <p className="text-sm text-gray-600">Seed: "{weaveSeed}"</p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Factual Anchors</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Add objective facts that can be verified - dates, locations, people, events.
+            </p>
+            
+            <div className="space-y-3">
+              {(bridgeData.factualAnchors || []).map((anchor: string, index: number) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <span className="text-blue-900">{anchor}</span>
+                  <button
+                    onClick={() => updateBridgeData({
+                      factualAnchors: bridgeData.factualAnchors.filter((_: any, i: number) => i !== index)
+                    })}
+                    className="text-red-600 hover:text-red-700 text-sm"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={newFactualAnchor}
+                  onChange={(e) => setNewFactualAnchor(e.target.value)}
+                  placeholder="e.g., It was a Tuesday, Restaurant was on Main Street"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  onKeyPress={(e) => e.key === 'Enter' && addFactualAnchor()}
+                />
+                <button
+                  onClick={addFactualAnchor}
+                  disabled={!newFactualAnchor.trim()}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
+          <button
+            onClick={onClose}
+            className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Save Anchors
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
