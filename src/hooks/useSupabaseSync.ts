@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { supabase, userAPI } from '../lib/supabase';
 import type { Weave, RetrievalSession } from '../contexts/WeaveContext';
 
+// Check if Supabase is properly configured
+const isSupabaseConfigured = () => {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  return url && key && !url.includes('your-project-id') && !key.includes('your-anon-key');
+};
+
 interface SyncStatus {
   isConnected: boolean;
   userHash: string | null;
@@ -30,6 +37,17 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
   }, [weaves, retrievalSessions, syncStatus.consentGiven, syncStatus.userHash]);
 
   const initializeUser = async () => {
+    // Don't attempt API calls if Supabase is not configured
+    if (!isSupabaseConfigured()) {
+      setSyncStatus({
+        isConnected: false,
+        userHash: null,
+        consentGiven: false,
+        lastSync: null
+      });
+      return;
+    }
+
     try {
       // Check if user has given consent
       const consent = localStorage.getItem('eidolon-consent');
@@ -81,6 +99,11 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
   const syncDataToSupabase = async () => {
     if (!syncStatus.userHash || !syncStatus.consentGiven) {
       return; // Don't sync if no consent or user hash
+    }
+
+    // Don't attempt API calls if Supabase is not configured
+    if (!isSupabaseConfigured()) {
+      return;
     }
 
     try {
@@ -136,6 +159,10 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
   };
 
   const trackEvent = async (eventType: string, eventData: any = {}) => {
+    if (!isSupabaseConfigured()) {
+      return; // Don't track if Supabase is not configured
+    }
+    
     if (syncStatus.consentGiven && syncStatus.userHash) {
       await userAPI.trackAnalyticsEvent(eventType, eventData, syncStatus.userHash);
     }
