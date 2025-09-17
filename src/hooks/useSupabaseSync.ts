@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase, userAPI } from '../lib/supabase';
-import { Weave, RetrievalSession } from '../contexts/WeaveContext';
+import type { Weave, RetrievalSession } from '../contexts/WeaveContext';
 
 interface SyncStatus {
   isConnected: boolean;
@@ -33,9 +33,20 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
     try {
       // Check if user has given consent
       const consent = localStorage.getItem('eidolon-consent');
-      const consentData = consent ? JSON.parse(consent) : null;
+      if (!consent) {
+        // No consent given yet, don't make any API calls
+        setSyncStatus({
+          isConnected: false,
+          userHash: null,
+          consentGiven: false,
+          lastSync: null
+        });
+        return;
+      }
+
+      const consentData = JSON.parse(consent);
       
-      if (consentData?.analytics || consentData?.research) {
+      if (consentData.analytics || consentData.research) {
         // User has given consent, create/update user record
         const userData = await userAPI.createOrUpdateUser({
           consent_analytics: consentData.analytics || false,
@@ -52,15 +63,25 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
 
         // Store user hash for future use
         localStorage.setItem('eidolon-user-hash', userData.user_hash);
+      } else {
+        // User has not given consent for data sharing
+        setSyncStatus({
+          isConnected: false,
+          userHash: null,
+          consentGiven: false,
+          lastSync: null
+        });
       }
     } catch (error) {
-      console.warn('Failed to initialize user:', error);
+      console.warn('Failed to initialize user (this is normal if no consent given):', error);
       setSyncStatus(prev => ({ ...prev, isConnected: false }));
     }
   };
 
   const syncDataToSupabase = async () => {
-    if (!syncStatus.userHash) return;
+    if (!syncStatus.userHash || !syncStatus.consentGiven) {
+      return; // Don't sync if no consent or user hash
+    }
 
     try {
       // Sync all weaves

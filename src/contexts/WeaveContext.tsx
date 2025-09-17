@@ -84,7 +84,6 @@ export const useWeave = () => {
 export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [weaves, setWeaves] = useState<Weave[]>([]);
   const [retrievalSessions, setRetrievalSessions] = useState<RetrievalSession[]>([]);
-  const { trackEvent } = useSupabaseSync(weaves, retrievalSessions);
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -119,6 +118,9 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('eidolon-sessions', JSON.stringify(retrievalSessions));
   }, [retrievalSessions]);
+
+  // Initialize Supabase sync after data is loaded
+  const { trackEvent } = useSupabaseSync(weaves, retrievalSessions);
 
   const calculateCoherenceScore = (narrative: string, sensoryDetails: Weave['sensoryDetails']): number => {
     // Simple coherence scoring based on narrative length, detail richness, and structure
