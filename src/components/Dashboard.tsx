@@ -1,6 +1,7 @@
 import React from 'react';
 import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import { useChallenge } from '../contexts/ChallengeContext';
 import DailyMemoryMoments from './DailyMemoryMoments';
 import ProgressiveChallenges from './ProgressiveChallenges';
 import RealWorldImpactTracker from './RealWorldImpactTracker';
@@ -11,7 +12,11 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const { weaves, retrievalSessions, getMetrics } = useWeave();
+  const { getUserLevel, getTotalXP, getActiveChallenge } = useChallenge();
   const metrics = getMetrics();
+  const userLevel = getUserLevel();
+  const totalXP = getTotalXP();
+  const activeChallenge = getActiveChallenge();
   
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
@@ -163,7 +168,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
       {/* Key Metrics - Simplified */}
       {weaves.length > 0 && (
-        <div className="grid md:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-5 gap-6">
           <div className="bg-white p-6 rounded-xl border border-gray-200">
             <div className="flex items-center space-x-3 mb-2">
               <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -211,6 +216,39 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 <div className="text-2xl font-bold text-gray-900">{metrics.completionRate}%</div>
                 <div className="text-sm text-gray-600">Success Rate</div>
               </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl border border-gray-200">
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <Trophy className="w-5 h-5 text-yellow-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-gray-900">L{userLevel}</div>
+                <div className="text-sm text-gray-600">{totalXP} XP</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Active Challenge Banner */}
+      {activeChallenge && (
+        <div className={`bg-gradient-to-r from-${activeChallenge.color}-500 to-${activeChallenge.color}-600 text-white rounded-xl p-6`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                <Target className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Active Challenge: {activeChallenge.title}</h3>
+                <p className="text-sm opacity-90">{activeChallenge.progressMessage}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold">+{activeChallenge.rewards.xp}</div>
+              <div className="text-sm opacity-75">XP Reward</div>
             </div>
           </div>
         </div>

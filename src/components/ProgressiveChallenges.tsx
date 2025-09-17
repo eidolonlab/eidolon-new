@@ -1,210 +1,95 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Target, Calendar, Star, Unlock, CheckCircle, ArrowRight, Brain, Eye, Ear, Heart, Zap } from 'lucide-react';
+import { 
+  Trophy, Target, Calendar, Star, CheckCircle, ArrowRight, Brain, 
+  Eye, Ear, Heart, Zap, Award, Clock, X, Play, Users, TrendingUp,
+  Gift, Flame, Timer, Sparkles
+} from 'lucide-react';
+import { useChallenge } from '../contexts/ChallengeContext';
 import { useWeave } from '../contexts/WeaveContext';
 
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  type: 'weekly' | 'skill' | 'milestone';
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  requirements: string[];
-  rewards: string[];
-  progress: number;
-  maxProgress: number;
-  unlocked: boolean;
-  completed: boolean;
-  icon: any;
-  color: string;
-}
-
 const ProgressiveChallenges: React.FC = () => {
-  const { weaves, retrievalSessions } = useWeave();
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [activeChallenge, setActiveChallenge] = useState<string | null>(null);
-  const [weeklyTheme, setWeeklyTheme] = useState('');
-  const [userLevel, setUserLevel] = useState(1);
-  const [totalXP, setTotalXP] = useState(0);
+  const { 
+    challenges, 
+    joinChallenge, 
+    leaveChallenge, 
+    claimReward, 
+    getUserLevel, 
+    getTotalXP,
+    getActiveChallenge 
+  } = useChallenge();
+  const { weaves } = useWeave();
+  
+  const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
+  const [showJoinModal, setShowJoinModal] = useState<string | null>(null);
+  const [celebrationChallenge, setCelebrationChallenge] = useState<string | null>(null);
 
-  const weeklyThemes = [
-    { theme: 'Childhood Memories', prompt: 'Explore memories from your early years', icon: Star, color: 'pink' },
-    { theme: 'Professional Moments', prompt: 'Capture career milestones and work experiences', icon: Target, color: 'blue' },
-    { theme: 'Sensory Focus', prompt: 'Deep dive into one sense each day', icon: Eye, color: 'purple' },
-    { theme: 'Emotional Landscapes', prompt: 'Focus on feelings and emotional memories', icon: Heart, color: 'red' },
-    { theme: 'Future Planning', prompt: 'Rehearse upcoming events and goals', icon: Calendar, color: 'emerald' },
-    { theme: 'Family Connections', prompt: 'Preserve and strengthen family memories', icon: Heart, color: 'orange' },
-    { theme: 'Learning Moments', prompt: 'Capture times of growth and discovery', icon: Brain, color: 'indigo' },
-    { theme: 'Gratitude & Joy', prompt: 'Focus on positive and meaningful experiences', icon: Star, color: 'yellow' }
-  ];
+  const userLevel = getUserLevel();
+  const totalXP = getTotalXP();
+  const activeChallenge = getActiveChallenge();
 
+  // Check for newly completed challenges
   useEffect(() => {
-    generateChallenges();
-    calculateUserLevel();
-    setCurrentWeeklyTheme();
-  }, [weaves, retrievalSessions]);
-
-  const setCurrentWeeklyTheme = () => {
-    const weekNumber = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
-    const currentTheme = weeklyThemes[weekNumber % weeklyThemes.length];
-    setWeeklyTheme(currentTheme.theme);
-  };
-
-  const calculateUserLevel = () => {
-    let xp = 0;
-    
-    // XP from weaves
-    xp += weaves.length * 10;
-    xp += weaves.filter(w => w.coherenceScore > 80).length * 5;
-    xp += weaves.filter(w => w.type === 'future' && w.completed).length * 15;
-    
-    // XP from sessions
-    xp += retrievalSessions.length * 5;
-    xp += retrievalSessions.filter(s => s.accuracy > 80).length * 3;
-    
-    setTotalXP(xp);
-    setUserLevel(Math.floor(xp / 100) + 1);
-  };
-
-  const generateChallenges = () => {
-    const newChallenges: Challenge[] = [
-      // Beginner Challenges
-      {
-        id: 'first-weave',
-        title: 'Memory Pioneer',
-        description: 'Create your first memory weave',
-        type: 'milestone',
-        difficulty: 'beginner',
-        requirements: ['Create 1 memory weave'],
-        rewards: ['10 XP', 'Unlock sensory challenges'],
-        progress: weaves.length,
-        maxProgress: 1,
-        unlocked: true,
-        completed: weaves.length >= 1,
-        icon: Star,
-        color: 'emerald'
-      },
-      {
-        id: 'sensory-explorer',
-        title: 'Sensory Explorer',
-        description: 'Fill in all 5 senses in a single memory',
-        type: 'skill',
-        difficulty: 'beginner',
-        requirements: ['Complete all sensory details in one weave'],
-        rewards: ['15 XP', 'Unlock advanced techniques'],
-        progress: weaves.filter(w => 
-          Object.values(w.sensoryDetails).every(detail => detail.length > 10)
-        ).length,
-        maxProgress: 1,
-        unlocked: weaves.length >= 1,
-        completed: weaves.some(w => 
-          Object.values(w.sensoryDetails).every(detail => detail.length > 10)
-        ),
-        icon: Eye,
-        color: 'purple'
-      },
-      {
-        id: 'weekly-warrior',
-        title: 'Weekly Warrior',
-        description: 'Complete this week\'s themed challenge',
-        type: 'weekly',
-        difficulty: 'intermediate',
-        requirements: [`Create 3 memories related to: ${weeklyTheme}`],
-        rewards: ['25 XP', 'Weekly champion badge'],
-        progress: weaves.filter(w => {
-          const weekStart = new Date();
-          weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-          return w.createdAt >= weekStart;
-        }).length,
-        maxProgress: 3,
-        unlocked: weaves.length >= 3,
-        completed: false,
-        icon: Calendar,
-        color: 'blue'
-      },
-      {
-        id: 'retrieval-master',
-        title: 'Retrieval Master',
-        description: 'Complete 10 retrieval training sessions',
-        type: 'skill',
-        difficulty: 'intermediate',
-        requirements: ['Complete 10 training sessions'],
-        rewards: ['30 XP', 'Unlock advanced coaching'],
-        progress: retrievalSessions.length,
-        maxProgress: 10,
-        unlocked: weaves.length >= 2,
-        completed: retrievalSessions.length >= 10,
-        icon: Brain,
-        color: 'indigo'
-      },
-      {
-        id: 'future-planner',
-        title: 'Future Planner',
-        description: 'Create and complete 3 future scenarios',
-        type: 'skill',
-        difficulty: 'intermediate',
-        requirements: ['Create 3 future scenarios', 'Complete all 3'],
-        rewards: ['35 XP', 'PMAR tracking unlocked'],
-        progress: weaves.filter(w => w.type === 'future' && w.completed).length,
-        maxProgress: 3,
-        unlocked: weaves.length >= 5,
-        completed: weaves.filter(w => w.type === 'future' && w.completed).length >= 3,
-        icon: Target,
-        color: 'emerald'
-      },
-      {
-        id: 'coherence-champion',
-        title: 'Coherence Champion',
-        description: 'Achieve 90+ coherence score on 5 memories',
-        type: 'skill',
-        difficulty: 'advanced',
-        requirements: ['5 memories with 90+ coherence score'],
-        rewards: ['50 XP', 'Memory master status'],
-        progress: weaves.filter(w => w.coherenceScore >= 90).length,
-        maxProgress: 5,
-        unlocked: weaves.length >= 10,
-        completed: weaves.filter(w => w.coherenceScore >= 90).length >= 5,
-        icon: Trophy,
-        color: 'yellow'
-      },
-      {
-        id: 'speed-demon',
-        title: 'Speed Demon',
-        description: 'Achieve sub-10 second recall on 5 sessions',
-        type: 'skill',
-        difficulty: 'advanced',
-        requirements: ['5 sessions with <10s recall time'],
-        rewards: ['40 XP', 'Rapid recall badge'],
-        progress: retrievalSessions.filter(s => s.latencyMs < 10000).length,
-        maxProgress: 5,
-        unlocked: retrievalSessions.length >= 10,
-        completed: retrievalSessions.filter(s => s.latencyMs < 10000).length >= 5,
-        icon: Zap,
-        color: 'orange'
+    challenges.forEach(challenge => {
+      if (challenge.joined && 
+          challenge.requirements.every(req => req.completed) && 
+          !challenge.completed) {
+        setCelebrationChallenge(challenge.id);
       }
-    ];
+    });
+  }, [challenges]);
 
-    setChallenges(newChallenges);
-  };
-
-  const getCurrentWeeklyTheme = () => {
-    const weekNumber = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
-    return weeklyThemes[weekNumber % weeklyThemes.length];
+  const getIcon = (iconName: string) => {
+    const icons = {
+      star: Star,
+      calendar: Calendar,
+      eye: Eye,
+      target: Target,
+      award: Award,
+      zap: Zap,
+      brain: Brain,
+      clock: Clock,
+      trophy: Trophy,
+      heart: Heart
+    };
+    return icons[iconName as keyof typeof icons] || Star;
   };
 
   const getNextXPLevel = () => {
     return (userLevel * 100) - totalXP;
   };
 
-  const claimReward = (challengeId: string) => {
+  const handleJoinChallenge = (challengeId: string) => {
+    joinChallenge(challengeId);
+    setShowJoinModal(null);
+    
+    // Show success message
     const challenge = challenges.find(c => c.id === challengeId);
-    if (challenge?.completed) {
-      alert(`🎉 Congratulations! You've earned: ${challenge.rewards.join(', ')}`);
-      // Here you would typically update user rewards in the database
+    if (challenge) {
+      alert(`🎯 Challenge Joined!\n\n"${challenge.title}" is now active. Check your progress anytime!`);
     }
   };
 
-  const currentTheme = getCurrentWeeklyTheme();
-  const ThemeIcon = currentTheme.icon;
+  const handleCompleteChallenge = (challengeId: string) => {
+    const challenge = challenges.find(c => c.id === challengeId);
+    if (challenge && challenge.requirements.every(req => req.completed)) {
+      setCelebrationChallenge(challengeId);
+    }
+  };
+
+  // Auto-check for completions
+  useEffect(() => {
+    challenges.forEach(challenge => {
+      if (challenge.joined && 
+          !challenge.completed && 
+          challenge.requirements.every(req => req.completed)) {
+        handleCompleteChallenge(challenge.id);
+      }
+    });
+  }, [weaves, challenges]);
+
+  const availableChallenges = challenges.filter(c => c.unlocked);
+  const joinedChallenges = challenges.filter(c => c.joined && !c.completed);
+  const completedChallenges = challenges.filter(c => c.completed);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -214,8 +99,8 @@ const ProgressiveChallenges: React.FC = () => {
             <Trophy className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Progressive Challenges</h2>
-            <p className="text-sm text-gray-600">Weekly goals to build your memory skills</p>
+            <h2 className="text-xl font-semibold text-gray-900">Memory Challenges</h2>
+            <p className="text-sm text-gray-600">Join challenges to build skills and earn rewards</p>
           </div>
         </div>
         
@@ -226,170 +111,347 @@ const ProgressiveChallenges: React.FC = () => {
         </div>
       </div>
 
-      {/* Weekly Theme */}
-      <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="flex items-center space-x-3 mb-3">
-          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-            <ThemeIcon className="w-4 h-4 text-blue-600" />
-          </div>
-          <div>
-            <h3 className="font-medium text-blue-900">This Week's Theme</h3>
-            <p className="text-sm text-blue-700">{currentTheme.theme}</p>
-          </div>
+      {/* XP Progress Bar */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-medium text-indigo-900">Level {userLevel} Progress</span>
+          <span className="text-sm text-indigo-700">{totalXP % 100}/100 XP</span>
         </div>
-        <p className="text-sm text-blue-800">{currentTheme.prompt}</p>
-        
-        <div className="mt-3 flex items-center justify-between">
-          <div className="text-xs text-blue-600">
-            {weaves.filter(w => {
-              const weekStart = new Date();
-              weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-              return w.createdAt >= weekStart;
-            }).length} memories created this week
-          </div>
-          <button
-            onClick={() => setActiveChallenge('weekly-warrior')}
-            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Join Challenge
-          </button>
+        <div className="w-full bg-indigo-200 rounded-full h-3">
+          <div 
+            className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-500"
+            style={{ width: `${((totalXP % 100) / 100) * 100}%` }}
+          />
         </div>
       </div>
 
-      {/* Challenge Grid */}
-      <div className="grid md:grid-cols-1 gap-4 max-w-2xl mx-auto">
-        {challenges.map((challenge) => {
-          const IconComponent = challenge.icon;
-          const progressPercentage = (challenge.progress / challenge.maxProgress) * 100;
-          
-          return (
-            <div
-              key={challenge.id}
-              className={`p-4 rounded-lg border transition-all cursor-pointer ${
-                challenge.unlocked
-                  ? challenge.completed
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-gray-300 hover:border-indigo-300 hover:bg-indigo-50'
-                  : 'border-gray-200 bg-gray-50 opacity-60'
-              }`}
-              onClick={() => challenge.unlocked && setActiveChallenge(challenge.id)}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    {challenge.unlocked ? (
-                      <IconComponent className="w-5 h-5 text-indigo-600" />
-                    ) : (
-                      <div className="w-5 h-5 bg-gray-400 rounded" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">{challenge.title}</h3>
-                    <p className="text-sm text-gray-600">{challenge.description}</p>
-                  </div>
-                </div>
-                
-                {challenge.completed && (
-                  <CheckCircle className="w-5 h-5 text-emerald-600" />
-                )}
-              </div>
-
-              {/* Progress Bar */}
-              <div className="mb-3">
-                <div className="flex justify-between text-xs text-gray-600 mb-1">
-                  <span>Progress</span>
-                  <span>{challenge.progress}/{challenge.maxProgress}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Requirements */}
-              <div className="space-y-1 mb-3">
-                {challenge.requirements.map((req, index) => (
-                  <div key={index} className="flex items-center space-x-2 text-xs text-gray-600">
-                    <div className={`w-2 h-2 rounded-full ${
-                      challenge.progress > index ? 'bg-indigo-500' : 'bg-gray-300'
-                    }`} />
-                    <span>{req}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Rewards */}
-              <div className="flex items-center justify-between">
-                <div className="text-xs text-gray-500">
-                  Rewards: {challenge.rewards.join(', ')}
-                </div>
-                {challenge.completed && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      claimReward(challenge.id);
-                    }}
-                    className="px-2 py-1 bg-emerald-600 text-white text-xs rounded hover:bg-emerald-700 transition-colors"
-                  >
-                    Claim
-                  </button>
-                )}
-              </div>
-
-              {!challenge.unlocked && (
-                <div className="mt-2 text-xs text-gray-500 italic">
-                  Unlock by completing previous challenges
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Challenge Details Modal */}
+      {/* Active Challenge Spotlight */}
       {activeChallenge && (
+        <div className={`mb-6 p-4 bg-gradient-to-r from-${activeChallenge.color}-50 to-${activeChallenge.color}-100 rounded-lg border border-${activeChallenge.color}-300`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              <div className={`w-8 h-8 bg-${activeChallenge.color}-200 rounded-lg flex items-center justify-center`}>
+                <Flame className={`w-4 h-4 text-${activeChallenge.color}-700`} />
+              </div>
+              <div>
+                <h3 className={`font-semibold text-${activeChallenge.color}-900`}>Active Challenge</h3>
+                <p className={`text-sm text-${activeChallenge.color}-700`}>{activeChallenge.title}</p>
+              </div>
+            </div>
+            {activeChallenge.timeLimit && (
+              <div className={`text-xs text-${activeChallenge.color}-600`}>
+                Ends {activeChallenge.timeLimit.toLocaleDateString()}
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            {activeChallenge.requirements.map((req, index) => (
+              <div key={index} className="flex items-center justify-between">
+                <span className={`text-sm text-${activeChallenge.color}-800`}>{req.description}</span>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-sm font-medium text-${activeChallenge.color}-700`}>
+                    {req.current}/{req.target}
+                  </span>
+                  {req.completed && <CheckCircle className={`w-4 h-4 text-${activeChallenge.color}-600`} />}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-3">
+            <div className="w-full bg-white bg-opacity-50 rounded-full h-2">
+              <div 
+                className={`bg-${activeChallenge.color}-600 h-2 rounded-full transition-all duration-500`}
+                style={{ 
+                  width: `${(activeChallenge.requirements.reduce((sum, req) => sum + req.current, 0) / 
+                           activeChallenge.requirements.reduce((sum, req) => sum + req.target, 0)) * 100}%` 
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Challenge Categories */}
+      <div className="space-y-6">
+        {/* Available Challenges */}
+        {availableChallenges.filter(c => !c.joined && !c.completed).length > 0 && (
+          <div>
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+              <Sparkles className="w-5 h-5 text-indigo-600" />
+              <span>Available Challenges</span>
+            </h3>
+            <div className="grid gap-4">
+              {availableChallenges.filter(c => !c.joined && !c.completed).map((challenge) => {
+                const IconComponent = getIcon(challenge.icon);
+                const totalProgress = challenge.requirements.reduce((sum, req) => sum + req.current, 0);
+                const totalTarget = challenge.requirements.reduce((sum, req) => sum + req.target, 0);
+                const progressPercentage = totalTarget > 0 ? (totalProgress / totalTarget) * 100 : 0;
+                
+                return (
+                  <div
+                    key={challenge.id}
+                    className={`p-4 rounded-lg border border-${challenge.color}-200 bg-${challenge.color}-50 hover:bg-${challenge.color}-100 transition-all cursor-pointer`}
+                    onClick={() => setShowJoinModal(challenge.id)}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-10 h-10 bg-${challenge.color}-200 rounded-lg flex items-center justify-center`}>
+                          <IconComponent className={`w-5 h-5 text-${challenge.color}-700`} />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{challenge.title}</h4>
+                          <p className="text-sm text-gray-600">{challenge.description}</p>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className={`text-xs px-2 py-1 bg-${challenge.color}-200 text-${challenge.color}-800 rounded-full capitalize`}>
+                              {challenge.difficulty}
+                            </span>
+                            <span className="text-xs text-gray-500">•</span>
+                            <span className="text-xs text-gray-500">{challenge.category}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <div className={`text-lg font-bold text-${challenge.color}-600`}>
+                          +{challenge.rewards.xp} XP
+                        </div>
+                        <div className="text-xs text-gray-500">{challenge.rewards.badge}</div>
+                      </div>
+                    </div>
+
+                    {/* Progress Preview */}
+                    <div className="mb-3">
+                      <div className="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Current Progress</span>
+                        <span>{totalProgress}/{totalTarget}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`bg-${challenge.color}-500 h-2 rounded-full transition-all duration-500`}
+                          style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm text-${challenge.color}-700`}>
+                        {challenge.progressMessage}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowJoinModal(challenge.id);
+                        }}
+                        className={`px-4 py-2 bg-${challenge.color}-600 text-white rounded-lg hover:bg-${challenge.color}-700 transition-colors text-sm font-medium`}
+                      >
+                        Join Challenge
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Joined Challenges */}
+        {joinedChallenges.length > 0 && (
+          <div>
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+              <Target className="w-5 h-5 text-orange-600" />
+              <span>Your Active Challenges</span>
+            </h3>
+            <div className="space-y-4">
+              {joinedChallenges.map((challenge) => {
+                const IconComponent = getIcon(challenge.icon);
+                const totalProgress = challenge.requirements.reduce((sum, req) => sum + req.current, 0);
+                const totalTarget = challenge.requirements.reduce((sum, req) => sum + req.target, 0);
+                const progressPercentage = totalTarget > 0 ? (totalProgress / totalTarget) * 100 : 0;
+                const isCompleted = challenge.requirements.every(req => req.completed);
+                
+                return (
+                  <div
+                    key={challenge.id}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      isCompleted 
+                        ? `border-${challenge.color}-500 bg-${challenge.color}-50` 
+                        : `border-${challenge.color}-300 bg-white hover:bg-${challenge.color}-25`
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-10 h-10 bg-${challenge.color}-200 rounded-lg flex items-center justify-center`}>
+                          <IconComponent className={`w-5 h-5 text-${challenge.color}-700`} />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900 flex items-center space-x-2">
+                            <span>{challenge.title}</span>
+                            {isCompleted && <CheckCircle className="w-4 h-4 text-emerald-600" />}
+                          </h4>
+                          <p className="text-sm text-gray-600">{challenge.description}</p>
+                          {challenge.timeLimit && (
+                            <div className="flex items-center space-x-1 mt-1">
+                              <Timer className="w-3 h-3 text-gray-500" />
+                              <span className="text-xs text-gray-500">
+                                Ends {challenge.timeLimit.toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <button
+                        onClick={() => leaveChallenge(challenge.id)}
+                        className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                        title="Leave challenge"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Detailed Progress */}
+                    <div className="space-y-3 mb-4">
+                      {challenge.requirements.map((req, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-4 h-4 rounded-full ${
+                              req.completed ? `bg-${challenge.color}-500` : 'bg-gray-300'
+                            }`}>
+                              {req.completed && <CheckCircle className="w-4 h-4 text-white" />}
+                            </div>
+                            <span className="text-sm text-gray-700">{req.description}</span>
+                          </div>
+                          <span className={`text-sm font-medium ${
+                            req.completed ? `text-${challenge.color}-600` : 'text-gray-500'
+                          }`}>
+                            {req.current}/{req.target}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Overall Progress Bar */}
+                    <div className="mb-4">
+                      <div className="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Overall Progress</span>
+                        <span>{Math.round(progressPercentage)}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div 
+                          className={`bg-gradient-to-r from-${challenge.color}-500 to-${challenge.color}-600 h-3 rounded-full transition-all duration-500`}
+                          style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm text-${challenge.color}-700 font-medium`}>
+                        {challenge.progressMessage}
+                      </span>
+                      {isCompleted ? (
+                        <button
+                          onClick={() => claimReward(challenge.id)}
+                          className={`px-4 py-2 bg-gradient-to-r from-${challenge.color}-500 to-${challenge.color}-600 text-white rounded-lg hover:from-${challenge.color}-600 hover:to-${challenge.color}-700 transition-all font-medium`}
+                        >
+                          Claim Reward! 🎉
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setSelectedChallenge(challenge.id)}
+                          className={`px-4 py-2 border border-${challenge.color}-300 text-${challenge.color}-700 rounded-lg hover:bg-${challenge.color}-100 transition-colors text-sm`}
+                        >
+                          View Tips
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Completed Challenges */}
+        {completedChallenges.length > 0 && (
+          <div>
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+              <Award className="w-5 h-5 text-emerald-600" />
+              <span>Completed Challenges</span>
+              <span className="text-sm text-gray-500">({completedChallenges.length})</span>
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {completedChallenges.slice(0, 4).map((challenge) => {
+                const IconComponent = getIcon(challenge.icon);
+                
+                return (
+                  <div
+                    key={challenge.id}
+                    className="p-4 bg-emerald-50 rounded-lg border border-emerald-200"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-emerald-200 rounded-lg flex items-center justify-center">
+                        <IconComponent className="w-4 h-4 text-emerald-700" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900">{challenge.title}</h4>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <span className="text-xs text-emerald-700">{challenge.rewards.badge}</span>
+                          <span className="text-xs text-gray-500">•</span>
+                          <span className="text-xs text-gray-500">+{challenge.rewards.xp} XP</span>
+                        </div>
+                      </div>
+                      <CheckCircle className="w-5 h-5 text-emerald-600" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* No Challenges State */}
+        {availableChallenges.length === 0 && (
+          <div className="text-center py-8">
+            <Trophy className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Challenges Available</h3>
+            <p className="text-gray-600">
+              Create some memories to unlock exciting challenges!
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Join Challenge Modal */}
+      {showJoinModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl max-w-md w-full p-6">
             {(() => {
-              const challenge = challenges.find(c => c.id === activeChallenge);
+              const challenge = challenges.find(c => c.id === showJoinModal);
               if (!challenge) return null;
               
-              const IconComponent = challenge.icon;
+              const IconComponent = getIcon(challenge.icon);
               
               return (
                 <>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-12 h-12 bg-${challenge.color}-100 rounded-lg flex items-center justify-center`}>
-                        <IconComponent className={`w-6 h-6 text-${challenge.color}-600`} />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{challenge.title}</h3>
-                        <p className="text-sm text-gray-600 capitalize">{challenge.difficulty} • {challenge.type}</p>
-                      </div>
+                  <div className="text-center mb-6">
+                    <div className={`w-16 h-16 bg-${challenge.color}-100 rounded-xl flex items-center justify-center mx-auto mb-4`}>
+                      <IconComponent className={`w-8 h-8 text-${challenge.color}-600`} />
                     </div>
-                    <button
-                      onClick={() => setActiveChallenge(null)}
-                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      ×
-                    </button>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{challenge.title}</h3>
+                    <p className="text-gray-600">{challenge.description}</p>
                   </div>
 
-                  <p className="text-gray-700 mb-4">{challenge.description}</p>
-
-                  <div className="space-y-4">
+                  <div className="space-y-4 mb-6">
                     <div>
                       <h4 className="font-medium text-gray-900 mb-2">Requirements</h4>
                       <div className="space-y-2">
                         {challenge.requirements.map((req, index) => (
                           <div key={index} className="flex items-center space-x-2">
-                            <CheckCircle className={`w-4 h-4 ${
-                              challenge.progress > index ? `text-${challenge.color}-600` : 'text-gray-300'
-                            }`} />
-                            <span className="text-sm text-gray-700">{req}</span>
+                            <Target className={`w-4 h-4 text-${challenge.color}-600`} />
+                            <span className="text-sm text-gray-700">{req.description}</span>
                           </div>
                         ))}
                       </div>
@@ -397,44 +459,57 @@ const ProgressiveChallenges: React.FC = () => {
 
                     <div>
                       <h4 className="font-medium text-gray-900 mb-2">Rewards</h4>
-                      <div className="space-y-1">
-                        {challenge.rewards.map((reward, index) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <Star className={`w-4 h-4 text-${challenge.color}-600`} />
-                            <span className="text-sm text-gray-700">{reward}</span>
-                          </div>
-                        ))}
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-1">
+                          <Zap className={`w-4 h-4 text-${challenge.color}-600`} />
+                          <span className="text-sm text-gray-700">+{challenge.rewards.xp} XP</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Award className={`w-4 h-4 text-${challenge.color}-600`} />
+                          <span className="text-sm text-gray-700">{challenge.rewards.badge}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-200">
-                      <div className="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Progress</span>
-                        <span>{challenge.progress}/{challenge.maxProgress}</span>
+                    {challenge.tips.length > 0 && (
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Tips for Success</h4>
+                        <div className="space-y-1">
+                          {challenge.tips.map((tip, index) => (
+                            <div key={index} className="flex items-start space-x-2">
+                              <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+                              <span className="text-sm text-gray-600">{tip}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div 
-                          className={`bg-${challenge.color}-500 h-3 rounded-full transition-all duration-500`}
-                          style={{ width: `${(challenge.progress / challenge.maxProgress) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {challenge.completed ? (
-                      <button
-                        onClick={() => claimReward(challenge.id)}
-                        className={`w-full px-4 py-3 bg-${challenge.color}-600 text-white rounded-lg hover:bg-${challenge.color}-700 transition-colors`}
-                      >
-                        Claim Rewards
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setActiveChallenge(null)}
-                        className="w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        Continue Training
-                      </button>
                     )}
+
+                    {challenge.timeLimit && (
+                      <div className={`p-3 bg-${challenge.color}-50 rounded-lg border border-${challenge.color}-200`}>
+                        <div className="flex items-center space-x-2">
+                          <Clock className={`w-4 h-4 text-${challenge.color}-600`} />
+                          <span className={`text-sm text-${challenge.color}-800`}>
+                            Challenge ends: {challenge.timeLimit.toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => setShowJoinModal(null)}
+                      className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Maybe Later
+                    </button>
+                    <button
+                      onClick={() => handleJoinChallenge(challenge.id)}
+                      className={`flex-1 px-4 py-3 bg-${challenge.color}-600 text-white rounded-lg hover:bg-${challenge.color}-700 transition-colors font-medium`}
+                    >
+                      Join Challenge!
+                    </button>
                   </div>
                 </>
               );
@@ -443,41 +518,125 @@ const ProgressiveChallenges: React.FC = () => {
         </div>
       )}
 
-      {/* Level Progress */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <Trophy className="w-5 h-5 text-indigo-600" />
-            <span className="font-medium text-indigo-900">Memory Training Level {userLevel}</span>
-          </div>
-          <div className="text-sm text-indigo-700">{totalXP} XP</div>
-        </div>
-        
-        <div className="w-full bg-indigo-200 rounded-full h-2 mb-2">
-          <div 
-            className="bg-indigo-600 h-2 rounded-full transition-all duration-500"
-            style={{ width: `${((totalXP % 100) / 100) * 100}%` }}
-          />
-        </div>
-        
-        <div className="flex justify-between text-xs text-indigo-600">
-          <span>Level {userLevel}</span>
-          <span>{getNextXPLevel()} XP to Level {userLevel + 1}</span>
-        </div>
-      </div>
+      {/* Challenge Tips Modal */}
+      {selectedChallenge && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6">
+            {(() => {
+              const challenge = challenges.find(c => c.id === selectedChallenge);
+              if (!challenge) return null;
+              
+              const IconComponent = getIcon(challenge.icon);
+              
+              return (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 bg-${challenge.color}-100 rounded-lg flex items-center justify-center`}>
+                        <IconComponent className={`w-5 h-5 text-${challenge.color}-600`} />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">{challenge.title}</h3>
+                        <p className="text-sm text-gray-600">Tips & Strategy</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setSelectedChallenge(null)}
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
 
-      {/* Research Context */}
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="flex items-center space-x-2 mb-2">
-          <Brain className="w-4 h-4 text-blue-600" />
-          <span className="font-medium text-blue-900">Cognitive Science</span>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Success Tips</h4>
+                      <div className="space-y-2">
+                        {challenge.tips.map((tip, index) => (
+                          <div key={index} className={`p-3 bg-${challenge.color}-50 rounded-lg border border-${challenge.color}-200`}>
+                            <div className="flex items-start space-x-2">
+                              <div className={`w-5 h-5 bg-${challenge.color}-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                                <span className={`text-xs font-bold text-${challenge.color}-700`}>{index + 1}</span>
+                              </div>
+                              <span className="text-sm text-gray-700">{tip}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm text-${challenge.color}-700 font-medium`}>
+                          {challenge.progressMessage}
+                        </span>
+                        <button
+                          onClick={() => setSelectedChallenge(null)}
+                          className={`px-4 py-2 bg-${challenge.color}-600 text-white rounded-lg hover:bg-${challenge.color}-700 transition-colors`}
+                        >
+                          Got it!
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         </div>
-        <p className="text-sm text-blue-800">
-          Progressive challenges are designed around the concept of "desirable difficulties" - 
-          optimal challenge levels that promote learning without overwhelming cognitive resources. 
-          Each challenge builds specific memory skills while maintaining motivation through achievement.
-        </p>
-      </div>
+      )}
+
+      {/* Celebration Modal */}
+      {celebrationChallenge && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 text-center">
+            {(() => {
+              const challenge = challenges.find(c => c.id === celebrationChallenge);
+              if (!challenge) return null;
+              
+              return (
+                <>
+                  <div className="mb-6">
+                    <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Trophy className="w-10 h-10 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Challenge Complete! 🎉</h3>
+                    <p className="text-gray-600">You've successfully completed "{challenge.title}"</p>
+                  </div>
+
+                  <div className="space-y-4 mb-6">
+                    <div className={`p-4 bg-${challenge.color}-50 rounded-lg border border-${challenge.color}-200`}>
+                      <h4 className="font-medium text-gray-900 mb-2">Your Rewards</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-center space-x-2">
+                          <Zap className={`w-5 h-5 text-${challenge.color}-600`} />
+                          <span className="font-bold text-lg">+{challenge.rewards.xp} XP</span>
+                        </div>
+                        <div className="text-2xl">{challenge.rewards.badge}</div>
+                        {challenge.rewards.unlocks && (
+                          <div className="text-sm text-gray-600">
+                            Unlocked: {challenge.rewards.unlocks.join(', ')}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      claimReward(challenge.id);
+                      setCelebrationChallenge(null);
+                    }}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all font-medium"
+                  >
+                    Claim Rewards! 🎁
+                  </button>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
