@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, Brain, Target, Award, Calendar, Clock, Eye, Lightbulb } from 'lucide-react';
+import { TrendingUp, Brain, Target, Award, Calendar, Clock, Eye, Lightbulb, CheckCircle } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 
 const MemoryInsights: React.FC = () => {
