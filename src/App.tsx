@@ -14,6 +14,7 @@ import { ChallengeProvider } from './contexts/ChallengeContext';
 import MemoryInsights from './components/MemoryInsights';
 import AdminDashboard from './components/AdminDashboard';
 import AdminAuth from './components/AdminAuth';
+import ADHDDashboard from './components/ADHDDashboard';
 import { supabase } from './lib/supabase';
 
 function App() {
@@ -237,6 +238,7 @@ function App() {
                   <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
                   <Route path="/training" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
                   <Route path="/insights" element={<InsightsPage />} />
+                  <Route path="/adhd" element={<ADHDDashboard onBack={() => navigate('/')} />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>
@@ -251,7 +253,7 @@ function App() {
                     { path: '/', icon: Home, label: 'Home' },
                     { path: '/weave', icon: Plus, label: 'Weave' },
                     { path: '/scenario', icon: Calendar, label: 'Future' },
-                    { path: '/retrieval', icon: BarChart3, label: 'Train' },
+                    { path: '/training', icon: BarChart3, label: 'Train' },
                     { path: '/insights', icon: TrendingUp, label: 'Insights' },
                   ].map(({ path, icon: Icon, label }) => (
                     <button

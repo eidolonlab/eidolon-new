@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users } from 'lucide-react';
+import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import { useChallenge } from '../contexts/ChallengeContext';
 import DailyMemoryMoments from './DailyMemoryMoments';
@@ -7,7 +7,7 @@ import ProgressiveChallenges from './ProgressiveChallenges';
 import RealWorldImpactTracker from './RealWorldImpactTracker';
 
 interface DashboardProps {
-  onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights') => void;
+  onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
@@ -122,7 +122,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       </div>
 
       {/* Core Actions - Simplified */}
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-4 gap-6">
         <button
           onClick={() => onNavigate('weave')}
           className="group bg-white border-2 border-gray-200 hover:border-indigo-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg"
@@ -163,6 +163,20 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Training</h3>
           <p className="text-gray-600 text-left">Practice spaced recall to strengthen your memories</p>
+        </button>
+        
+        <button
+          onClick={() => onNavigate('adhd')}
+          className="group bg-white border-2 border-gray-200 hover:border-blue-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+              <Shield className="w-6 h-6 text-blue-600" />
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">ADHD Support</h3>
+          <p className="text-gray-600 text-left">Build focus, working memory, and executive function</p>
         </button>
       </div>
 
