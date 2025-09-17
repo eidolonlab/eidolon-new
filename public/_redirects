@@ -1,0 +1,9 @@
+# Netlify redirects for SPA
+/*    /index.html   200
+
+# Force HTTPS
+http://tryeidolon.com/*    https://tryeidolon.com/:splat    301!
+http://www.tryeidolon.com/*    https://tryeidolon.com/:splat    301!
+
+# Redirect www to non-www
+https://www.tryeidolon.com/*    https://tryeidolon.com/:splat    301!
