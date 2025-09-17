@@ -75,6 +75,7 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
   const handleDemoAccess = () => {
     // Demo bypass for when Supabase is not configured
     localStorage.setItem('eidolon-admin-demo', 'true');
+    localStorage.setItem('eidolon-admin-authenticated', 'true');
     onAuthSuccess();
   };
 

@@ -24,7 +24,8 @@ const AdminDashboard: React.FC = () => {
       
       // Check if we're in demo mode
       const demoAccess = localStorage.getItem('eidolon-admin-demo');
-      if (demoAccess === 'true') {
+      const demoAuth = localStorage.getItem('eidolon-admin-authenticated');
+      if (demoAccess === 'true' && demoAuth === 'true') {
         // Load demo data instead of making API calls
         setStats({
           total_users: 1247,

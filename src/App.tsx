@@ -38,7 +38,8 @@ function App() {
     try {
       // Check for demo admin access first
       const demoAccess = localStorage.getItem('eidolon-admin-demo');
-      if (demoAccess === 'true') {
+      const demoAuth = localStorage.getItem('eidolon-admin-authenticated');
+      if (demoAccess === 'true' && demoAuth === 'true') {
         setIsAuthenticated(true);
         setIsAdmin(true);
         setCheckingAuth(false);
