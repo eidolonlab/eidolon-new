@@ -361,7 +361,7 @@ const HabitFormation: React.FC = () => {
                     Mark Complete
                   </button>
                 </div>
-              )}
+              <p><strong>Consistency &gt; Perfection:</strong> Missing one day doesn't break habit formation if you get back on track quickly.</p>
             </div>
           );
         })}
