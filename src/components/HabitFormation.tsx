@@ -361,7 +361,7 @@ const HabitFormation: React.FC = () => {
                     Mark Complete
                   </button>
                 </div>
-              <p><strong>Consistency &gt; Perfection:</strong> Missing one day doesn't break habit formation if you get back on track quickly.</p>
+              )}
             </div>
           );
         })}
@@ -409,7 +409,7 @@ const HabitFormation: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-4 text-sm text-blue-800">
           <div>
             <p className="mb-2"><strong>21-Day Myth:</strong> Research shows habits actually take 18-254 days to form, with an average of 66 days.</p>
-            <p><strong>Consistency > Perfection:</strong> Missing one day doesn't break habit formation if you get back on track quickly.</p>
+            <p><strong>Consistency &gt; Perfection:</strong> Missing one day doesn't break habit formation if you get back on track quickly.</p>
           </div>
           <div>
             <p className="mb-2"><strong>Cue-Routine-Reward:</strong> Habits form through consistent cue-behavior-reward loops.</p>
