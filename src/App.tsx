@@ -171,9 +171,9 @@ function App() {
                       Scenarios
                     </button>
                     <button
-                      onClick={() => navigate('/retrieval')}
+                      onClick={() => navigate('/training')}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        currentPath === '/retrieval'
+                        currentPath === '/training'
                           ? 'bg-indigo-100 text-indigo-700'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                       }`}
@@ -227,7 +227,7 @@ function App() {
                 <Route path="/" element={<Dashboard onNavigate={(view) => navigate(`/${view}`)} />} />
                 <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
                 <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
-                <Route path="/retrieval" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
+                <Route path="/training" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

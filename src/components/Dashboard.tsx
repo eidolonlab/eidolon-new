@@ -66,7 +66,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </button>
 
         <button
-          onClick={() => onNavigate('retrieval')}
+          onClick={() => onNavigate('training')}
           className="group bg-gradient-to-br from-orange-500 to-red-600 text-white p-6 rounded-2xl hover:from-orange-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105"
         >
           <div className="flex items-center justify-between mb-4">
