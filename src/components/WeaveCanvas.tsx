@@ -7,6 +7,7 @@ import InteractiveCueEngine from './InteractiveCueEngine';
 import SmartNarrativeBuilder from './SmartNarrativeBuilder';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
 import ContextualHintEngine from './ContextualHintEngine';
+import SimplifiedWeaveFlow from './SimplifiedWeaveFlow';
 
 interface WeaveCanvasProps {
   onBack: () => void;
@@ -37,6 +38,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const [showLiveAnalyzer, setShowLiveAnalyzer] = useState(true);
   const [showContextualHints, setShowContextualHints] = useState(true);
   const [aiInteractionCount, setAiInteractionCount] = useState(0);
+  const [useSimplifiedFlow, setUseSimplifiedFlow] = useState(true);
 
   const sensoryPrompts = {
     visual: [
@@ -118,6 +120,40 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
     onBack();
   };
 
+  // If using simplified flow, render that instead
+  if (useSimplifiedFlow) {
+    return (
+      <div className="min-h-screen">
+        <div className="flex items-center justify-between mb-8">
+          <button
+            onClick={onBack}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to Dashboard</span>
+          </button>
+          
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setUseSimplifiedFlow(false)}
+              className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Advanced Mode
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Create Memory Weave</h1>
+          </div>
+        </div>
+        
+        <SimplifiedWeaveFlow
+          onComplete={(weave) => {
+            console.log('Weave completed:', weave);
+            onBack();
+          }}
+          onCancel={onBack}
+        />
+      </div>
+    );
+  }
   const renderStepContent = () => {
     switch (step) {
       case 1:

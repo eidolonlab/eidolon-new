@@ -2,6 +2,7 @@ import React from 'react';
 import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import MemoryInsights from './MemoryInsights';
+import PMARDashboard from './PMARDashboard';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'retrieval') => void;
@@ -176,8 +177,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
             <span className="text-2xl font-bold text-gray-900">{metrics.avgCoherenceScore}</span>
           </div>
-          <h4 className="font-semibold text-gray-900 mb-1">Coherence Score</h4>
-          <p className="text-sm text-gray-600">Average narrative quality</p>
+          <h4 className="font-semibold text-gray-900 mb-1">NCS Score</h4>
+          <p className="text-sm text-gray-600">Narrative Coherence/Specificity</p>
         </div>
 
         <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
@@ -190,7 +191,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </span>
           </div>
           <h4 className="font-semibold text-gray-900 mb-1">Recall Speed</h4>
-          <p className="text-sm text-gray-600">Average retrieval time</p>
+          <p className="text-sm text-gray-600">Clinical retrieval speed metric</p>
         </div>
 
         <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
@@ -200,10 +201,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
             <span className="text-2xl font-bold text-gray-900">{metrics.completionRate}%</span>
           </div>
-          <h4 className="font-semibold text-gray-900 mb-1">Follow-Through</h4>
-          <p className="text-sm text-gray-600">Scenario completion rate</p>
+          <h4 className="font-semibold text-gray-900 mb-1">PMAR</h4>
+          <p className="text-sm text-gray-600">Prospective Memory Adherence Rate</p>
         </div>
       </div>
+      
+      {/* PMAR Dashboard */}
+      <PMARDashboard />
 
       {/* Recent Activity */}
       <div className="grid md:grid-cols-2 gap-8">

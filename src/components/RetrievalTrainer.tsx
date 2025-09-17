@@ -4,6 +4,7 @@ import { useWeave } from '../contexts/WeaveContext';
 import ErrorlessMode from './ErrorlessMode';
 import InteractiveRetrievalCoach from './InteractiveRetrievalCoach';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
+import RecallLatencyTimer from './RecallLatencyTimer';
 
 interface RetrievalTrainerProps {
   onBack: () => void;
@@ -23,6 +24,7 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
     detailsRecalled: number;
     accuracy: number;
   } | null>(null);
+  const [recallLatency, setRecallLatency] = useState<number | null>(null);
 
   const availableWeaves = weaves.filter(w => w.type === 'past' && w.narrative.length > 0);
   const selectedWeave = currentWeave ? weaves.find(w => w.id === currentWeave) : null;
@@ -222,6 +224,17 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                   <h2 className="text-xl font-bold text-gray-900 mb-2">Recall in Progress</h2>
                   <p className="text-gray-600">Memory: <strong>{selectedWeave.title}</strong></p>
                   <p className="text-sm text-gray-500 mt-2">Seed: "{selectedWeave.seed}"</p>
+                </div>
+                
+                {/* Clinical Recall Latency Timer */}
+                <div className="max-w-md mx-auto">
+                  <RecallLatencyTimer
+                    onComplete={(latencyMs) => {
+                      setRecallLatency(latencyMs);
+                      console.log('Recall latency recorded:', latencyMs);
+                    }}
+                    isActive={true}
+                  />
                 </div>
 
                 <div className="max-w-2xl mx-auto">
