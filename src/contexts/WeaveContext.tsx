@@ -84,7 +84,7 @@ export const useWeave = () => {
 export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [weaves, setWeaves] = useState<Weave[]>([]);
   const [retrievalSessions, setRetrievalSessions] = useState<RetrievalSession[]>([]);
-  const { trackEvent } = useSupabaseSync();
+  const { trackEvent } = useSupabaseSync(weaves, retrievalSessions);
 
   // Load data from localStorage on mount
   useEffect(() => {

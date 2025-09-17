@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase, userAPI } from '../lib/supabase';
-import { useWeave } from '../contexts/WeaveContext';
+import { Weave, RetrievalSession } from '../contexts/WeaveContext';
 
 interface SyncStatus {
   isConnected: boolean;
@@ -9,8 +9,7 @@ interface SyncStatus {
   lastSync: Date | null;
 }
 
-export const useSupabaseSync = () => {
-  const { weaves, retrievalSessions } = useWeave();
+export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSession[]) => {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({
     isConnected: false,
     userHash: null,
