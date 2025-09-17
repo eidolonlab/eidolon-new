@@ -117,13 +117,16 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
       errorlessMode,
       difficultyLevel,
       ifThenPlans: weaveType === 'future' ? [] : undefined,
-      scheduledFor: weaveType === 'future' ? undefined : undefined,
+      scheduledFor: weaveType === 'future' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : undefined, // Default to 1 week from now
       completed: false,
       cues: tempCues,
       bridgeData: tempBridgeData,
     };
 
     addWeave(newWeave);
+    
+    // Show success message
+    alert(`${weaveType === 'past' ? 'Memory weave' : 'Future scenario'} "${title}" has been saved successfully!`);
     onBack();
   };
 

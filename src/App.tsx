@@ -24,6 +24,9 @@ function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   const currentPath = location.pathname;
+  
+  // Debug logging
+  console.log('App - Current path:', currentPath);
 
   // Check admin status
   useEffect(() => {

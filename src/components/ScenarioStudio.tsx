@@ -86,6 +86,9 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
       ifThenPlans: [''],
       narrative: '',
     });
+    
+    // Show success message
+    alert(`Future scenario "${formData.title}" has been created successfully!`);
     setShowCreateForm(false);
   };
 

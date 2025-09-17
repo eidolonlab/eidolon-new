@@ -12,6 +12,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const { weaves, getMetrics } = useWeave();
   const metrics = getMetrics();
   
+  console.log('Dashboard - Current weaves:', weaves);
+  console.log('Dashboard - Metrics:', metrics);
+  
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
     .filter(w => w.type === 'future' && !w.completed && w.scheduledFor)
@@ -22,8 +25,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      year: 'numeric',
     }).format(date);
   };
 

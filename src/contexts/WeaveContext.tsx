@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSupabaseSync } from '../hooks/useSupabaseSync';
+import { createSampleWeaves, createSampleRetrievalSessions } from '../utils/sampleData';
 
 export interface Weave {
   id: string;
@@ -98,6 +99,11 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         scheduledFor: w.scheduledFor ? new Date(w.scheduledFor) : undefined,
       }));
       setWeaves(parsedWeaves);
+    } else {
+      // Load sample data if no saved data exists
+      const sampleWeaves = createSampleWeaves();
+      setWeaves(sampleWeaves);
+      localStorage.setItem('eidolon-weaves', JSON.stringify(sampleWeaves));
     }
     
     if (savedSessions) {
@@ -107,6 +113,11 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         endTime: s.endTime ? new Date(s.endTime) : undefined,
       }));
       setRetrievalSessions(parsedSessions);
+    } else {
+      // Load sample sessions if no saved data exists
+      const sampleSessions = createSampleRetrievalSessions();
+      setRetrievalSessions(sampleSessions);
+      localStorage.setItem('eidolon-sessions', JSON.stringify(sampleSessions));
     }
   }, []);
 
@@ -141,6 +152,9 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
     
     setWeaves(prev => [newWeave, ...prev]);
+    
+    console.log('Weave added:', newWeave);
+    console.log('Total weaves now:', weaves.length + 1);
     
     // Track weave creation
     trackEvent('weave_created', {

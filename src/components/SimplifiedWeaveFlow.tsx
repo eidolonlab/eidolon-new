@@ -106,6 +106,9 @@ const SimplifiedWeaveFlow: React.FC<SimplifiedWeaveFlowProps> = ({ onComplete, o
     };
 
     addWeave(newWeave);
+    
+    // Show success message
+    alert(`Memory weave "${newWeave.title}" has been saved successfully!`);
     onComplete(newWeave);
   };
 

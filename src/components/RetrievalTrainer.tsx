@@ -75,6 +75,9 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
       accuracy: results.accuracy,
       difficulty: latencyMs < 10000 ? 'easy' : latencyMs < 30000 ? 'medium' : 'hard',
     });
+    
+    console.log('Retrieval session completed:', results);
+    console.log('Session saved for weave:', selectedWeave.title);
   };
 
   const resetSession = () => {
