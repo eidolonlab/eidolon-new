@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import WeaveCanvas from './components/WeaveCanvas';
@@ -14,14 +15,15 @@ import AdminDashboard from './components/AdminDashboard';
 import AdminAuth from './components/AdminAuth';
 import { supabase } from './lib/supabase';
 
-type View = 'dashboard' | 'weave' | 'scenario' | 'retrieval' | 'insights' | 'settings' | 'admin';
-
 function App() {
-  const [currentView, setCurrentView] = useState<View>('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showSettings, setShowSettings] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+
+  const currentPath = location.pathname;
 
   // Check admin status
   useEffect(() => {
@@ -59,60 +61,68 @@ function App() {
     checkAdminStatus();
   };
 
-  // Show admin auth if trying to access admin and not authenticated
-  if (currentView === 'admin' && !isAuthenticated && !checkingAuth) {
-    return <AdminAuth onAuthSuccess={handleAuthSuccess} />;
-  }
+  // Admin route component
+  const AdminRoute = () => {
+    // Show loading while checking auth
+    if (checkingAuth) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-lg text-gray-600">Checking authentication...</span>
+          </div>
+        </div>
+      );
+    }
 
-  // Show loading while checking auth
-  if (checkingAuth && currentView === 'admin') {
+    // Show admin auth if not authenticated
+    if (!isAuthenticated) {
+      return <AdminAuth onAuthSuccess={handleAuthSuccess} />;
+    }
+
+    // Show admin dashboard if authenticated and is admin
+    if (isAdmin) {
+      return <AdminDashboard />;
+    }
+
+    // Access denied if authenticated but not admin
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex items-center space-x-3">
-          <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-lg text-gray-600">Checking authentication...</span>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600">You don't have admin privileges.</p>
         </div>
       </div>
     );
-  }
-  const renderView = () => {
-    switch (currentView) {
-      case 'dashboard':
-        return <Dashboard onNavigate={setCurrentView} />;
-      case 'weave':
-        return <WeaveCanvas onBack={() => setCurrentView('dashboard')} />;
-      case 'scenario':
-        return <ScenarioStudio onBack={() => setCurrentView('dashboard')} />;
-      case 'retrieval':
-        return <RetrievalTrainer onBack={() => setCurrentView('dashboard')} />;
-      case 'insights':
-        return (
-          <div className="space-y-8">
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => setCurrentView('dashboard')}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                <span>Back to Dashboard</span>
-              </button>
-              <h1 className="text-2xl font-bold text-gray-900">Memory Insights</h1>
-            </div>
-            <MemoryInsights />
-          </div>
-        );
-      case 'admin':
-        return isAdmin ? <AdminDashboard /> : (
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-              <p className="text-gray-600">You don't have admin privileges.</p>
-            </div>
-          </div>
-        );
-      default:
-        return <Dashboard onNavigate={setCurrentView} />;
-    }
+  };
+
+  const InsightsPage = () => (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to Dashboard</span>
+        </button>
+        <h1 className="text-2xl font-bold text-gray-900">Memory Insights</h1>
+      </div>
+      <MemoryInsights />
+    </div>
+  );
+
+  const isAdminRoute = currentPath === '/admin';
+
+  // Don't show main layout for admin route
+  if (isAdminRoute) {
+    return (
+      <WeaveProvider>
+        <Routes>
+          <Route path="/admin" element={<AdminRoute />} />
+        </Routes>
+      </WeaveProvider>
+    );
   };
 
   return (
@@ -135,9 +145,9 @@ function App() {
               {/* Navigation */}
               <nav className="hidden md:flex items-center space-x-1">
                 <button
-                  onClick={() => setCurrentView('dashboard')}
+                  onClick={() => navigate('/')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentView === 'dashboard'
+                    currentPath === '/'
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
@@ -146,9 +156,9 @@ function App() {
                   Dashboard
                 </button>
                 <button
-                  onClick={() => setCurrentView('weave')}
+                  onClick={() => navigate('/weave')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentView === 'weave'
+                    currentPath === '/weave'
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
@@ -157,9 +167,9 @@ function App() {
                   New Weave
                 </button>
                 <button
-                  onClick={() => setCurrentView('scenario')}
+                  onClick={() => navigate('/scenario')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentView === 'scenario'
+                    currentPath === '/scenario'
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
@@ -168,9 +178,9 @@ function App() {
                   Scenarios
                 </button>
                 <button
-                  onClick={() => setCurrentView('retrieval')}
+                  onClick={() => navigate('/retrieval')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentView === 'retrieval'
+                    currentPath === '/retrieval'
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
@@ -179,9 +189,9 @@ function App() {
                   Training
                 </button>
                 <button
-                  onClick={() => setCurrentView('insights')}
+                  onClick={() => navigate('/insights')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentView === 'insights'
+                    currentPath === '/insights'
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
@@ -202,9 +212,9 @@ function App() {
                 </button>
                 {isAdmin && (
                   <button
-                    onClick={() => setCurrentView('admin')}
+                    onClick={() => navigate('/admin')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentView === 'admin'
+                      currentPath === '/admin'
                         ? 'bg-red-100 text-red-700'
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
@@ -220,7 +230,14 @@ function App() {
 
         {/* Main Content */}
         <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
-          {renderView()}
+          <Routes>
+            <Route path="/" element={<Dashboard onNavigate={(view) => navigate(`/${view}`)} />} />
+            <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
+            <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
+            <Route path="/retrieval" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
+            <Route path="/insights" element={<InsightsPage />} />
+            <Route path="/admin" element={<AdminRoute />} />
+          </Routes>
         </main>
         
         {/* Legal Footer */}
@@ -230,17 +247,17 @@ function App() {
         <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
           <div className="flex items-center justify-around py-2">
             {[
-              { id: 'dashboard', icon: Home, label: 'Home' },
-              { id: 'weave', icon: Plus, label: 'Weave' },
-              { id: 'scenario', icon: Calendar, label: 'Future' },
-              { id: 'retrieval', icon: BarChart3, label: 'Train' },
-              { id: 'insights', icon: TrendingUp, label: 'Insights' },
-            ].map(({ id, icon: Icon, label }) => (
+              { path: '/', icon: Home, label: 'Home' },
+              { path: '/weave', icon: Plus, label: 'Weave' },
+              { path: '/scenario', icon: Calendar, label: 'Future' },
+              { path: '/retrieval', icon: BarChart3, label: 'Train' },
+              { path: '/insights', icon: TrendingUp, label: 'Insights' },
+            ].map(({ path, icon: Icon, label }) => (
               <button
-                key={id}
-                onClick={() => setCurrentView(id as View)}
+                key={path}
+                onClick={() => navigate(path)}
                 className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
-                  currentView === id
+                  currentPath === path
                     ? 'text-indigo-600'
                     : 'text-gray-600'
                 }`}
