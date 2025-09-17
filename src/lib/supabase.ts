@@ -118,9 +118,10 @@ export const userAPI = {
     // Generate a privacy-preserving hash for the user
     const userHash = await generateUserHash();
     
+    // First try to insert a new user
     const { data, error } = await supabase
       .from('users')
-      .upsert({
+      .insert({
         ...userData,
         user_hash: userHash,
         last_active: new Date().toISOString()
