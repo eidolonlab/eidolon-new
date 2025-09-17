@@ -22,6 +22,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [adminDemoMode, setAdminDemoMode] = useState(false);
 
   const currentPath = location.pathname;
   
@@ -36,10 +37,9 @@ function App() {
   const checkAdminStatus = async () => {
     setCheckingAuth(true);
     try {
-      // Check for demo admin access first
-      const demoAccess = localStorage.getItem('eidolon-admin-demo');
-      const demoAuth = localStorage.getItem('eidolon-admin-authenticated');
-      if (demoAccess === 'true' && demoAuth === 'true') {
+      // For admin routes, always allow demo access
+      if (currentPath === '/admin') {
+        setAdminDemoMode(true);
         setIsAuthenticated(true);
         setIsAdmin(true);
         setCheckingAuth(false);
@@ -92,37 +92,8 @@ function App() {
 
   // Admin route component
   const AdminRoute = () => {
-    // Show loading while checking auth
-    if (checkingAuth) {
-      return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="flex items-center space-x-3">
-            <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-lg text-gray-600">Checking authentication...</span>
-          </div>
-        </div>
-      );
-    }
-
-    // Show admin auth if not authenticated
-    if (!isAuthenticated) {
-      return <AdminAuth onAuthSuccess={handleAuthSuccess} />;
-    }
-
-    // Show admin dashboard if authenticated and is admin
-    if (isAdmin) {
-      return <AdminDashboard />;
-    }
-
-    // Access denied if authenticated but not admin
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-          <p className="text-gray-600">You don't have admin privileges.</p>
-        </div>
-      </div>
-    );
+    // Always show admin dashboard for demo purposes
+    return <AdminDashboard />;
   };
 
   return (
