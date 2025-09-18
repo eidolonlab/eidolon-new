@@ -5,6 +5,7 @@ import ErrorlessMode from './ErrorlessMode';
 import InteractiveRetrievalCoach from './InteractiveRetrievalCoach';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
 import RecallLatencyTimer from './RecallLatencyTimer';
+import AdaptiveRetrievalSystem from './AdaptiveRetrievalSystem';
 
 interface RetrievalTrainerProps {
   onBack: () => void;
@@ -25,6 +26,16 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
     accuracy: number;
   } | null>(null);
   const [recallLatency, setRecallLatency] = useState<number | null>(null);
+  const [sessionHistory, setSessionHistory] = useState<any[]>([]);
+
+  // Load session history for adaptive coaching
+  useEffect(() => {
+    const savedSessions = localStorage.getItem('eidolon-sessions');
+    if (savedSessions) {
+      const sessions = JSON.parse(savedSessions);
+      setSessionHistory(sessions.slice(0, 20)); // Last 20 sessions for analysis
+    }
+  }, []);
 
   const availableWeaves = weaves.filter(w => w.type === 'past' && w.narrative.length > 0);
   const selectedWeave = currentWeave ? weaves.find(w => w.id === currentWeave) : null;
@@ -269,11 +280,19 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                   {/* Interactive Coaching */}
                   {showCoach && selectedWeave && (
                     <div className="mt-4">
-                      <InteractiveRetrievalCoach
+                      <AdaptiveRetrievalSystem
                         weave={selectedWeave}
                         userResponse={userResponse}
-                        onHintRequest={() => {}}
-                        onEncouragement={setEncouragementMessage}
+                        sessionHistory={sessionHistory}
+                        onHint={(hint, hintType) => {
+                          setEncouragementMessage(hint);
+                        }}
+                        onEncouragement={(message, motivationType) => {
+                          setEncouragementMessage(message);
+                        }}
+                        onDifficultyAdjustment={(newDifficulty) => {
+                          console.log('Difficulty adjusted to:', newDifficulty);
+                        }}
                       />
                     </div>
                   )}

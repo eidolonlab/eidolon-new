@@ -8,6 +8,8 @@ import SmartNarrativeBuilder from './SmartNarrativeBuilder';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
 import ContextualHintEngine from './ContextualHintEngine';
 import SimplifiedWeaveFlow from './SimplifiedWeaveFlow';
+import AdaptiveMemoryCoach from './AdaptiveMemoryCoach';
+import PerfectMemoryFlow from './PerfectMemoryFlow';
 
 interface WeaveCanvasProps {
   onBack: () => void;
@@ -44,6 +46,17 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
     factualAnchors: [],
     peopleInvolved: [],
   });
+  const [userMemoryHistory, setUserMemoryHistory] = useState<any[]>([]);
+  const [usePerfectFlow, setUsePerfectFlow] = useState(false);
+
+  // Load user history for adaptive coaching
+  useEffect(() => {
+    const savedWeaves = localStorage.getItem('eidolon-weaves');
+    if (savedWeaves) {
+      const weaves = JSON.parse(savedWeaves);
+      setUserMemoryHistory(weaves.slice(0, 10)); // Last 10 memories for pattern analysis
+    }
+  }, []);
 
   const sensoryPrompts = {
     visual: [
@@ -150,17 +163,33 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             >
               Advanced Mode
             </button>
+            <button
+              onClick={() => setUsePerfectFlow(true)}
+              className="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Perfect Flow
+            </button>
             <h1 className="text-2xl font-bold text-gray-900">Create Memory Weave</h1>
           </div>
         </div>
         
-        <SimplifiedWeaveFlow
-          onComplete={(weave) => {
-            console.log('Weave completed:', weave);
-            onBack();
-          }}
-          onCancel={onBack}
-        />
+        {usePerfectFlow ? (
+          <PerfectMemoryFlow
+            onComplete={(weave) => {
+              console.log('Perfect weave completed:', weave);
+              onBack();
+            }}
+            onCancel={onBack}
+          />
+        ) : (
+          <SimplifiedWeaveFlow
+            onComplete={(weave) => {
+              console.log('Weave completed:', weave);
+              onBack();
+            }}
+            onCancel={onBack}
+          />
+        )}
       </div>
     );
   }
@@ -416,12 +445,18 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             {/* Interactive Cue Engine */}
             {showAIAssistant && activeField && (
               <div className="mt-6">
-                <InteractiveCueEngine
+                <AdaptiveMemoryCoach
                   currentText={sensoryDetails[activeField as keyof typeof sensoryDetails]}
-                  onSuggestion={(suggestion, type) => handleSuggestionAccept(suggestion, type)}
-                  isActive={showAIAssistant}
-                  fieldType={activeField}
                   memoryType={weaveType}
+                  fieldType={activeField}
+                  userHistory={userMemoryHistory}
+                  onSuggestion={(suggestion, confidence, reasoning) => {
+                    handleSuggestionAccept(suggestion, activeField as keyof typeof sensoryDetails);
+                    setAiInteractionCount(prev => prev + 1);
+                  }}
+                  onPatternInsight={(insight) => {
+                    console.log('Pattern insight:', insight);
+                  }}
                 />
               </div>
             )}

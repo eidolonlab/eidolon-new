@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Clock, MapPin, Plus, Trash2, Save, Zap, Target, Li
 import { useWeave } from '../contexts/WeaveContext';
 import InteractiveCueEngine from './InteractiveCueEngine';
 import ContextualHintEngine from './ContextualHintEngine';
+import IntelligentScenarioPlanner from './IntelligentScenarioPlanner';
 
 interface ScenarioStudioProps {
   onBack: () => void;
@@ -322,37 +323,30 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
                   </button>
                 </div>
                 
-                <InteractiveCueEngine
-                  currentText={formData.seed + ' ' + formData.narrative}
-                  onSuggestion={(suggestion, type) => {
-                    if (type === 'emotional') {
-                      setFormData(prev => ({
-                        ...prev,
-                        narrative: prev.narrative + (prev.narrative ? ' ' : '') + suggestion
-                      }));
-                    }
-                  }}
-                  isActive={showAIAssistance}
-                  fieldType="scenario"
-                  memoryType="future"
-                />
-                
-                <ContextualHintEngine
-                  currentText={formData.seed + ' ' + formData.title}
-                  memoryType="future"
-                  onHintSelect={(hint, category) => {
-                    // Add hint as if-then plan
+                <IntelligentScenarioPlanner
+                  scenarioSeed={formData.seed}
+                  scheduledDate={formData.scheduledFor && formData.scheduledTime ? 
+                    new Date(`${formData.scheduledFor}T${formData.scheduledTime}`) : undefined}
+                  onIfThenSuggestion={(plan, confidence, reasoning) => {
                     const emptyIndex = formData.ifThenPlans.findIndex(p => p.trim().length === 0);
                     if (emptyIndex !== -1) {
-                      handleIfThenPlanChange(emptyIndex, hint);
+                      handleIfThenPlanChange(emptyIndex, plan);
                     } else {
                       setFormData(prev => ({
                         ...prev,
-                        ifThenPlans: [...prev.ifThenPlans, hint]
+                        ifThenPlans: [...prev.ifThenPlans, plan]
                       }));
                     }
                   }}
-                  isActive={showAIAssistance}
+                  onConfidenceStrategy={(strategy) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      narrative: prev.narrative + (prev.narrative ? ' ' : '') + strategy
+                    }));
+                  }}
+                  onRiskMitigation={(risk, mitigation) => {
+                    console.log('Risk mitigation:', risk, mitigation);
+                  }}
                 />
               </div>
             )}
