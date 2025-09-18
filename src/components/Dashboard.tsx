@@ -5,6 +5,7 @@ import { useChallenge } from '../contexts/ChallengeContext';
 import DailyMemoryMoments from './DailyMemoryMoments';
 import ProgressiveChallenges from './ProgressiveChallenges';
 import RealWorldImpactTracker from './RealWorldImpactTracker';
+import CognitiveStateOptimizer from './CognitiveStateOptimizer';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
@@ -17,6 +18,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const userLevel = getUserLevel();
   const totalXP = getTotalXP();
   const activeChallenge = getActiveChallenge();
+  const [showCognitiveOptimizer, setShowCognitiveOptimizer] = useState(false);
+  const [cognitiveState, setCognitiveState] = useState<any>(null);
   
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
@@ -395,6 +398,55 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
       {/* Real-World Impact - Show value */}
       <RealWorldImpactTracker />
+
+      {/* Cognitive State Optimizer - Advanced Feature */}
+      {weaves.length >= 3 && (
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Cognitive Optimization</h3>
+                <p className="text-sm text-gray-600">AI-powered cognitive state management</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowCognitiveOptimizer(!showCognitiveOptimizer)}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              {showCognitiveOptimizer ? 'Hide' : 'Optimize'}
+            </button>
+          </div>
+          
+          {showCognitiveOptimizer && (
+            <CognitiveStateOptimizer
+              onStateChange={setCognitiveState}
+              onOptimizationRecommendation={(rec) => {
+                console.log('Cognitive optimization:', rec);
+              }}
+            />
+          )}
+          
+          {cognitiveState && (
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-white rounded-lg">
+                <div className="text-lg font-bold text-indigo-600">{cognitiveState.overallOptimization?.toFixed(0)}%</div>
+                <div className="text-xs text-gray-600">Optimization</div>
+              </div>
+              <div className="text-center p-3 bg-white rounded-lg">
+                <div className="text-lg font-bold text-purple-600">{cognitiveState.attention?.toFixed(0)}%</div>
+                <div className="text-xs text-gray-600">Attention</div>
+              </div>
+              <div className="text-center p-3 bg-white rounded-lg">
+                <div className="text-lg font-bold text-pink-600">{cognitiveState.workingMemory?.toFixed(0)}%</div>
+                <div className="text-xs text-gray-600">Working Memory</div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Getting Started Guide - For new users */}
       {weaves.length === 0 && (

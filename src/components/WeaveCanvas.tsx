@@ -10,6 +10,11 @@ import ContextualHintEngine from './ContextualHintEngine';
 import SimplifiedWeaveFlow from './SimplifiedWeaveFlow';
 import AdaptiveMemoryCoach from './AdaptiveMemoryCoach';
 import PerfectMemoryFlow from './PerfectMemoryFlow';
+import NeuralNetworkVisualizer from './NeuralNetworkVisualizer';
+import CognitiveStateOptimizer from './CognitiveStateOptimizer';
+import QuantumMemoryEngine from './QuantumMemoryEngine';
+import EmotionalResonanceEngine from './EmotionalResonanceEngine';
+import PredictiveMemoryAnalytics from './PredictiveMemoryAnalytics';
 
 interface WeaveCanvasProps {
   onBack: () => void;
@@ -48,6 +53,12 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   });
   const [userMemoryHistory, setUserMemoryHistory] = useState<any[]>([]);
   const [usePerfectFlow, setUsePerfectFlow] = useState(false);
+  const [showAdvancedFeatures, setShowAdvancedFeatures] = useState(false);
+  const [neuralNetworkStrength, setNeuralNetworkStrength] = useState(0);
+  const [cognitiveOptimization, setCognitiveOptimization] = useState<any>(null);
+  const [quantumEnhancement, setQuantumEnhancement] = useState<any>(null);
+  const [emotionalResonance, setEmotionalResonance] = useState<any>(null);
+  const [memoryPredictions, setMemoryPredictions] = useState<any>(null);
 
   // Load user history for adaptive coaching
   useEffect(() => {
@@ -169,6 +180,12 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             >
               Perfect Flow
             </button>
+            <button
+              onClick={() => setShowAdvancedFeatures(!showAdvancedFeatures)}
+              className="px-3 py-1.5 text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors"
+            >
+              🧠 Quantum Mode
+            </button>
             <h1 className="text-2xl font-bold text-gray-900">Create Memory Weave</h1>
           </div>
         </div>
@@ -181,6 +198,66 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             }}
             onCancel={onBack}
           />
+        ) : showAdvancedFeatures ? (
+          <div className="space-y-8">
+            {/* Cognitive State Optimizer */}
+            <CognitiveStateOptimizer
+              onStateChange={setCognitiveOptimization}
+              onOptimizationRecommendation={(rec) => {
+                console.log('Optimization recommendation:', rec);
+              }}
+            />
+            
+            {/* Neural Network Visualizer */}
+            <NeuralNetworkVisualizer
+              memoryData={{
+                visual: sensoryDetails.visual,
+                auditory: sensoryDetails.auditory,
+                emotional: sensoryDetails.emotional,
+                narrative: narrative
+              }}
+              onNetworkStrength={setNeuralNetworkStrength}
+            />
+            
+            {/* Quantum Memory Engine */}
+            <QuantumMemoryEngine
+              memoryData={sensoryDetails}
+              onQuantumEnhancement={setQuantumEnhancement}
+            />
+            
+            {/* Emotional Resonance Engine */}
+            <EmotionalResonanceEngine
+              emotionalContent={sensoryDetails.emotional}
+              onResonanceDetected={setEmotionalResonance}
+            />
+            
+            {/* Predictive Memory Analytics */}
+            <PredictiveMemoryAnalytics
+              memoryData={{ ...sensoryDetails, narrative, seed }}
+              userHistory={userMemoryHistory}
+              onPrediction={setMemoryPredictions}
+              onPatternDetected={(pattern) => {
+                console.log('Cognitive pattern detected:', pattern);
+              }}
+            />
+            
+            {/* Enhanced Save Button */}
+            <div className="text-center">
+              <button
+                onClick={handleSave}
+                disabled={!seed || !title}
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg font-medium shadow-lg"
+              >
+                🧠 Save Quantum-Enhanced Memory
+              </button>
+              {neuralNetworkStrength > 0 && (
+                <p className="text-sm text-gray-600 mt-2">
+                  Neural network strength: {neuralNetworkStrength.toFixed(0)}% | 
+                  Predicted retrieval success: {memoryPredictions?.retrievalSuccess?.toFixed(0) || 0}%
+                </p>
+              )}
+            </div>
+          </div>
         ) : (
           <SimplifiedWeaveFlow
             onComplete={(weave) => {
