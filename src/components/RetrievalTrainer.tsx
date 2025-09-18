@@ -382,6 +382,8 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                   </div>
                 </div>
               </div>
+              )}
+              
               {showPredictiveAnalytics && selectedWeave && (
                 <div className="mt-6">
                   <PredictiveMemoryAnalytics
