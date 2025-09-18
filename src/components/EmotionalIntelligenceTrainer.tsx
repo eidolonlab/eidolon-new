@@ -34,6 +34,8 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
   });
   const [currentScenario, setCurrentScenario] = useState<any>(null);
   const [userResponses, setUserResponses] = useState<string[]>([]);
+  const [adaptiveCoaching, setAdaptiveCoaching] = useState<string>('');
+  const [emotionalInsights, setEmotionalInsights] = useState<string[]>([]);
 
   const exercises = {
     recognition: {
@@ -68,23 +70,102 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
       title: 'Workplace Pressure',
       description: 'Your manager just assigned you an urgent project with an impossible deadline.',
       targetEmotion: 'stress management',
-      optimalResponse: 'Take a deep breath, break the project into smaller tasks, and communicate realistic timelines.'
+      optimalResponse: 'Take a deep breath, break the project into smaller tasks, and communicate realistic timelines.',
+      emotionalChallenge: 'Managing overwhelm while maintaining professionalism'
     },
     {
       id: 'social-rejection',
       title: 'Social Rejection',
       description: 'You weren\'t invited to a social gathering that most of your friends are attending.',
       targetEmotion: 'disappointment processing',
-      optimalResponse: 'Acknowledge the hurt feelings, practice self-compassion, and plan alternative meaningful activities.'
+      optimalResponse: 'Acknowledge the hurt feelings, practice self-compassion, and plan alternative meaningful activities.',
+      emotionalChallenge: 'Processing rejection without self-blame'
     },
     {
       id: 'achievement-celebration',
       title: 'Personal Achievement',
       description: 'You just received recognition for a project you worked hard on.',
       targetEmotion: 'positive emotion savoring',
-      optimalResponse: 'Fully experience the pride, share with supportive people, and reflect on the effort that led to success.'
+      optimalResponse: 'Fully experience the pride, share with supportive people, and reflect on the effort that led to success.',
+      emotionalChallenge: 'Allowing yourself to feel proud without minimizing'
+    },
+    {
+      id: 'conflict-resolution',
+      title: 'Interpersonal Conflict',
+      description: 'A close friend criticized something important to you in front of others.',
+      targetEmotion: 'hurt and anger management',
+      optimalResponse: 'Acknowledge your feelings, seek to understand their perspective, and address the issue privately.',
+      emotionalChallenge: 'Managing hurt feelings while preserving the relationship'
     }
   ];
+
+  const regulationTechniques = [
+    {
+      name: '4-7-8 Breathing',
+      description: 'Inhale 4, hold 7, exhale 8 - activates parasympathetic nervous system',
+      effectiveness: 85,
+      timeToEffect: 2,
+      bestFor: ['anxiety', 'stress', 'overwhelm']
+    },
+    {
+      name: 'Progressive Muscle Relaxation',
+      description: 'Tense and release muscle groups to reduce physical stress',
+      effectiveness: 80,
+      timeToEffect: 5,
+      bestFor: ['tension', 'anger', 'physical stress']
+    },
+    {
+      name: 'Cognitive Reframing',
+      description: 'Challenge negative thoughts and find alternative perspectives',
+      effectiveness: 90,
+      timeToEffect: 3,
+      bestFor: ['negative thinking', 'catastrophizing', 'self-criticism']
+    },
+    {
+      name: '5-4-3-2-1 Grounding',
+      description: '5 things you see, 4 hear, 3 touch, 2 smell, 1 taste',
+      effectiveness: 75,
+      timeToEffect: 1,
+      bestFor: ['panic', 'dissociation', 'overwhelm']
+    }
+  ];
+
+  useEffect(() => {
+    generateAdaptiveCoaching();
+    analyzeEmotionalPatterns();
+  }, [emotionalState, currentExercise]);
+
+  const generateAdaptiveCoaching = () => {
+    const { valence, arousal, dominance, clarity } = emotionalState;
+    
+    if (valence < -2 && arousal > 3) {
+      setAdaptiveCoaching("High negative energy detected. Consider the 4-7-8 breathing technique to calm your nervous system.");
+    } else if (valence > 2 && arousal < 2) {
+      setAdaptiveCoaching("Positive but low energy. This is perfect for reflection and gratitude exercises.");
+    } else if (dominance < 2) {
+      setAdaptiveCoaching("Feeling powerless? Try the cognitive reframing exercise to regain perspective and control.");
+    } else if (clarity < 2) {
+      setAdaptiveCoaching("Emotional confusion detected. The 5-4-3-2-1 grounding technique can help clarify your state.");
+    } else {
+      setAdaptiveCoaching("Balanced emotional state - excellent for empathy and social awareness training.");
+    }
+  };
+
+  const analyzeEmotionalPatterns = () => {
+    const insights = [];
+    
+    if (emotionalState.valence > 2) {
+      insights.push("You're in a positive emotional state - great for building empathy and social connections");
+    }
+    if (emotionalState.arousal > 3 && emotionalState.dominance > 3) {
+      insights.push("High energy + high control = optimal state for challenging emotional work");
+    }
+    if (emotionalState.clarity > 3) {
+      insights.push("Clear emotional awareness - you're developing strong emotional intelligence");
+    }
+    
+    setEmotionalInsights(insights);
+  };
 
   const startExercise = (type: keyof typeof exercises) => {
     setCurrentExercise(type);
@@ -188,6 +269,16 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
                     }
                   </div>
                 </div>
+                
+                {adaptiveCoaching && (
+                  <div className="mt-3 p-3 bg-white rounded border border-pink-200">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <Brain className="w-3 h-3 text-pink-600" />
+                      <span className="text-xs font-medium text-pink-800">AI Coach</span>
+                    </div>
+                    <p className="text-xs text-pink-700">{adaptiveCoaching}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -205,20 +296,25 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
             </div>
 
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-3">Regulation Techniques</h4>
+              <h4 className="font-medium text-blue-900 mb-3">Personalized Regulation Techniques</h4>
               <div className="space-y-3">
-                <button className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
-                  <div className="font-medium text-gray-900">4-7-8 Breathing</div>
-                  <div className="text-sm text-gray-600">Inhale 4, hold 7, exhale 8 - activates parasympathetic nervous system</div>
-                </button>
-                <button className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
-                  <div className="font-medium text-gray-900">Progressive Muscle Relaxation</div>
-                  <div className="text-sm text-gray-600">Tense and release muscle groups to reduce physical stress</div>
-                </button>
-                <button className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
-                  <div className="font-medium text-gray-900">Cognitive Reframing</div>
-                  <div className="text-sm text-gray-600">Challenge negative thoughts and find alternative perspectives</div>
-                </button>
+                {regulationTechniques.map((technique, index) => (
+                  <button 
+                    key={index}
+                    className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-medium text-gray-900">{technique.name}</div>
+                      <div className="text-xs text-blue-600">{technique.effectiveness}% effective</div>
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2">{technique.description}</div>
+                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                      <span>Effect in {technique.timeToEffect} min</span>
+                      <span>•</span>
+                      <span>Best for: {technique.bestFor.join(', ')}</span>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -238,7 +334,10 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
             {currentScenario && (
               <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
                 <h4 className="font-medium text-purple-900 mb-2">{currentScenario.title}</h4>
-                <p className="text-purple-800 mb-4">{currentScenario.description}</p>
+                <p className="text-purple-800 mb-3">{currentScenario.description}</p>
+                <div className="text-xs text-purple-600 mb-4">
+                  <strong>Challenge:</strong> {currentScenario.emotionalChallenge}
+                </div>
                 
                 <div className="space-y-3">
                   <div>
@@ -263,6 +362,11 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
                     />
                   </div>
                 </div>
+                
+                <div className="mt-4 p-3 bg-white rounded border border-purple-200">
+                  <div className="text-xs font-medium text-purple-800 mb-1">Optimal Response:</div>
+                  <div className="text-xs text-purple-700">{currentScenario.optimalResponse}</div>
+                </div>
               </div>
             )}
           </div>
@@ -280,19 +384,22 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
             </div>
 
             <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-              <h4 className="font-medium text-emerald-900 mb-3">Social Cue Reading</h4>
+              <h4 className="font-medium text-emerald-900 mb-3">Social Intelligence Skills</h4>
               <div className="space-y-3">
                 <div className="p-3 bg-white rounded-lg border border-emerald-200">
-                  <div className="font-medium text-gray-900 mb-1">Body Language Awareness</div>
-                  <div className="text-sm text-gray-600">Notice posture, gestures, and facial expressions</div>
+                  <div className="font-medium text-gray-900 mb-1">Body Language Mastery</div>
+                  <div className="text-sm text-gray-600">Read posture, gestures, and micro-expressions</div>
+                  <div className="text-xs text-emerald-600 mt-1">85% of communication is non-verbal</div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border border-emerald-200">
-                  <div className="font-medium text-gray-900 mb-1">Vocal Tone Recognition</div>
-                  <div className="text-sm text-gray-600">Listen for pitch, pace, and emotional undertones</div>
+                  <div className="font-medium text-gray-900 mb-1">Vocal Tone Analysis</div>
+                  <div className="text-sm text-gray-600">Detect emotions through pitch, pace, and volume</div>
+                  <div className="text-xs text-emerald-600 mt-1">Voice reveals true emotional state</div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border border-emerald-200">
-                  <div className="font-medium text-gray-900 mb-1">Context Sensitivity</div>
-                  <div className="text-sm text-gray-600">Consider environment, relationships, and timing</div>
+                  <div className="font-medium text-gray-900 mb-1">Context Intelligence</div>
+                  <div className="text-sm text-gray-600">Understand environment, relationships, and timing</div>
+                  <div className="text-xs text-emerald-600 mt-1">Context shapes all social interactions</div>
                 </div>
               </div>
             </div>
@@ -315,6 +422,21 @@ const EmotionalIntelligenceTrainer: React.FC<EmotionalIntelligenceTrainerProps> 
           <p className="text-sm text-gray-600">Build emotional awareness, regulation, and social skills</p>
         </div>
       </div>
+
+      {/* Emotional Insights */}
+      {emotionalInsights.length > 0 && (
+        <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+          <div className="flex items-center space-x-2 mb-2">
+            <TrendingUp className="w-4 h-4 text-indigo-600" />
+            <span className="font-medium text-indigo-900">Your Emotional Intelligence</span>
+          </div>
+          <div className="space-y-1">
+            {emotionalInsights.map((insight, index) => (
+              <div key={index} className="text-sm text-indigo-800">• {insight}</div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Exercise Selection */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">

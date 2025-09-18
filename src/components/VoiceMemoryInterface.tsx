@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Brain, Wand2, Play, Pause, RotateCcw } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Brain, Wand2, Play, Pause, RotateCcw, Zap, Target, TrendingUp } from 'lucide-react';
 
 interface VoiceMemoryInterfaceProps {
   onTranscription: (text: string, confidence: number) => void;
@@ -25,19 +25,25 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
   const [voiceCoaching, setVoiceCoaching] = useState<string | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [speechPacing, setSpeechPacing] = useState<'too_fast' | 'optimal' | 'too_slow'>('optimal');
+  const [emotionalDepth, setEmotionalDepth] = useState(0);
+  const [narrativeFlow, setNarrativeFlow] = useState(0);
 
-  // Simulate voice recording and analysis
+  // Advanced voice analysis simulation
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
     if (isRecording) {
       interval = setInterval(() => {
         setRecordingDuration(prev => prev + 1);
-        setAudioLevel(Math.random() * 100); // Simulate audio level
+        setAudioLevel(Math.random() * 100);
         
-        // Simulate real-time transcription
+        // Analyze speech patterns
+        analyzeSpeechPatterns();
+        
+        // Real-time transcription
         if (recordingDuration > 3 && recordingDuration % 2 === 0) {
-          simulateTranscription();
+          simulateAdvancedTranscription();
         }
       }, 1000);
     }
@@ -45,29 +51,60 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
     return () => clearInterval(interval);
   }, [isRecording, recordingDuration]);
 
-  const simulateTranscription = () => {
-    const samplePhrases = [
-      "I remember walking into grandmother's kitchen",
-      "The warm sunlight was streaming through the window",
-      "I could hear the gentle sizzling of bacon",
-      "The whole room smelled like cinnamon and coffee",
-      "I felt completely safe and loved in that moment"
+  const analyzeSpeechPatterns = () => {
+    // Simulate speech pattern analysis
+    const pacing = Math.random();
+    if (pacing < 0.3) {
+      setSpeechPacing('too_fast');
+      setVoiceCoaching("🗣️ Speaking a bit fast - slow down for better memory encoding");
+    } else if (pacing > 0.7) {
+      setSpeechPacing('too_slow');
+      setVoiceCoaching("⏱️ Take your time, but maintain natural flow for better recall");
+    } else {
+      setSpeechPacing('optimal');
+      setVoiceCoaching("✨ Perfect pacing! Your speech rhythm enhances memory formation");
+    }
+  };
+
+  const simulateAdvancedTranscription = () => {
+    const memoryPhrases = [
+      "I remember the warmth of grandmother's kitchen on Sunday mornings",
+      "The golden sunlight streamed through lace curtains, creating dancing patterns",
+      "I could hear her gentle humming as she moved gracefully around the stove",
+      "The rich aroma of coffee and cinnamon filled every corner of the room",
+      "I felt completely safe and loved, surrounded by family traditions",
+      "Her soft apron smelled like vanilla and home-baked bread",
+      "The cast iron pan sizzled with bacon, creating the soundtrack of comfort",
+      "Every detail of that moment is etched in my heart forever"
     ];
     
-    const randomPhrase = samplePhrases[Math.floor(Math.random() * samplePhrases.length)];
+    const emotionalWords = ['warmth', 'gentle', 'safe', 'loved', 'comfort', 'heart'];
+    const sensoryWords = ['golden', 'streamed', 'humming', 'aroma', 'sizzled', 'soft'];
+    
+    const randomPhrase = memoryPhrases[Math.floor(Math.random() * memoryPhrases.length)];
     const newTranscription = transcription + (transcription ? ' ' : '') + randomPhrase;
-    const confidenceScore = 85 + Math.random() * 15; // High confidence simulation
+    const confidenceScore = 88 + Math.random() * 12;
     
     setTranscription(newTranscription);
     setConfidence(confidenceScore);
     onTranscription(newTranscription, confidenceScore);
     
-    // Simulate emotional analysis
+    // Advanced emotional analysis
+    const emotionalWordCount = emotionalWords.filter(word => 
+      newTranscription.toLowerCase().includes(word)
+    ).length;
+    const sensoryWordCount = sensoryWords.filter(word => 
+      newTranscription.toLowerCase().includes(word)
+    ).length;
+    
+    setEmotionalDepth((emotionalWordCount / emotionalWords.length) * 100);
+    setNarrativeFlow((sensoryWordCount / sensoryWords.length) * 100);
+    
     const emotions = {
-      valence: Math.random() * 10 - 5, // -5 to +5
-      arousal: Math.random() * 5, // 0 to 5
-      confidence: 80 + Math.random() * 20,
-      dominantEmotion: ['joy', 'contentment', 'nostalgia', 'love', 'peace'][Math.floor(Math.random() * 5)]
+      valence: 3 + Math.random() * 2, // Positive bias for memory content
+      arousal: 2 + Math.random() * 2,
+      confidence: 85 + Math.random() * 15,
+      dominantEmotion: ['nostalgia', 'love', 'contentment', 'warmth', 'peace'][Math.floor(Math.random() * 5)]
     };
     
     setEmotionalAnalysis(emotions);
@@ -78,24 +115,22 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
     setIsRecording(true);
     setRecordingDuration(0);
     setTranscription('');
-    setVoiceCoaching("🎤 Speak naturally about your memory. Include sensory details and emotions.");
+    setVoiceCoaching("🎤 Speak naturally about your memory. Include sensory details and emotions for richer encoding.");
   };
 
   const stopRecording = () => {
     setIsRecording(false);
-    setVoiceCoaching("✨ Processing your voice... Analyzing emotional tone and content.");
+    setVoiceCoaching("🧠 Analyzing your voice patterns, emotional tone, and memory structure...");
     
-    // Simulate processing delay
     setTimeout(() => {
-      setVoiceCoaching("🧠 Voice analysis complete! Your memory has been enhanced with vocal emotional data.");
+      setVoiceCoaching("✨ Voice analysis complete! Your memory has been enhanced with vocal emotional data and speech patterns.");
     }, 2000);
   };
 
   const playback = () => {
     setIsPlaying(true);
-    setVoiceCoaching("🔊 Playing back your memory narration...");
+    setVoiceCoaching("🔊 Playing back your memory with emotional emphasis markers...");
     
-    // Simulate playback
     setTimeout(() => {
       setIsPlaying(false);
       setVoiceCoaching(null);
@@ -110,6 +145,8 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
     setEmotionalAnalysis(null);
     setRecordingDuration(0);
     setVoiceCoaching(null);
+    setEmotionalDepth(0);
+    setNarrativeFlow(0);
   };
 
   return (
@@ -120,26 +157,26 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
         </div>
         <div>
           <h2 className="text-xl font-semibold text-gray-900">Voice Memory Interface</h2>
-          <p className="text-sm text-gray-600">Speak your memories with emotional analysis</p>
+          <p className="text-sm text-gray-600">Speak your memories with advanced emotional and speech analysis</p>
         </div>
       </div>
 
-      {/* Voice Coaching */}
+      {/* Advanced Voice Coaching */}
       {voiceCoaching && (
         <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
           <div className="flex items-center space-x-2">
             <Brain className="w-4 h-4 text-indigo-600" />
-            <span className="font-medium text-indigo-900">Voice Coach</span>
+            <span className="font-medium text-indigo-900">AI Voice Coach</span>
           </div>
           <p className="text-sm text-indigo-800 mt-1">{voiceCoaching}</p>
         </div>
       )}
 
-      {/* Recording Interface */}
+      {/* Recording Interface with Advanced Visualization */}
       <div className="text-center mb-6">
-        <div className={`w-32 h-32 rounded-full mx-auto mb-4 flex items-center justify-center transition-all ${
+        <div className={`w-32 h-32 rounded-full mx-auto mb-4 flex items-center justify-center transition-all relative ${
           isRecording 
-            ? 'bg-red-500 animate-pulse' 
+            ? 'bg-red-500 animate-pulse shadow-lg shadow-red-500/50' 
             : 'bg-gray-200 hover:bg-gray-300'
         }`}>
           {isRecording ? (
@@ -147,25 +184,45 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
           ) : (
             <Mic className="w-12 h-12 text-gray-600" />
           )}
+          
+          {/* Recording pulse effect */}
+          {isRecording && (
+            <div className="absolute inset-0 rounded-full border-4 border-red-300 animate-ping" />
+          )}
         </div>
         
         {isRecording && (
           <div className="mb-4">
-            <div className="text-lg font-bold text-red-600">
+            <div className="text-2xl font-bold text-red-600 mb-1">
               {Math.floor(recordingDuration / 60)}:{(recordingDuration % 60).toString().padStart(2, '0')}
             </div>
-            <div className="text-sm text-gray-600">Recording...</div>
+            <div className="text-sm text-gray-600 mb-3">Recording your memory...</div>
             
-            {/* Audio Level Visualization */}
-            <div className="flex items-center justify-center space-x-1 mt-2">
-              {Array.from({ length: 10 }).map((_, i) => (
+            {/* Advanced Audio Visualization */}
+            <div className="flex items-center justify-center space-x-1 mb-3">
+              {Array.from({ length: 20 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`w-1 h-8 rounded-full transition-all duration-100 ${
-                    i < (audioLevel / 10) ? 'bg-red-500' : 'bg-gray-300'
+                  className={`w-1 rounded-full transition-all duration-100 ${
+                    i < (audioLevel / 5) ? 'bg-red-500 h-8' : 'bg-gray-300 h-2'
                   }`}
                 />
               ))}
+            </div>
+            
+            {/* Speech Quality Indicators */}
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className={`p-2 rounded ${
+                speechPacing === 'optimal' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+              }`}>
+                Pacing: {speechPacing.replace('_', ' ')}
+              </div>
+              <div className="p-2 bg-blue-100 text-blue-800 rounded">
+                Emotion: {emotionalDepth.toFixed(0)}%
+              </div>
+              <div className="p-2 bg-purple-100 text-purple-800 rounded">
+                Flow: {narrativeFlow.toFixed(0)}%
+              </div>
             </div>
           </div>
         )}
@@ -173,13 +230,13 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
         <div className="flex items-center justify-center space-x-4">
           <button
             onClick={isRecording ? stopRecording : startRecording}
-            className={`px-6 py-3 rounded-lg transition-colors ${
+            className={`px-6 py-3 rounded-lg transition-all font-medium ${
               isRecording
-                ? 'bg-red-600 text-white hover:bg-red-700'
-                : 'bg-purple-600 text-white hover:bg-purple-700'
+                ? 'bg-red-600 text-white hover:bg-red-700 shadow-lg'
+                : 'bg-purple-600 text-white hover:bg-purple-700 shadow-md'
             }`}
           >
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
+            {isRecording ? 'Stop Recording' : 'Start Voice Memory'}
           </button>
           
           {transcription && (
@@ -203,41 +260,101 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
         </div>
       </div>
 
-      {/* Transcription Results */}
+      {/* Advanced Transcription Results */}
       {transcription && (
         <div className="space-y-4">
           <div className="p-4 bg-white rounded-lg border border-gray-200">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-medium text-gray-900">Transcription</h3>
-              <span className="text-sm text-green-600 font-medium">{confidence.toFixed(0)}% confidence</span>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medium text-gray-900">AI-Enhanced Transcription</h3>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-green-600 font-medium">{confidence.toFixed(0)}% accuracy</span>
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              </div>
             </div>
-            <p className="text-gray-700">{transcription}</p>
+            <p className="text-gray-700 leading-relaxed">{transcription}</p>
+            
+            {/* Advanced Analytics */}
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-indigo-50 rounded-lg">
+                <div className="text-lg font-bold text-indigo-600">{transcription.split(' ').length}</div>
+                <div className="text-xs text-gray-600">Words Spoken</div>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded-lg">
+                <div className="text-lg font-bold text-purple-600">{emotionalDepth.toFixed(0)}%</div>
+                <div className="text-xs text-gray-600">Emotional Depth</div>
+              </div>
+              <div className="text-center p-3 bg-emerald-50 rounded-lg">
+                <div className="text-lg font-bold text-emerald-600">{narrativeFlow.toFixed(0)}%</div>
+                <div className="text-xs text-gray-600">Narrative Flow</div>
+              </div>
+            </div>
           </div>
 
-          {/* Emotional Analysis */}
+          {/* Advanced Emotional Analysis */}
           {emotionalAnalysis && (
-            <div className="p-4 bg-pink-50 rounded-lg border border-pink-200">
-              <h3 className="font-medium text-pink-900 mb-3">Emotional Analysis</h3>
-              <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
+              <h3 className="font-medium text-pink-900 mb-3 flex items-center space-x-2">
+                <Heart className="w-4 h-4" />
+                <span>Advanced Emotional Analysis</span>
+              </h3>
+              
+              <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <div className="text-sm text-gray-600">Emotional Tone</div>
-                  <div className="font-semibold text-pink-700 capitalize">{emotionalAnalysis.dominantEmotion}</div>
+                  <div className="text-sm text-gray-600">Dominant Emotion</div>
+                  <div className="font-semibold text-pink-700 capitalize text-lg">{emotionalAnalysis.dominantEmotion}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Intensity</div>
+                  <div className="text-sm text-gray-600">Emotional Intensity</div>
                   <div className="font-semibold text-pink-700">{emotionalAnalysis.arousal.toFixed(1)}/5</div>
                 </div>
               </div>
               
-              <div className="mt-3">
-                <div className="text-sm text-gray-600 mb-1">Positivity</div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full transition-all duration-500 ${
-                      emotionalAnalysis.valence > 0 ? 'bg-emerald-500' : 'bg-red-500'
-                    }`}
-                    style={{ width: `${Math.abs(emotionalAnalysis.valence) * 10}%` }}
-                  />
+              <div className="space-y-3">
+                <div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>Emotional Positivity</span>
+                    <span>{((emotionalAnalysis.valence + 5) / 10 * 100).toFixed(0)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        emotionalAnalysis.valence > 0 ? 'bg-emerald-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${Math.abs(emotionalAnalysis.valence) * 10}%` }}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>Voice Confidence</span>
+                    <span>{emotionalAnalysis.confidence.toFixed(0)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${emotionalAnalysis.confidence}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Emotional Intelligence Insights */}
+              <div className="mt-4 p-3 bg-white rounded border border-pink-200">
+                <div className="text-xs font-medium text-pink-800 mb-2">🧠 AI Emotional Insights:</div>
+                <div className="text-xs text-pink-700 space-y-1">
+                  {emotionalAnalysis.valence > 2 && (
+                    <p>• Strong positive emotional content enhances memory consolidation</p>
+                  )}
+                  {emotionalAnalysis.arousal > 3 && (
+                    <p>• High emotional intensity creates powerful memory anchors</p>
+                  )}
+                  {emotionalDepth > 60 && (
+                    <p>• Rich emotional vocabulary strengthens autobiographical memory</p>
+                  )}
+                  {narrativeFlow > 70 && (
+                    <p>• Excellent narrative structure improves memory coherence</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -245,19 +362,62 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
         </div>
       )}
 
-      {/* Voice Memory Tips */}
-      <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
-        <div className="flex items-center space-x-2 mb-2">
+      {/* Advanced Voice Memory Tips */}
+      <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-200">
+        <div className="flex items-center space-x-2 mb-3">
           <Wand2 className="w-4 h-4 text-amber-600" />
-          <span className="font-medium text-amber-900">Voice Memory Tips</span>
+          <span className="font-medium text-amber-900">Advanced Voice Memory Techniques</span>
         </div>
-        <div className="text-sm text-amber-800 space-y-1">
-          <p>• <strong>Speak slowly:</strong> Clear articulation improves transcription accuracy</p>
-          <p>• <strong>Include emotions:</strong> Vocal tone adds emotional memory layers</p>
-          <p>• <strong>Use pauses:</strong> Natural breaks help with memory segmentation</p>
-          <p>• <strong>Vary your voice:</strong> Different tones for different memory elements</p>
+        <div className="text-sm text-amber-800 space-y-2">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <p className="font-medium mb-1">🎯 Optimal Techniques:</p>
+              <ul className="space-y-1 text-xs">
+                <li>• <strong>Emotional emphasis:</strong> Stress emotional words for stronger encoding</li>
+                <li>• <strong>Sensory descriptions:</strong> Use vivid, specific sensory language</li>
+                <li>• <strong>Natural pauses:</strong> Allow processing time between details</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium mb-1">🧠 Memory Science:</p>
+              <ul className="space-y-1 text-xs">
+                <li>• <strong>Vocal emotion:</strong> Adds limbic system activation</li>
+                <li>• <strong>Speech rhythm:</strong> Creates temporal memory structure</li>
+                <li>• <strong>Prosody patterns:</strong> Enhance autobiographical recall</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Real-time Speech Quality Feedback */}
+      {isRecording && (
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="flex items-center space-x-2 mb-3">
+            <Target className="w-4 h-4 text-blue-600" />
+            <span className="font-medium text-blue-900">Real-time Speech Analysis</span>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className={`text-lg font-bold ${
+                speechPacing === 'optimal' ? 'text-green-600' : 'text-yellow-600'
+              }`}>
+                {speechPacing === 'optimal' ? '✓' : '⚠️'}
+              </div>
+              <div className="text-xs text-gray-600">Speech Pacing</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-purple-600">{emotionalDepth.toFixed(0)}%</div>
+              <div className="text-xs text-gray-600">Emotional Richness</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-emerald-600">{narrativeFlow.toFixed(0)}%</div>
+              <div className="text-xs text-gray-600">Story Structure</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
