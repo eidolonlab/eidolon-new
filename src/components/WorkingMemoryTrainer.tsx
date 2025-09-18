@@ -22,10 +22,22 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
   const [maxLevel, setMaxLevel] = useState(3);
   const [reactionTimes, setReactionTimes] = useState<number[]>([]);
   const [startTime, setStartTime] = useState<Date | null>(null);
+  const [adaptiveDifficulty, setAdaptiveDifficulty] = useState(true);
+  const [personalBest, setPersonalBest] = useState(3);
+  const [streakCount, setStreakCount] = useState(0);
+  const [encouragementMessage, setEncouragementMessage] = useState('');
 
   const generateSequence = (length: number) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
   };
+
+  // Load personal best from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('eidolon-working-memory-best');
+    if (saved) {
+      setPersonalBest(parseInt(saved));
+    }
+  }, []);
 
   const startRound = () => {
     const newSequence = generateSequence(currentLevel);
@@ -70,19 +82,45 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
       
       if (isCorrect) {
         setScore(prev => prev + 1);
+        setStreakCount(prev => prev + 1);
         setMaxLevel(prev => Math.max(prev, currentLevel));
+        
+        // Update personal best
+        if (currentLevel > personalBest) {
+          setPersonalBest(currentLevel);
+          localStorage.setItem('eidolon-working-memory-best', currentLevel.toString());
+          setEncouragementMessage(`🎉 New personal best! Level ${currentLevel}`);
+        } else if (streakCount >= 3) {
+          setEncouragementMessage(`🔥 ${streakCount} correct in a row! You're in the zone!`);
+        }
+        
         setGameState('feedback');
         
         setTimeout(() => {
-          if (currentLevel < 8) {
-            setCurrentLevel(prev => prev + 1);
-            setAttempts(prev => prev + 1);
-            startRound();
+          if (adaptiveDifficulty) {
+            // Adaptive difficulty: increase by 1 if doing well, or adjust based on performance
+            const shouldIncrease = streakCount >= 2 || (score / attempts) > 0.8;
+            if (shouldIncrease && currentLevel < 9) {
+              setCurrentLevel(prev => prev + 1);
+            } else if (!shouldIncrease && currentLevel > 3) {
+              // Stay at current level for consolidation
+            }
           } else {
+            // Standard progression
+            if (currentLevel < 8) {
+              setCurrentLevel(prev => prev + 1);
+            }
+          }
+          
+          setAttempts(prev => prev + 1);
+          startRound();
+        } else {
             completeGame();
           }
         }, 1500);
       } else {
+        setStreakCount(0);
+        setEncouragementMessage('');
         setGameState('feedback');
         setTimeout(() => {
           setAttempts(prev => prev + 1);
@@ -145,6 +183,23 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             <div className="text-lg font-semibold text-gray-900 mb-2">Starting Level: {currentLevel}</div>
             <div className="text-sm text-gray-600 mb-6">
               You'll see {currentLevel} numbers to remember
+              {personalBest > 3 && (
+                <span className="block text-emerald-600 font-medium mt-1">
+                  Personal Best: Level {personalBest}
+                </span>
+              )}
+            </div>
+            
+            <div className="mb-6 flex items-center justify-center space-x-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={adaptiveDifficulty}
+                  onChange={(e) => setAdaptiveDifficulty(e.target.checked)}
+                  className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                />
+                <span className="text-sm text-gray-700">Adaptive difficulty</span>
+              </label>
             </div>
             
             <button
@@ -251,6 +306,13 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Encouragement Message */}
+      {encouragementMessage && (
+        <div className="text-center p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+          <p className="text-emerald-800 font-medium">{encouragementMessage}</p>
         </div>
       )}
 

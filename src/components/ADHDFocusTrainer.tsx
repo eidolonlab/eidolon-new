@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Brain, Play, Pause, RotateCcw, Target, Zap, Clock, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react';
+import { Brain, Play, Pause, RotateCcw, Target, Zap, Clock, CheckCircle, AlertCircle, TrendingUp, Eye, Lightbulb } from 'lucide-react';
 
 interface ADHDFocusTrainerProps {
   onComplete: (results: {
@@ -19,6 +19,9 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
   const [taskCompleted, setTaskCompleted] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [focusBreaks, setFocusBreaks] = useState<Date[]>([]);
+  const [adaptiveMode, setAdaptiveMode] = useState(true);
+  const [personalizedTasks, setPersonalizedTasks] = useState<string[]>([]);
+  const [focusZone, setFocusZone] = useState<'building' | 'peak' | 'declining'>('building');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const focusTasks = [
@@ -29,7 +32,11 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
     "Write a brief reflection on something you learned recently",
     "Create a simple to-do list for the next 2 hours",
     "Practice deep breathing while focusing on your breath count",
-    "Write down 5 things you're grateful for with specific details"
+    "Write down 5 things you're grateful for with specific details",
+    "Organize your digital desktop or phone home screen",
+    "Read one article and write a 3-sentence summary",
+    "Plan your ideal evening routine in detail",
+    "Write a letter to your future self about today"
   ];
 
   const durations = [
@@ -38,6 +45,47 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
     { minutes: 15, label: '15 min', description: 'Deep focus' },
     { minutes: 25, label: '25 min', description: 'Pomodoro technique' }
   ];
+
+  // Generate personalized tasks based on user's current state and history
+  useEffect(() => {
+    generatePersonalizedTasks();
+    assessFocusZone();
+  }, [distractionCount, timeRemaining, selectedDuration]);
+
+  const generatePersonalizedTasks = () => {
+    const tasks = [];
+    const timeLeft = timeRemaining;
+    const sessionProgress = ((selectedDuration - timeRemaining) / selectedDuration) * 100;
+    
+    if (sessionProgress < 25) {
+      tasks.push("Start with organizing one small area of your workspace");
+      tasks.push("Write down your top 3 priorities for today");
+    } else if (sessionProgress < 50) {
+      tasks.push("Tackle a moderately challenging task you've been avoiding");
+      tasks.push("Practice a skill you want to improve");
+    } else if (sessionProgress < 75) {
+      tasks.push("Focus on detailed work that requires sustained attention");
+      tasks.push("Complete a task that needs careful planning");
+    } else {
+      tasks.push("Finish strong with a satisfying completion task");
+      tasks.push("Reflect on what you've accomplished in this session");
+    }
+    
+    setPersonalizedTasks(tasks);
+  };
+
+  const assessFocusZone = () => {
+    const sessionProgress = ((selectedDuration - timeRemaining) / selectedDuration) * 100;
+    const distractionRate = distractionCount / Math.max(1, (selectedDuration - timeRemaining) / 60);
+    
+    if (sessionProgress < 30 || distractionRate > 2) {
+      setFocusZone('building');
+    } else if (sessionProgress < 80 && distractionRate < 1) {
+      setFocusZone('peak');
+    } else {
+      setFocusZone('declining');
+    }
+  };
 
   useEffect(() => {
     if (isActive && timeRemaining > 0) {
@@ -87,9 +135,22 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
 
   const recordDistraction = () => {
     setDistractionCount(prev => prev + 1);
-    // Brief pause to acknowledge the distraction
-    setIsActive(false);
-    setTimeout(() => setIsActive(true), 2000);
+    
+    if (adaptiveMode) {
+      // Adaptive response based on distraction count
+      if (distractionCount >= 3) {
+        // Suggest a micro-break
+        setIsActive(false);
+        setTimeout(() => {
+          alert("💡 Micro-break: Take 30 seconds to look out a window or do deep breathing");
+          setIsActive(true);
+        }, 1000);
+      } else {
+        // Brief acknowledgment
+        setIsActive(false);
+        setTimeout(() => setIsActive(true), 1500);
+      }
+    }
   };
 
   const handleComplete = () => {
@@ -179,6 +240,20 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
             </div>
           </div>
 
+          {/* Adaptive Features Toggle */}
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="adaptive"
+              checked={adaptiveMode}
+              onChange={(e) => setAdaptiveMode(e.target.checked)}
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="adaptive" className="text-sm text-gray-700">
+              Enable adaptive coaching (AI adjusts based on your performance)
+            </label>
+          </div>
+
           <button
             onClick={startSession}
             className="w-full flex items-center justify-center space-x-2 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium"
@@ -190,6 +265,42 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
       ) : (
         // Active Session
         <div className="space-y-6">
+          {/* Focus Zone Indicator */}
+          <div className={`p-4 rounded-lg border ${
+            focusZone === 'peak' ? 'bg-emerald-50 border-emerald-200' :
+            focusZone === 'building' ? 'bg-blue-50 border-blue-200' :
+            'bg-yellow-50 border-yellow-200'
+          }`}>
+            <div className="flex items-center space-x-2 mb-2">
+              <Eye className={`w-4 h-4 ${
+                focusZone === 'peak' ? 'text-emerald-600' :
+                focusZone === 'building' ? 'text-blue-600' :
+                'text-yellow-600'
+              }`} />
+              <span className={`font-medium ${
+                focusZone === 'peak' ? 'text-emerald-900' :
+                focusZone === 'building' ? 'text-blue-900' :
+                'text-yellow-900'
+              }`}>
+                {focusZone === 'peak' ? 'Peak Focus Zone' :
+                 focusZone === 'building' ? 'Building Focus' :
+                 'Focus Declining'}
+              </span>
+            </div>
+            <p className={`text-sm ${
+              focusZone === 'peak' ? 'text-emerald-800' :
+              focusZone === 'building' ? 'text-blue-800' :
+              'text-yellow-800'
+            }`}>
+              {focusZone === 'peak' ? 
+                'Excellent! This is your optimal focus time. Tackle your most challenging tasks now.' :
+                focusZone === 'building' ?
+                'Your attention is warming up. Start with moderate difficulty tasks.' :
+                'Focus is naturally declining. Consider lighter tasks or take a break soon.'
+              }
+            </p>
+          </div>
+
           {/* Timer Display */}
           <div className="text-center">
             <div className="text-6xl font-bold text-blue-600 mb-2">
@@ -249,6 +360,23 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
                 <label htmlFor="taskComplete" className="text-sm text-indigo-700">
                   I completed this task
                 </label>
+              </div>
+            </div>
+          )}
+
+          {/* Personalized Task Suggestions */}
+          {personalizedTasks.length > 0 && (
+            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+              <div className="flex items-center space-x-2 mb-3">
+                <Lightbulb className="w-4 h-4 text-indigo-600" />
+                <span className="font-medium text-indigo-900">Suggested Focus Tasks</span>
+              </div>
+              <div className="space-y-2">
+                {personalizedTasks.map((task, index) => (
+                  <div key={index} className="text-sm text-indigo-800 bg-white rounded p-2 border border-indigo-200">
+                    • {task}
+                  </div>
+                ))}
               </div>
             </div>
           )}

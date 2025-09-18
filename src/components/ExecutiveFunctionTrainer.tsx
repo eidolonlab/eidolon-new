@@ -17,6 +17,8 @@ interface ExecutiveFunctionTrainerProps {
     tasksCompleted: number;
     planningTime: number;
     executionEfficiency: number;
+    timeEstimationAccuracy: number;
+    focusInterruptions: number;
   }) => void;
 }
 
@@ -29,6 +31,9 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
   const [planningStartTime, setPlanningStartTime] = useState<Date | null>(null);
   const [planningTime, setPlanningTime] = useState(0);
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
+  const [timeEstimationAccuracy, setTimeEstimationAccuracy] = useState<number[]>([]);
+  const [productivityScore, setProductivityScore] = useState(0);
+  const [focusInterruptions, setFocusInterruptions] = useState(0);
 
   useEffect(() => {
     if (phase === 'planning' && !planningStartTime) {
@@ -78,10 +83,27 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
   const completeTask = (taskId: string) => {
     setTasks(prev => prev.map(task => 
       task.id === taskId 
-        ? { ...task, completed: true, completedTime: new Date() }
+        ? { 
+            ...task, 
+            completed: true, 
+            completedTime: new Date(),
+          }
         : task
     ));
+    
+    // Calculate time estimation accuracy
+    const task = tasks.find(t => t.id === taskId);
+    if (task?.startTime) {
+      const actualMinutes = (new Date().getTime() - task.startTime.getTime()) / (1000 * 60);
+      const accuracy = Math.abs(task.estimatedMinutes - actualMinutes) / task.estimatedMinutes;
+      setTimeEstimationAccuracy(prev => [...prev, 1 - accuracy]);
+    }
+    
     setCurrentTaskId(null);
+  };
+
+  const recordInterruption = () => {
+    setFocusInterruptions(prev => prev + 1);
   };
 
   const finishSession = () => {
@@ -97,12 +119,17 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
     }, 0);
     
     const efficiency = totalEstimated > 0 ? (totalEstimated / Math.max(totalActual, 1)) * 100 : 0;
+    const avgTimeAccuracy = timeEstimationAccuracy.length > 0 
+      ? timeEstimationAccuracy.reduce((sum, acc) => sum + acc, 0) / timeEstimationAccuracy.length * 100
+      : 0;
     
     onComplete({
       tasksPlanned: tasks.length,
       tasksCompleted: completedTasks.length,
       planningTime: planningTime / 1000,
-      executionEfficiency: Math.min(efficiency, 200) // Cap at 200% for super-efficiency
+      executionEfficiency: Math.min(efficiency, 200), // Cap at 200% for super-efficiency
+      timeEstimationAccuracy: avgTimeAccuracy,
+      focusInterruptions
     });
   };
 
@@ -239,6 +266,20 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
             </div>
           )}
         </div>
+        
+        {/* Real-time Executive Function Coaching */}
+        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="flex items-center space-x-2 mb-2">
+            <Target className="w-4 h-4 text-blue-600" />
+            <span className="font-medium text-blue-900">Executive Function Tips</span>
+          </div>
+          <div className="text-sm text-blue-800 space-y-1">
+            <p>• <strong>Time estimation:</strong> Be realistic - most people underestimate by 25%</p>
+            <p>• <strong>Priority setting:</strong> Ask "What happens if this isn't done today?"</p>
+            <p>• <strong>Task breakdown:</strong> If a task feels overwhelming, break it into smaller steps</p>
+            <p>• <strong>Energy matching:</strong> Do high-priority tasks when your energy is highest</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -305,12 +346,20 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
                     {task.completed ? (
                       <CheckCircle className="w-5 h-5 text-emerald-600" />
                     ) : isActive ? (
-                      <button
-                        onClick={() => completeTask(task.id)}
-                        className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
-                      >
-                        Complete
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => completeTask(task.id)}
+                          className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
+                        >
+                          Complete
+                        </button>
+                        <button
+                          onClick={recordInterruption}
+                          className="px-3 py-1.5 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm"
+                        >
+                          Interrupted
+                        </button>
+                      </div>
                     ) : (
                       <button
                         onClick={() => startTask(task.id)}
