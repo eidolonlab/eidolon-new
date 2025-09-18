@@ -382,20 +382,19 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                   </div>
                 </div>
               </div>
-              )}
+            )}
               
-              {showPredictiveAnalytics && selectedWeave && (
-                <div className="mt-6">
-                  <PredictiveMemoryAnalytics
-                    memoryData={selectedWeave}
-                    userHistory={sessionHistory}
-                    onPrediction={setMemoryPredictions}
-                    onPatternDetected={(pattern) => {
-                      setEncouragementMessage(`🧠 Pattern detected: ${pattern.pattern} - ${pattern.recommendation}`);
-                    }}
-                  />
-                </div>
-              )}
+            {showPredictiveAnalytics && selectedWeave && (
+              <div className="mt-6">
+                <PredictiveMemoryAnalytics
+                  memoryData={selectedWeave}
+                  userHistory={sessionHistory}
+                  onPrediction={setMemoryPredictions}
+                  onPatternDetected={(pattern) => {
+                    setEncouragementMessage(`🧠 Pattern detected: ${pattern.pattern} - ${pattern.recommendation}`);
+                  }}
+                />
+              </div>
             )}
 
             {sessionState === 'completed' && sessionResults && (
