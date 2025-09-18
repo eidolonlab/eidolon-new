@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import { useChallenge } from '../contexts/ChallengeContext';
