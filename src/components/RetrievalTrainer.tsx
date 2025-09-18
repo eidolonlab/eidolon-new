@@ -6,6 +6,8 @@ import InteractiveRetrievalCoach from './InteractiveRetrievalCoach';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
 import RecallLatencyTimer from './RecallLatencyTimer';
 import AdaptiveRetrievalSystem from './AdaptiveRetrievalSystem';
+import PredictiveMemoryAnalytics from './PredictiveMemoryAnalytics';
+import EmotionalResonanceEngine from './EmotionalResonanceEngine';
 
 interface RetrievalTrainerProps {
   onBack: () => void;
@@ -27,6 +29,9 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
   } | null>(null);
   const [recallLatency, setRecallLatency] = useState<number | null>(null);
   const [sessionHistory, setSessionHistory] = useState<any[]>([]);
+  const [showPredictiveAnalytics, setShowPredictiveAnalytics] = useState(false);
+  const [memoryPredictions, setMemoryPredictions] = useState<any>(null);
+  const [emotionalResonance, setEmotionalResonance] = useState<any>(null);
 
   // Load session history for adaptive coaching
   useEffect(() => {
@@ -297,6 +302,16 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                     </div>
                   )}
                   
+                  {/* Emotional Resonance Analysis */}
+                  {userResponse.length > 30 && (
+                    <div className="mt-4">
+                      <EmotionalResonanceEngine
+                        emotionalContent={userResponse}
+                        onResonanceDetected={setEmotionalResonance}
+                      />
+                    </div>
+                  )}
+                  
                   {/* Live Memory Analyzer for Retrieval */}
                   {userResponse.length > 20 && (
                     <div className="mt-4">
@@ -341,6 +356,16 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                       >
                         {showCoach ? 'Hide' : 'Show'} Coach
                       </button>
+                      <button
+                        onClick={() => setShowPredictiveAnalytics(!showPredictiveAnalytics)}
+                        className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                          showPredictiveAnalytics 
+                            ? 'bg-purple-100 text-purple-700' 
+                            : 'bg-gray-100 text-gray-600'
+                        }`}
+                      >
+                        🔮 Predictions
+                      </button>
                       <div className="text-sm text-gray-500">
                         {userResponse.trim().split(/\s+/).filter(w => w.length > 0).length} words
                       </div>
@@ -357,6 +382,20 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                   </div>
                 </div>
               </div>
+              
+              {/* Predictive Analytics Panel */}
+              {showPredictiveAnalytics && selectedWeave && (
+                <div className="mt-6">
+                  <PredictiveMemoryAnalytics
+                    memoryData={selectedWeave}
+                    userHistory={sessionHistory}
+                    onPrediction={setMemoryPredictions}
+                    onPatternDetected={(pattern) => {
+                      setEncouragementMessage(`🧠 Pattern detected: ${pattern.pattern} - ${pattern.recommendation}`);
+                    }}
+                  />
+                </div>
+              )}
             )}
 
             {sessionState === 'completed' && sessionResults && (
