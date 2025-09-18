@@ -113,9 +113,10 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
           }
           
           setAttempts(prev => prev + 1);
-          startRound();
-        } else {
+          if (attempts >= 9) {
             completeGame();
+          } else {
+            startRound();
           }
         }, 1500);
       } else {
