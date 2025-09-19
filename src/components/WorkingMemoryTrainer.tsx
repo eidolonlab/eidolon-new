@@ -29,6 +29,12 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
   const [personalBest, setPersonalBest] = useState(3);
   const [streakCount, setStreakCount] = useState(0);
   const [encouragementMessage, setEncouragementMessage] = useState('');
+  const [defaultProgress, setDefaultProgress] = useState({
+    level: 3,
+    sessions: 0,
+    bestLevel: 3,
+    avgAccuracy: 0
+  });
   const [savedProfiles, setSavedProfiles] = useState<Array<{
     name: string;
     sessions: number;
@@ -43,14 +49,20 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
 
   // Load personal best from localStorage
   useEffect(() => {
+    // Load default progress (your main progress)
+    const defaultSaved = localStorage.getItem('eidolon-working-memory-default');
+    if (defaultSaved) {
+      const defaultData = JSON.parse(defaultSaved);
+      setDefaultProgress(defaultData);
+      setPersonalBest(defaultData.bestLevel);
+      setCurrentLevel(defaultData.level);
+    }
+    
+    // Load named profiles
     const saved = localStorage.getItem('eidolon-working-memory-profiles');
     if (saved) {
       const profiles = JSON.parse(saved);
       setSavedProfiles(profiles);
-      
-      // Set overall personal best
-      const overallBest = Math.max(...profiles.map((p: any) => p.bestLevel), 3);
-      setPersonalBest(overallBest);
     }
   }, []);
 
@@ -169,7 +181,18 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
   };
 
   const updateProfileData = (level: number, accuracy: number) => {
-    if (!useCustomProfile || !profileName.trim()) return;
+    if (!useCustomProfile || !profileName.trim()) {
+      // Update default progress
+      const newDefaultProgress = {
+        level: currentLevel,
+        sessions: defaultProgress.sessions + 1,
+        bestLevel: Math.max(defaultProgress.bestLevel, level),
+        avgAccuracy: (defaultProgress.avgAccuracy * defaultProgress.sessions + accuracy) / (defaultProgress.sessions + 1)
+      };
+      setDefaultProgress(newDefaultProgress);
+      localStorage.setItem('eidolon-working-memory-default', JSON.stringify(newDefaultProgress));
+      return;
+    }
     
     const profiles = [...savedProfiles];
     const existingIndex = profiles.findIndex(p => p.name === profileName.trim());
@@ -229,6 +252,30 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             </div>
           </div>
 
+          {/* Default Progress Display */}
+          <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Brain className="w-4 h-4 text-indigo-600" />
+              <span className="font-medium text-indigo-900">Your Main Progress</span>
+            </div>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="text-center">
+                <div className="text-lg font-bold text-indigo-600">{defaultProgress.bestLevel}</div>
+                <div className="text-xs text-gray-600">Best Level</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-indigo-600">{defaultProgress.sessions}</div>
+                <div className="text-xs text-gray-600">Sessions</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-indigo-600">{Math.round(defaultProgress.avgAccuracy)}%</div>
+                <div className="text-xs text-gray-600">Avg Accuracy</div>
+              </div>
+            </div>
+            <p className="text-xs text-indigo-700 mt-2">
+              This is your main progress that continues automatically when you train without a named profile
+            </p>
+          </div>
           {/* Training Profile Selection */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
@@ -240,7 +287,7 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
                 className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
               />
               <label htmlFor="useProfile" className="text-sm text-gray-700">
-                Create named training profile (track progress separately)
+                Create named training profile (track progress separately from main progress)
               </label>
             </div>
             
@@ -254,11 +301,11 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
                     type="text"
                     value={profileName}
                     onChange={(e) => setProfileName(e.target.value)}
-                    placeholder="e.g., Morning Focus, Post-Workout, Evening Practice"
+                    placeholder="e.g., Morning Training, Post-Coffee, Experimental Session"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Create separate tracking for different training conditions or goals
+                    Your main progress continues separately - this creates additional tracking for specific conditions
                   </p>
                 </div>
                 
@@ -393,9 +440,9 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="w-full py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium"
           >
-            Continue
+            {useCustomProfile && profileName.trim() ? `Start "${profileName}" Training` : `Continue Main Training (Level ${defaultProgress.level})`}
           </button>
         </div>
       </div>

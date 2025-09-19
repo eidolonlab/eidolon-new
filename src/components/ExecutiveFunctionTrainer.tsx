@@ -280,8 +280,10 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
             >
               <Plus className="w-4 h-4" />
               <span>Add Task</span>
-            </button>
-          </div>
+                {useCustomProfile && profileName.trim() ? 
+                  `Start "${profileName}" Planning Session` : 
+                  'Continue Main Executive Training'
+                }
 
           {/* Task List */}
           {tasks.length > 0 && (

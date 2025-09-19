@@ -287,7 +287,10 @@ const NeurofeedbackTrainer: React.FC<NeurofeedbackTrainerProps> = ({ onComplete 
             disabled={useCustomProfile && !profileName.trim()}
             className="w-full py-4 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-lg font-medium"
           >
-            {useCustomProfile && profileName.trim() ? `Start "${profileName}" Coherence Training` : 'Start Coherence Training'}
+            {useCustomProfile && profileName.trim() ? 
+              `Start "${profileName}" Coherence Training` : 
+              'Continue Main Coherence Training'
+            }
           </button>
         </div>
       ) : (

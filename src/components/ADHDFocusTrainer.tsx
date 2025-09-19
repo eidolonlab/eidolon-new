@@ -542,8 +542,10 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
             >
               <RotateCcw className="w-4 h-4" />
               <span>
-                Start {formatTime(selectedDuration)} 
-                {useCustomProfile && profileName.trim() ? ` "${profileName}"` : ''} Focus Session
+                {useCustomProfile && profileName.trim() ? 
+                  `Start "${profileName}" Session (${formatTime(selectedDuration)})` : 
+                  `Continue Main Training (${formatTime(selectedDuration)})`
+                }
               </span>
             </button>
           </div>
