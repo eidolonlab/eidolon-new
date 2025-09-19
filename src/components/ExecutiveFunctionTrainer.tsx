@@ -280,10 +280,8 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
             >
               <Plus className="w-4 h-4" />
               <span>Add Task</span>
-                {useCustomProfile && profileName.trim() ? 
-                  `Start "${profileName}" Planning Session` : 
-                  'Continue Main Executive Training'
-                }
+            </button>
+          </div>
 
           {/* Task List */}
           {tasks.length > 0 && (
@@ -432,79 +430,80 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
           })}
         </div>
 
-        {/* Finish Session */}
-        <div className="mt-6 text-center">
-          {/* Training Profile Selection */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                id="useProfile"
-                checked={useCustomProfile}
-                onChange={(e) => setUseCustomProfile(e.target.checked)}
-                className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
-              />
-              <label htmlFor="useProfile" className="text-sm text-gray-700">
-                Create named training profile (track executive function progress separately)
-              </label>
-            </div>
-            
-            {useCustomProfile && (
-              <div className="space-y-3">
+        {/* Training Profile Selection */}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="useProfile"
+              checked={useCustomProfile}
+              onChange={(e) => setUseCustomProfile(e.target.checked)}
+              className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+            />
+            <label htmlFor="useProfile" className="text-sm text-gray-700">
+              Create named training profile (track executive function progress separately)
+            </label>
+          </div>
+          
+          {useCustomProfile && (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Executive Function Profile Name
+                </label>
+                <input
+                  type="text"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  placeholder="e.g., Work Planning, Study Organization, Daily Tasks"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Track planning and execution skills in different contexts
+                </p>
+              </div>
+              
+              {/* Existing Profiles */}
+              {savedProfiles.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Executive Function Profile Name
+                    Or select existing profile:
                   </label>
-                  <input
-                    type="text"
-                    value={profileName}
-                    onChange={(e) => setProfileName(e.target.value)}
-                    placeholder="e.g., Work Planning, Study Organization, Daily Tasks"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Track planning and execution skills in different contexts
-                  </p>
-                </div>
-                
-                {/* Existing Profiles */}
-                {savedProfiles.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Or select existing profile:
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {savedProfiles.map((profile, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setProfileName(profile.name)}
-                          className={`p-2 text-left border rounded-lg transition-colors ${
-                            profileName === profile.name
-                              ? 'border-emerald-500 bg-emerald-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="font-medium text-sm">{profile.name}</div>
-                          <div className="text-xs text-gray-500">
-                            {profile.sessions} sessions • {Math.round(profile.avgEfficiency)}% efficiency
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {savedProfiles.map((profile, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setProfileName(profile.name)}
+                        className={`p-2 text-left border rounded-lg transition-colors ${
+                          profileName === profile.name
+                            ? 'border-emerald-500 bg-emerald-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="font-medium text-sm">{profile.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {profile.sessions} sessions • {Math.round(profile.avgEfficiency)}% efficiency
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                )}
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
+        {/* Finish Session */}
+        <div className="mt-6 text-center">
           <button
             onClick={finishSession}
             disabled={useCustomProfile && !profileName.trim()}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <span>
-              Start {formatTime(selectedDuration)} 
-              {useCustomProfile && profileName.trim() ? ` "${profileName}"` : ''} Planning Session
+              {useCustomProfile && profileName.trim() ? 
+                `Finish "${profileName}" Session` : 
+                'Finish Executive Training Session'}
             </span>
           </button>
         </div>
