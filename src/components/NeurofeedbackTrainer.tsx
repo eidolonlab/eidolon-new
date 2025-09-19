@@ -3,6 +3,7 @@ import { Activity, Brain, Zap, Target, TrendingUp, Play, Pause, RotateCcw } from
 
 interface NeurofeedbackTrainerProps {
   onComplete: (results: {
+    profileName?: string;
     sessionDuration: number;
     averageCoherence: number;
     peakCoherence: number;
@@ -20,6 +21,27 @@ const NeurofeedbackTrainer: React.FC<NeurofeedbackTrainerProps> = ({ onComplete 
   const [isInCoherence, setIsInCoherence] = useState(false);
   const [coherenceStreak, setCoherenceStreak] = useState(0);
   const [maxStreak, setMaxStreak] = useState(0);
+  const [profileName, setProfileName] = useState('');
+  const [useCustomProfile, setUseCustomProfile] = useState(false);
+  const [savedProfiles, setSavedProfiles] = useState<Array<{
+    name: string;
+    sessions: number;
+    avgCoherence: number;
+    maxStreak: number;
+    lastUsed: Date;
+  }>>([]);
+
+  // Load saved profiles
+  useEffect(() => {
+    const saved = localStorage.getItem('eidolon-coherence-profiles');
+    if (saved) {
+      const profiles = JSON.parse(saved).map((p: any) => ({
+        ...p,
+        lastUsed: new Date(p.lastUsed)
+      }));
+      setSavedProfiles(profiles);
+    }
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -84,13 +106,46 @@ const NeurofeedbackTrainer: React.FC<NeurofeedbackTrainerProps> = ({ onComplete 
         (coherenceHistory.slice(-15).reduce((sum, val) => sum + val, 0) / 15) - 
         (coherenceHistory.slice(0, 15).reduce((sum, val) => sum + val, 0) / 15) : 0;
       
+      // Update profile data if using custom profile
+      if (useCustomProfile && profileName.trim()) {
+        updateProfileData(averageCoherence);
+      }
+      
       onComplete({
+        profileName: useCustomProfile ? profileName : undefined,
         sessionDuration: sessionTime,
         averageCoherence,
         peakCoherence,
         improvementRate
       });
     }
+  };
+
+  const updateProfileData = (averageCoherence: number) => {
+    const profiles = [...savedProfiles];
+    const existingIndex = profiles.findIndex(p => p.name === profileName.trim());
+    
+    if (existingIndex >= 0) {
+      const existing = profiles[existingIndex];
+      profiles[existingIndex] = {
+        ...existing,
+        sessions: existing.sessions + 1,
+        avgCoherence: (existing.avgCoherence * existing.sessions + averageCoherence) / (existing.sessions + 1),
+        maxStreak: Math.max(existing.maxStreak, maxStreak),
+        lastUsed: new Date()
+      };
+    } else {
+      profiles.push({
+        name: profileName.trim(),
+        sessions: 1,
+        avgCoherence: averageCoherence,
+        maxStreak: maxStreak,
+        lastUsed: new Date()
+      });
+    }
+    
+    setSavedProfiles(profiles);
+    localStorage.setItem('eidolon-coherence-profiles', JSON.stringify(profiles));
   };
 
   const getCoherenceColor = () => {
@@ -164,11 +219,75 @@ const NeurofeedbackTrainer: React.FC<NeurofeedbackTrainerProps> = ({ onComplete 
             </p>
           </div>
 
+          {/* Training Profile Selection */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="useCoherenceProfile"
+                checked={useCustomProfile}
+                onChange={(e) => setUseCustomProfile(e.target.checked)}
+                className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+              />
+              <label htmlFor="useCoherenceProfile" className="text-sm text-gray-700">
+                Create named coherence profile (track different training conditions)
+              </label>
+            </div>
+            
+            {useCustomProfile && (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Coherence Training Profile Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    placeholder="e.g., Morning Meditation, Pre-Work, Stress Relief"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Track coherence training in different contexts or times of day
+                  </p>
+                </div>
+                
+                {/* Existing Profiles */}
+                {savedProfiles.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Or select existing profile:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {savedProfiles.map((profile, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setProfileName(profile.name)}
+                          className={`p-2 text-left border rounded-lg transition-colors ${
+                            profileName === profile.name
+                              ? 'border-emerald-500 bg-emerald-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="font-medium text-sm">{profile.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {profile.sessions} sessions • Avg: {Math.round(profile.avgCoherence)}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <button
             onClick={startSession}
+            disabled={useCustomProfile && !profileName.trim()}
             className="w-full py-4 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-lg font-medium"
           >
-            Start Coherence Training
+            {useCustomProfile && profileName.trim() ? `Start "${profileName}" Coherence Training` : 'Start Coherence Training'}
           </button>
         </div>
       ) : (

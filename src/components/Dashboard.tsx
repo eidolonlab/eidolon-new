@@ -6,6 +6,7 @@ import DailyMemoryMoments from './DailyMemoryMoments';
 import ProgressiveChallenges from './ProgressiveChallenges';
 import RealWorldImpactTracker from './RealWorldImpactTracker';
 import CognitiveStateOptimizer from './CognitiveStateOptimizer';
+import ProfileInsights from './ProfileInsights';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
@@ -509,13 +510,64 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               </div>
             </button>
             
-            <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <Users className="w-5 h-5 text-gray-400" />
-              <div className="text-left">
-                <div className="font-medium text-gray-500">Community Features</div>
-                <div className="text-sm text-gray-400">Coming soon</div>
+            <ProfileInsights />
+          </div>
+        </div>
+      )}
+
+      {/* Training Profile Analytics - Show if user has created profiles */}
+      {(localStorage.getItem('eidolon-focus-profiles') || 
+        localStorage.getItem('eidolon-memory-profiles') || 
+        localStorage.getItem('eidolon-scenario-profiles')) && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Training Profile Analytics</h3>
+            <span className="text-xs text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">Wellness Tracking</span>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center space-x-2 mb-2">
+                <Brain className="w-4 h-4 text-blue-600" />
+                <span className="font-medium text-blue-900">Focus Profiles</span>
+              </div>
+              <div className="text-sm text-blue-800">
+                {JSON.parse(localStorage.getItem('eidolon-focus-profiles') || '[]').length} active profiles
               </div>
             </div>
+            
+            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+              <div className="flex items-center space-x-2 mb-2">
+                <Target className="w-4 h-4 text-indigo-600" />
+                <span className="font-medium text-indigo-900">Memory Profiles</span>
+              </div>
+              <div className="text-sm text-indigo-800">
+                {JSON.parse(localStorage.getItem('eidolon-memory-profiles') || '[]').length} active profiles
+              </div>
+            </div>
+            
+            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <div className="text-left">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Calendar className="w-4 h-4 text-emerald-600" />
+                  <span className="font-medium text-emerald-900">Scenario Profiles</span>
+                </div>
+                <div className="text-sm text-emerald-800">
+                  {JSON.parse(localStorage.getItem('eidolon-scenario-profiles') || '[]').length} active profiles
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+            <div className="flex items-center space-x-2 mb-1">
+              <Shield className="w-3 h-3 text-green-600" />
+              <span className="text-xs font-medium text-green-800">Wellness & Fitness Focus</span>
+            </div>
+            <p className="text-xs text-green-700">
+              Training profiles are for <strong>cognitive fitness and skill building</strong> - similar to having different workout routines. 
+              This is not medical testing and makes no health claims.
+            </p>
           </div>
         </div>
       )}

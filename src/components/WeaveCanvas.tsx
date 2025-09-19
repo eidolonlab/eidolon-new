@@ -59,6 +59,15 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const [quantumEnhancement, setQuantumEnhancement] = useState<any>(null);
   const [emotionalResonance, setEmotionalResonance] = useState<any>(null);
   const [memoryPredictions, setMemoryPredictions] = useState<any>(null);
+  const [profileName, setProfileName] = useState('');
+  const [useCustomProfile, setUseCustomProfile] = useState(false);
+  const [savedProfiles, setSavedProfiles] = useState<Array<{
+    name: string;
+    weaves: number;
+    avgCoherence: number;
+    lastUsed: Date;
+    category: string;
+  }>>([]);
 
   // Load user history for adaptive coaching
   useEffect(() => {
@@ -66,6 +75,16 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
     if (savedWeaves) {
       const weaves = JSON.parse(savedWeaves);
       setUserMemoryHistory(weaves.slice(0, 10)); // Last 10 memories for pattern analysis
+    }
+    
+    // Load saved profiles
+    const savedProfiles = localStorage.getItem('eidolon-memory-profiles');
+    if (savedProfiles) {
+      const profiles = JSON.parse(savedProfiles).map((p: any) => ({
+        ...p,
+        lastUsed: new Date(p.lastUsed)
+      }));
+      setSavedProfiles(profiles);
     }
   }, []);
 
@@ -131,6 +150,11 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const handleSave = () => {
     if (!seed || !title) return;
 
+    // Update profile data if using custom profile
+    if (useCustomProfile && profileName.trim()) {
+      updateProfileData();
+    }
+
     const newWeave = {
       type: weaveType,
       seed,
@@ -145,13 +169,51 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
       completed: false,
       cues: tempCues,
       bridgeData: tempBridgeData,
+      profileName: useCustomProfile ? profileName : undefined,
     };
 
     addWeave(newWeave);
     
     // Show success message
-    alert(`${weaveType === 'past' ? 'Memory weave' : 'Future scenario'} "${title}" has been saved successfully!`);
+    const profileText = useCustomProfile && profileName ? ` to "${profileName}" profile` : '';
+    alert(`${weaveType === 'past' ? 'Memory weave' : 'Future scenario'} "${title}" has been saved successfully${profileText}!`);
     onBack();
+  };
+
+  const updateProfileData = () => {
+    const profiles = [...savedProfiles];
+    const existingIndex = profiles.findIndex(p => p.name === profileName.trim());
+    const coherenceScore = calculateCoherenceScore(narrative, sensoryDetails);
+    
+    if (existingIndex >= 0) {
+      const existing = profiles[existingIndex];
+      profiles[existingIndex] = {
+        ...existing,
+        weaves: existing.weaves + 1,
+        avgCoherence: (existing.avgCoherence * existing.weaves + coherenceScore) / (existing.weaves + 1),
+        lastUsed: new Date()
+      };
+    } else {
+      profiles.push({
+        name: profileName.trim(),
+        weaves: 1,
+        avgCoherence: coherenceScore,
+        lastUsed: new Date(),
+        category: weaveType
+      });
+    }
+    
+    setSavedProfiles(profiles);
+    localStorage.setItem('eidolon-memory-profiles', JSON.stringify(profiles));
+  };
+
+  const calculateCoherenceScore = (narrative: string, sensoryDetails: any): number => {
+    // Simple coherence scoring based on narrative length, detail richness, and structure
+    const narrativeScore = Math.min(narrative.length / 200, 1) * 40; // Up to 40 points for length
+    const detailScore = Object.values(sensoryDetails).filter((d: any) => d.length > 10).length * 10; // 10 points per detailed sense
+    const structureScore = (narrative.match(/\./g) || []).length > 2 ? 20 : 10; // Basic structure check
+    
+    return Math.round(Math.min(narrativeScore + detailScore + structureScore, 100));
   };
 
   // If using simplified flow, render that instead
@@ -363,6 +425,69 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                   placeholder="Give your weave a memorable title"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
+              </div>
+              
+              {/* Memory Profile Selection */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="useMemoryProfile"
+                    checked={useCustomProfile}
+                    onChange={(e) => setUseCustomProfile(e.target.checked)}
+                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  />
+                  <label htmlFor="useMemoryProfile" className="text-sm text-gray-700">
+                    Create named memory profile (track different memory types separately)
+                  </label>
+                </div>
+                
+                {useCustomProfile && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Memory Profile Name
+                      </label>
+                      <input
+                        type="text"
+                        value={profileName}
+                        onChange={(e) => setProfileName(e.target.value)}
+                        placeholder="e.g., Childhood Memories, Work Experiences, Family Moments"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Organize memories by theme, time period, or purpose
+                      </p>
+                    </div>
+                    
+                    {/* Existing Profiles */}
+                    {savedProfiles.length > 0 && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Or select existing profile:
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {savedProfiles.map((profile, index) => (
+                            <button
+                              key={index}
+                              onClick={() => setProfileName(profile.name)}
+                              className={`p-2 text-left border rounded-lg transition-colors ${
+                                profileName === profile.name
+                                  ? 'border-indigo-500 bg-indigo-50'
+                                  : 'border-gray-200 hover:border-gray-300'
+                              }`}
+                            >
+                              <div className="font-medium text-sm">{profile.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {profile.weaves} memories • Avg: {Math.round(profile.avgCoherence)}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               
               {/* Training Options */}

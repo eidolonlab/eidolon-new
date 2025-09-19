@@ -42,6 +42,7 @@ export interface Weave {
   };
   errorlessMode?: boolean;
   difficultyLevel?: 'easy' | 'medium' | 'hard';
+  profileName?: string;
 }
 
 export interface RetrievalSession {
