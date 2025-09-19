@@ -86,7 +86,7 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
       type,
       date: new Date(),
       results,
-      improvement
+      improvement,
         profileName: results.profileName || undefined
     };
 
