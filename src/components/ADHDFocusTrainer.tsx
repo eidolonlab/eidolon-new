@@ -470,7 +470,7 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
             >
               {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               <span>{isActive ? 'Pause' : 'Resume'}</span>
-            </div>
+            </button>
             
             {/* Training Profile Selection */}
             <div className="space-y-4">
