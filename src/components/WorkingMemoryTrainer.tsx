@@ -3,6 +3,7 @@ import { Brain, Play, CheckCircle, XCircle, RotateCcw, TrendingUp, Target, Zap }
 
 interface WorkingMemoryTrainerProps {
   onComplete: (results: {
+    profileName?: string;
     level: number;
     accuracy: number;
     reactionTime: number;
@@ -12,6 +13,8 @@ interface WorkingMemoryTrainerProps {
 
 const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete }) => {
   const [gameState, setGameState] = useState<'setup' | 'showing' | 'testing' | 'feedback' | 'complete'>('setup');
+  const [profileName, setProfileName] = useState('');
+  const [useCustomProfile, setUseCustomProfile] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(3);
   const [sequence, setSequence] = useState<number[]>([]);
   const [userInput, setUserInput] = useState<number[]>([]);
@@ -26,6 +29,13 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
   const [personalBest, setPersonalBest] = useState(3);
   const [streakCount, setStreakCount] = useState(0);
   const [encouragementMessage, setEncouragementMessage] = useState('');
+  const [savedProfiles, setSavedProfiles] = useState<Array<{
+    name: string;
+    sessions: number;
+    bestLevel: number;
+    avgAccuracy: number;
+    lastUsed: Date;
+  }>>([]);
 
   const generateSequence = (length: number) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
@@ -33,9 +43,14 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
 
   // Load personal best from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('eidolon-working-memory-best');
+    const saved = localStorage.getItem('eidolon-working-memory-profiles');
     if (saved) {
-      setPersonalBest(parseInt(saved));
+      const profiles = JSON.parse(saved);
+      setSavedProfiles(profiles);
+      
+      // Set overall personal best
+      const overallBest = Math.max(...profiles.map((p: any) => p.bestLevel), 3);
+      setPersonalBest(overallBest);
     }
   }, []);
 
@@ -88,7 +103,7 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
         // Update personal best
         if (currentLevel > personalBest) {
           setPersonalBest(currentLevel);
-          localStorage.setItem('eidolon-working-memory-best', currentLevel.toString());
+          updateProfileData(currentLevel, isCorrect ? 100 : 0);
           setEncouragementMessage(`🎉 New personal best! Level ${currentLevel}`);
         } else if (streakCount >= 3) {
           setEncouragementMessage(`🔥 ${streakCount} correct in a row! You're in the zone!`);
@@ -141,12 +156,46 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
       ? reactionTimes.reduce((sum, time) => sum + time, 0) / reactionTimes.length 
       : 0;
     
+    const finalAccuracy = attempts > 0 ? (score / attempts) * 100 : 0;
+    updateProfileData(maxLevel, finalAccuracy);
+    
     onComplete({
+      profileName: useCustomProfile ? profileName : undefined,
       level: currentLevel,
-      accuracy: attempts > 0 ? (score / attempts) * 100 : 0,
+      accuracy: finalAccuracy,
       reactionTime: avgReactionTime,
       maxSpan: maxLevel
     });
+  };
+
+  const updateProfileData = (level: number, accuracy: number) => {
+    if (!useCustomProfile || !profileName.trim()) return;
+    
+    const profiles = [...savedProfiles];
+    const existingIndex = profiles.findIndex(p => p.name === profileName.trim());
+    
+    if (existingIndex >= 0) {
+      // Update existing profile
+      profiles[existingIndex] = {
+        ...profiles[existingIndex],
+        sessions: profiles[existingIndex].sessions + 1,
+        bestLevel: Math.max(profiles[existingIndex].bestLevel, level),
+        avgAccuracy: (profiles[existingIndex].avgAccuracy + accuracy) / 2,
+        lastUsed: new Date()
+      };
+    } else {
+      // Create new profile
+      profiles.push({
+        name: profileName.trim(),
+        sessions: 1,
+        bestLevel: level,
+        avgAccuracy: accuracy,
+        lastUsed: new Date()
+      });
+    }
+    
+    setSavedProfiles(profiles);
+    localStorage.setItem('eidolon-working-memory-profiles', JSON.stringify(profiles));
   };
 
   const isCorrectSoFar = () => {
@@ -180,6 +229,68 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             </div>
           </div>
 
+          {/* Training Profile Selection */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="useProfile"
+                checked={useCustomProfile}
+                onChange={(e) => setUseCustomProfile(e.target.checked)}
+                className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+              />
+              <label htmlFor="useProfile" className="text-sm text-gray-700">
+                Create named training profile (track progress separately)
+              </label>
+            </div>
+            
+            {useCustomProfile && (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Training Profile Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    placeholder="e.g., Morning Focus, Post-Workout, Evening Practice"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Create separate tracking for different training conditions or goals
+                  </p>
+                </div>
+                
+                {/* Existing Profiles */}
+                {savedProfiles.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Or select existing profile:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {savedProfiles.map((profile, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setProfileName(profile.name)}
+                          className={`p-2 text-left border rounded-lg transition-colors ${
+                            profileName === profile.name
+                              ? 'border-purple-500 bg-purple-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="font-medium text-sm">{profile.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {profile.sessions} sessions • Level {profile.bestLevel}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900 mb-2">Starting Level: {currentLevel}</div>
             <div className="text-sm text-gray-600 mb-6">
@@ -205,9 +316,10 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             
             <button
               onClick={startRound}
-              className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-lg font-medium"
+              disabled={useCustomProfile && !profileName.trim()}
+              className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium"
             >
-              Start Training
+              {useCustomProfile && profileName.trim() ? `Start "${profileName}" Training` : 'Start Training'}
             </button>
           </div>
         </div>
@@ -251,6 +363,17 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             <div className="text-sm text-gray-600">Correct</div>
           </div>
         </div>
+        
+        {useCustomProfile && profileName && (
+          <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="text-center">
+              <div className="font-medium text-purple-900">Training Profile: "{profileName}"</div>
+              <div className="text-sm text-purple-700 mt-1">
+                This session will be tracked separately for trend analysis
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex space-x-3">
           <button
@@ -261,6 +384,8 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
               setAttempts(0);
               setMaxLevel(3);
               setReactionTimes([]);
+              setProfileName('');
+              setUseCustomProfile(false);
             }}
             className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >

@@ -87,6 +87,7 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
       date: new Date(),
       results,
       improvement
+        profileName: results.profileName || undefined
     };
 
     saveSessions([newSession, ...sessions]);
