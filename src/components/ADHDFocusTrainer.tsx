@@ -533,7 +533,7 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
                   )}
                 </div>
               )}
-            </button>
+            </div>
             
             <button
               onClick={reset}
