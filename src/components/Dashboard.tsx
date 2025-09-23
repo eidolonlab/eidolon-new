@@ -141,6 +141,153 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         />
       )}
 
+      {/* Eidolon Labs Preview */}
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200 p-8">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <Brain className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Eidolon Labs</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Peek behind the curtain at revolutionary memory features in development. 
+            These innovations will set Eidolon apart from every competitor in the cognitive training space.
+          </p>
+        </div>
+
+        {/* Phase Roadmap */}
+        <div className="grid md:grid-cols-4 gap-4 mb-8">
+          <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-6 h-6 bg-emerald-100 rounded-lg flex items-center justify-center">
+                <span className="text-xs font-bold text-emerald-700">1</span>
+              </div>
+              <span className="font-semibold text-emerald-900">Phase 1 - Foundation</span>
+            </div>
+            <div className="text-sm text-emerald-800 mb-2">Q4 2025 - Live Now</div>
+            <div className="space-y-1">
+              <div className="text-xs text-emerald-700 bg-white rounded px-2 py-1">Memory Weaving</div>
+              <div className="text-xs text-emerald-700 bg-white rounded px-2 py-1">Spaced Retrieval</div>
+              <div className="text-xs text-emerald-700 bg-white rounded px-2 py-1">ADHD Support</div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                <span className="text-xs font-bold text-blue-700">2</span>
+              </div>
+              <span className="font-semibold text-blue-900">Phase 2 - Intelligence</span>
+            </div>
+            <div className="text-sm text-blue-800 mb-2">Q2 2026</div>
+            <div className="space-y-1">
+              <div className="text-xs text-blue-700 bg-white rounded px-2 py-1">StoryGraph</div>
+              <div className="text-xs text-blue-700 bg-white rounded px-2 py-1">Transfer Lab</div>
+              <div className="text-xs text-blue-700 bg-white rounded px-2 py-1">Context-Aware AI</div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center">
+                <span className="text-xs font-bold text-purple-700">3</span>
+              </div>
+              <span className="font-semibold text-purple-900">Phase 3 - Professional</span>
+            </div>
+            <div className="text-sm text-purple-800 mb-2">Q3 2026</div>
+            <div className="space-y-1">
+              <div className="text-xs text-purple-700 bg-white rounded px-2 py-1">Coach Protocols</div>
+              <div className="text-xs text-purple-700 bg-white rounded px-2 py-1">Team Features</div>
+              <div className="text-xs text-purple-700 bg-white rounded px-2 py-1">Clinical Integration</div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-6 h-6 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <span className="text-xs font-bold text-indigo-700">4</span>
+              </div>
+              <span className="font-semibold text-indigo-900">Phase 4 - AI Enhancement</span>
+            </div>
+            <div className="text-sm text-indigo-800 mb-2">Q4 2026</div>
+            <div className="space-y-1">
+              <div className="text-xs text-indigo-700 bg-white rounded px-2 py-1">Predictive Analytics</div>
+              <div className="text-xs text-indigo-700 bg-white rounded px-2 py-1">AI Coach</div>
+              <div className="text-xs text-indigo-700 bg-white rounded px-2 py-1">Natural Language</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Revolutionary Features Preview */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div className="p-4 bg-white rounded-lg border border-purple-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Users className="w-5 h-5 text-purple-600" />
+              <span className="font-medium text-gray-900">StoryGraph</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">Visual network of people, places, projects & promises</p>
+            <div className="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded">Phase 2 - Q2 2026</div>
+          </div>
+
+          <div className="p-4 bg-white rounded-lg border border-emerald-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Target className="w-5 h-5 text-emerald-600" />
+              <span className="font-medium text-gray-900">Transfer Lab</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">N-of-1 experiments to prove what works for you</p>
+            <div className="text-xs text-emerald-600 bg-emerald-100 px-2 py-1 rounded">Phase 2 - Q2 2026</div>
+          </div>
+
+          <div className="p-4 bg-white rounded-lg border border-yellow-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Award className="w-5 h-5 text-yellow-600" />
+              <span className="font-medium text-gray-900">Meaningful Wins</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">Track real-world outcomes instead of abstract scores</p>
+            <div className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded">Phase 1 - Live Now</div>
+          </div>
+
+          <div className="p-4 bg-white rounded-lg border border-blue-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Brain className="w-5 h-5 text-blue-600" />
+              <span className="font-medium text-gray-900">Coach Protocols</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">Drag-and-drop protocol builder for professionals</p>
+            <div className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">Phase 3 - Q3 2026</div>
+          </div>
+
+          <div className="p-4 bg-white rounded-lg border border-red-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Heart className="w-5 h-5 text-red-600" />
+              <span className="font-medium text-gray-900">Anxiety Regulation</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">60-120 second acute relief + preventive tools</p>
+            <div className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded">Phase 1 - Live Now</div>
+          </div>
+
+          <div className="p-4 bg-white rounded-lg border border-indigo-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-indigo-600" />
+              <span className="font-medium text-gray-900">Predictive Analytics</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">AI-powered memory performance forecasting</p>
+            <div className="text-xs text-indigo-600 bg-indigo-100 px-2 py-1 rounded">Phase 4 - Q4 2026</div>
+          </div>
+        </div>
+
+        {/* Early Access CTA */}
+        <div className="text-center">
+          <button
+            onClick={() => alert('🎉 Early Access Interest Recorded!\n\nWe\'ll notify you when these features become available for testing. Thank you for your interest in shaping the future of memory training!')}
+            className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all font-medium shadow-lg"
+          >
+            🚀 Request Early Access to Labs Features
+          </button>
+          <p className="text-sm text-gray-600 mt-3">
+            Be among the first to test revolutionary memory features and help shape the future of cognitive training
+          </p>
+        </div>
+      </div>
+
       {/* Quick Actions */}
       <div className="grid md:grid-cols-2 gap-6">
         <button
