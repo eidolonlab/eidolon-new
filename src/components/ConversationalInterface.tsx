@@ -62,7 +62,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       });
     }
 
-    if (upcomingEvents.length > 0 && attention > 60) {
+    if (upcomingEvents && upcomingEvents.length > 0 && attention > 60) {
       const nextEvent = upcomingEvents[0];
       suggestions.push({
         text: `Mental rehearsal for "${nextEvent.title}" - proven to double success rates`,
