@@ -10,7 +10,6 @@ interface IntelligentDashboardProps {
 
 const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate }) => {
   return <Dashboard onNavigate={onNavigate} />;
-  );
 };
 
 export default IntelligentDashboard;
