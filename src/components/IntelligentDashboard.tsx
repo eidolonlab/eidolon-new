@@ -425,6 +425,50 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         </div>
       )}
 
+      {currentFocus === 'sprint' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => {
+                setCurrentFocus(null);
+                setShowConversation(true);
+              }}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Dashboard</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Focused Attention Training</h1>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-8">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-8 h-8 text-purple-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Build Sustained Concentration</h2>
+              <p className="text-gray-600">Train your ability to maintain focus for extended periods</p>
+            </div>
+            <div className="space-y-4">
+              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <h3 className="font-medium text-purple-900 mb-2">How It Works</h3>
+                <div className="text-sm text-purple-800 space-y-1">
+                  <p>• Choose a focus duration (5-25 minutes)</p>
+                  <p>• Work on a single task without switching</p>
+                  <p>• Track distractions honestly when they occur</p>
+                  <p>• Build your attention span gradually over time</p>
+                </div>
+              </div>
+              <button
+                onClick={() => onNavigate('adhd')}
+                className="w-full px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors text-lg font-medium"
+              >
+                Start Focus Training Session
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Adaptive Progress Display */}
       {weaves.length > 0 && interfaceMode !== 'simple' && (
         <div className="grid md:grid-cols-4 gap-6">
