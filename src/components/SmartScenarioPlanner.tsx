@@ -175,15 +175,15 @@ const SmartScenarioPlanner: React.FC<SmartScenarioPlannerProps> = ({
         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <Calendar className="w-8 h-8 text-blue-600" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Future Scenario Rehearsal</h2>
-        <p className="text-gray-600">Implementation intentions + mental rehearsal for 2x success rates</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Smart Scenario Planning</h2>
+        <p className="text-gray-600">AI-powered mental rehearsal for upcoming events</p>
       </div>
 
       <div className="space-y-6">
         {/* Event Selection or Creation */}
         {upcomingEvents.length > 0 && !selectedEvent && (
           <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-            <h3 className="font-medium text-blue-900 mb-3">Events Ready for Mental Rehearsal</h3>
+            <h3 className="font-medium text-blue-900 mb-3">Detected Upcoming Events</h3>
             <div className="space-y-2">
               {upcomingEvents.map((event) => (
                 <button
@@ -270,4 +270,55 @@ const SmartScenarioPlanner: React.FC<SmartScenarioPlannerProps> = ({
             <div className="space-y-2">
               {planningData.ifThenPlans.filter(p => p.trim().length > 0).map((plan, index) => (
                 <div key={index} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                
+                  <div className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-medium text-blue-700">{index + 1}</span>
+                  </div>
+                  <p className="text-gray-700">{plan}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Risk Assessment */}
+        {riskAssessment.length > 0 && (
+          <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+            <div className="flex items-center space-x-2 mb-3">
+              <Target className="w-4 h-4 text-amber-600" />
+              <span className="font-medium text-amber-900">Potential Challenges</span>
+            </div>
+            <div className="space-y-1">
+              {riskAssessment.map((risk, index) => (
+                <div key={index} className="text-sm text-amber-800">• {risk}</div>
+              ))}
+            </div>
+            <p className="text-xs text-amber-700 mt-2">
+              Your if-then plans help you prepare for these scenarios
+            </p>
+          </div>
+        )}
+
+        <div className="flex space-x-3">
+          <button
+            onClick={onComplete}
+            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={!planningData.seed.trim() || !planningData.title.trim()}
+            className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <CheckCircle className="w-4 h-4" />
+            <span>Save Scenario Plan</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SmartScenarioPlanner;
+
+export default SmartScenarioPlanner
