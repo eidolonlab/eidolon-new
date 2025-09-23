@@ -148,8 +148,10 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         <div className="flex items-center justify-center space-x-3 mb-4">
           <div className={`w-12 h-12 bg-${flowColor}-100 rounded-xl flex items-center justify-center`}>
             <TimeIcon className={`w-6 h-6 text-${flowColor}-600`} />
-          {/* ADHD Support - Hero Feature */}
-          <div className="text-center mb-8">
+          </div>
+        </div>
+      </div>
+
       {/* ADHD Support - Hero Feature */}
       <div className="text-center mb-12">
         <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
