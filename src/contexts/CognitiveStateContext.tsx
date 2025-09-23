@@ -208,28 +208,27 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
 
   const getAdaptiveMessage = (): string => {
     const { attention, energy, stress, timeOfDay } = cognitiveState;
-    const activity = getOptimalActivity();
     
     const messages = {
       morning: {
-        high: "Good morning! Your mind is sharp - perfect for creating rich memories.",
-        medium: "Morning energy building - great time to capture yesterday's moments.",
-        low: "Gentle morning start - how about a quick memory from last night?"
+        high: "Good morning! Peak cognitive state detected - ideal for multi-sensory memory weaving.",
+        medium: "Morning clarity building - perfect for autobiographical memory capture.",
+        low: "Gentle morning start - stress regulation will optimize your memory systems."
       },
       afternoon: {
-        high: "Afternoon focus peak! Ideal for memory training or scenario planning.",
-        medium: "Steady afternoon energy - good for reviewing and strengthening memories.",
-        low: "Afternoon lull - perfect for gentle memory capture or breathing exercises."
+        high: "Afternoon focus peak! Optimal for spaced retrieval training or scenario rehearsal.",
+        medium: "Steady afternoon state - excellent for memory strengthening through practice.",
+        low: "Natural afternoon dip - gentle memory capture or stress regulation recommended."
       },
       evening: {
-        high: "Evening clarity! Great time to plan tomorrow or reflect on today.",
-        medium: "Winding down - capture today's meaningful moments while they're fresh.",
-        low: "Peaceful evening - gentle memory work or gratitude practice?"
+        high: "Evening clarity! Perfect for future scenario planning or memory consolidation.",
+        medium: "Reflection time - capture today's meaningful moments for long-term storage.",
+        low: "Peaceful evening - gentle memory work supports overnight consolidation."
       },
       night: {
-        high: "Late night energy! Quick memory capture before rest.",
-        medium: "Quiet night reflection - what stood out from today?",
-        low: "Rest time approaching - gentle breathing or tomorrow's intention?"
+        high: "Late night clarity! Quick memory capture before sleep consolidation.",
+        medium: "Pre-sleep reflection - capture today's highlights for overnight processing.",
+        low: "Rest preparation - gentle regulation supports memory consolidation during sleep."
       }
     };
 

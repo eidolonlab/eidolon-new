@@ -168,8 +168,8 @@ const IntelligentTrainingCoach: React.FC<IntelligentTrainingCoachProps> = ({
           <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Target className="w-8 h-8 text-orange-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Intelligent Training</h2>
-          <p className="text-gray-600">AI-optimized memory strengthening</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Spaced Retrieval Training</h2>
+          <p className="text-gray-600">Evidence-based memory strengthening with adaptive difficulty</p>
         </div>
 
         {/* Training Mode Indicator */}
@@ -189,9 +189,9 @@ const IntelligentTrainingCoach: React.FC<IntelligentTrainingCoachProps> = ({
               trainingMode === 'focused' ? 'text-red-900' :
               'text-green-900'
             }`}>
-              {trainingMode === 'gentle' ? 'Gentle Mode' :
-               trainingMode === 'focused' ? 'Focused Mode' :
-               'Adaptive Mode'}
+              {trainingMode === 'gentle' ? 'Errorless Learning Mode' :
+               trainingMode === 'focused' ? 'Free Recall Challenge' :
+               'Adaptive Spaced Retrieval'}
             </span>
           </div>
           <p className={`text-sm ${
@@ -200,10 +200,10 @@ const IntelligentTrainingCoach: React.FC<IntelligentTrainingCoachProps> = ({
             'text-green-800'
           }`}>
             {trainingMode === 'gentle' ? 
-              'Supportive hints and gentle guidance based on your current stress level.' :
+              'Gentle hints prevent errors - ideal for building confidence and reducing cognitive load.' :
               trainingMode === 'focused' ?
-              'Challenging recall practice - your cognitive state is optimal for intensive training.' :
-              'Balanced approach adapting to your responses in real-time.'
+              'Free recall without hints - your peak state enables challenging retrieval practice.' :
+              'Adaptive difficulty based on performance - optimal challenge for memory consolidation.'
             }
           </p>
         </div>

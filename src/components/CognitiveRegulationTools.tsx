@@ -99,14 +99,14 @@ const CognitiveRegulationTools: React.FC<CognitiveRegulationToolsProps> = ({ cog
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Heart className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Cognitive Regulation</h2>
-          <p className="text-gray-600">Reset your nervous system for optimal performance</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Memory State Optimization</h2>
+          <p className="text-gray-600">Regulate stress to optimize memory formation and recall</p>
         </div>
 
         {/* Stress Level Check */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-3">
-            How stressed or overwhelmed do you feel right now? (1-10)
+            Current stress level? (Stress impairs memory encoding by up to 50%)
           </label>
           <div className="flex space-x-1">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (

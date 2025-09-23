@@ -204,21 +204,21 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Brain className="w-8 h-8 text-emerald-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Rich Memory Creation</h2>
-          <p className="text-gray-600">Your cognitive state is perfect for detailed memory work</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Multi-Sensory Memory Weaving</h2>
+          <p className="text-gray-600">Peak cognitive state detected - perfect for rich autobiographical encoding</p>
         </div>
 
         {step === 1 && (
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Memory Seed
+                Memory Seed (Core moment to expand)
               </label>
               <input
                 type="text"
                 value={memoryData.seed}
                 onChange={(e) => setMemoryData(prev => ({ ...prev, seed: e.target.value }))}
-                placeholder="e.g., grandmother's kitchen, first day at work"
+                placeholder="e.g., grandmother's kitchen, first day at work, sunset walk"
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
                 autoFocus
               />
@@ -226,13 +226,13 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Memory Title
+                Memory Title (How you'll remember this)
               </label>
               <input
                 type="text"
                 value={memoryData.title}
                 onChange={(e) => setMemoryData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="Give your memory a meaningful title"
+                placeholder="e.g., Sunday Morning at Grandma's, My First Day as Manager"
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>

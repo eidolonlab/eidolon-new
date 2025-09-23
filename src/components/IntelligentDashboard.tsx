@@ -195,13 +195,13 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
 
       {currentFocus === 'weave' && (
         <div className="bg-white rounded-xl border border-gray-200 p-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Enhanced Memory Weaving</h3>
-          <p className="text-gray-600 mb-6">Your cognitive state is optimal for rich memory creation.</p>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Multi-Sensory Memory Weaving</h3>
+          <p className="text-gray-600 mb-6">Peak cognitive state detected - perfect for rich autobiographical memory formation with 5-sense encoding.</p>
           <button
             onClick={() => onNavigate('weave')}
             className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            Start Advanced Weaving
+            Begin Memory Weaving Session
           </button>
         </div>
       )}
