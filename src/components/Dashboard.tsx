@@ -388,19 +388,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <h3 className="text-lg font-semibold text-gray-900">Cognitive State</h3>
             </div>
             <button
-              onClick={() => setShowCognitiveOptimizer(true)}
+             onClick={() => setShowCognitiveOptimizer(true)}
               className="text-blue-600 hover:text-blue-700"
             >
               <Eye className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Optimize your mental state for peak memory performance
-          </p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Last check: 2h ago</span>
-            <span className="text-green-600 font-medium">Optimal</span>
-          </div>
+         <button
+           onClick={() => setShowCognitiveOptimizer(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             Optimize your mental state for peak memory performance
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>Last check: 2h ago</span>
+             <span className="text-green-600 font-medium">Optimal</span>
+           </div>
+         </button>
         </div>
 
         {/* Story Graph */}
@@ -419,13 +424,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <Eye className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Visualize connections between your memories and experiences
-          </p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>{weaves.length} memories mapped</span>
-            <span className="text-purple-600 font-medium">View network</span>
-          </div>
+         <button
+           onClick={() => setShowStoryGraph(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             Visualize connections between your memories and experiences
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>{weaves.length} memories mapped</span>
+             <span className="text-purple-600 font-medium">View network</span>
+           </div>
+         </button>
         </div>
 
         {/* Focus Sprints */}
@@ -444,13 +454,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <Play className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Structured attention training for ADHD support
-          </p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Next: 25min session</span>
-            <span className="text-orange-600 font-medium">Start now</span>
-          </div>
+         <button
+           onClick={() => setShowFocusSprints(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             6-minute focused bursts that produce meaningful wins
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>Next: 6min sprint</span>
+             <span className="text-orange-600 font-medium">Start now</span>
+           </div>
+         </button>
         </div>
 
         {/* Anxiety Regulation Toolkit */}
@@ -469,13 +484,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <Eye className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Evidence-based techniques for managing anxiety and stress
-          </p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>5 techniques available</span>
-            <span className="text-green-600 font-medium">Practice</span>
-          </div>
+         <button
+           onClick={() => setShowAnxietyToolkit(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             Evidence-based techniques for managing anxiety and stress
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>5 techniques available</span>
+             <span className="text-green-600 font-medium">Practice</span>
+           </div>
+         </button>
         </div>
 
         {/* Transfer Lab */}
@@ -494,13 +514,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <Eye className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Apply memory skills to real-world challenges and goals
-          </p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>3 active transfers</span>
-            <span className="text-indigo-600 font-medium">Explore</span>
-          </div>
+         <button
+           onClick={() => setShowTransferLab(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             N-of-1 experiments to prove what works for you
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>3 active experiments</span>
+             <span className="text-indigo-600 font-medium">Explore</span>
+           </div>
+         </button>
         </div>
 
         {/* Meaningful Wins Tracker */}
@@ -519,13 +544,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <Eye className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Track and celebrate your personal growth and achievements
-          </p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>12 wins recorded</span>
-            <span className="text-yellow-600 font-medium">Add win</span>
-          </div>
+         <button
+           onClick={() => setShowMeaningfulWins(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             Track and celebrate your personal growth and achievements
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>12 wins recorded</span>
+             <span className="text-yellow-600 font-medium">Add win</span>
+           </div>
+         </button>
         </div>
       </div>
 
