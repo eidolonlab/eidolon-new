@@ -162,6 +162,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       case 'train': return 'orange';
       case 'regulate': return 'red';
       case 'sprint': return 'purple';
+      case 'adhd': return 'blue';
       default: return 'gray';
     }
   };
