@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Zap, Play, Pause, CheckCircle, Target, Clock, Award, TrendingUp, Brain, Lightbulb, Star } from 'lucide-react';
+import { Zap, Play, Pause, CheckCircle, Target, Clock, Award, TrendingUp, Brain, Lightbulb, Star, Users, Calendar } from 'lucide-react';
 
 interface MicroAction {
   id: string;
