@@ -144,6 +144,7 @@ function App() {
                           <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
                           <p className="text-sm text-gray-600">Intelligent Memory Companion</p>
                         <p className="text-sm text-gray-600">Memory Training & Recall</p>
+                        </div>
                       </div>
                       
                       {/* Simplified Navigation */}
