@@ -174,6 +174,14 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       {showConversation && (
         <ConversationalInterface
           cognitiveState={cognitiveState}
+          onAction={(action) => {
+            setCurrentFocus(action);
+            setShowConversation(false);
+          }}
+        />
+      )}
+
+      {currentFocus === 'capture' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <button
@@ -198,6 +206,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         </div>
       )}
 
+      {currentFocus === 'retrieve' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <button
