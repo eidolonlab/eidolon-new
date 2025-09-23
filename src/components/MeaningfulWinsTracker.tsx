@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Award, TrendingUp, Calendar, CheckCircle, Star, Target, Heart, Brain, Zap, Clock } from 'lucide-react';
+import { Award, TrendingUp, Calendar, CheckCircle, Star, Target, Heart, Brain, Zap, Clock, Plus, Lightbulb } from 'lucide-react';
 
 interface MeaningfulWin {
   id: string;
