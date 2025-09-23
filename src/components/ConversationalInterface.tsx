@@ -111,6 +111,38 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     setSuggestions(suggestions.sort((a, b) => b.priority - a.priority).slice(0, 4));
   };
 
+  // Always available core actions regardless of time/state
+  const coreActions = [
+    {
+      text: "Future scenario rehearsal - build confidence for upcoming events",
+      action: "scenario",
+      icon: Calendar,
+      color: "emerald",
+      description: "Mental rehearsal with implementation intentions"
+    },
+    {
+      text: "Memory training - strengthen recall through spaced practice", 
+      action: "training",
+      icon: Target,
+      color: "orange",
+      description: "Evidence-based retrieval training"
+    },
+    {
+      text: "ADHD support - focus, working memory & executive function",
+      action: "adhd", 
+      icon: Brain,
+      color: "blue",
+      description: "Attention and cognitive control training"
+    },
+    {
+      text: "Memory weaving - create rich multi-sensory memories",
+      action: "weave",
+      icon: Sparkles, 
+      color: "purple",
+      description: "Transform moments into vivid memories"
+    }
+  ];
+
   const getActionIcon = (action: string) => {
     switch (action) {
       case 'capture': return Star;
@@ -163,7 +195,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
       {/* Intelligent Suggestions */}
       <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">What would you like to do?</h4>
+        <h4 className="font-medium text-gray-900">Recommended for you right now:</h4>
         {suggestions.map((suggestion, index) => {
           const ActionIcon = getActionIcon(suggestion.action);
           const color = getActionColor(suggestion.action);
@@ -209,6 +241,40 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
             </div>
           );
         })}
+      </div>
+
+      {/* Always Available Core Features */}
+      <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="font-medium text-gray-900">All Features Available</h4>
+          <span className="text-xs text-gray-500">Access anytime, optimized for your state</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {coreActions.map((action, index) => {
+            const ActionIcon = action.icon;
+            
+            return (
+              <button
+                key={index}
+                onClick={() => onActionSelect(action.action)}
+                className={`p-4 bg-${action.color}-50 border border-${action.color}-200 rounded-lg hover:bg-${action.color}-100 transition-all text-left group`}
+              >
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className={`w-8 h-8 bg-${action.color}-100 rounded-lg flex items-center justify-center group-hover:bg-${action.color}-200 transition-colors`}>
+                    <ActionIcon className={`w-4 h-4 text-${action.color}-600`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h5 className="font-medium text-gray-900 text-sm leading-tight">{action.text.split(' - ')[0]}</h5>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600">{action.description}</p>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-gray-500 mt-3 text-center">
+          💡 Recommendations above are optimized for your current state, but all features work anytime
+        </p>
       </div>
 
       {/* State Summary */}
