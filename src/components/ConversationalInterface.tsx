@@ -55,9 +55,9 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     // Intelligent action suggestions based on state
     if (stress > 60) {
       suggestions.push({
-        text: "Regulate stress first - it improves memory formation by 40%",
+        text: "Take 2 minutes to reset your nervous system",
         action: "regulate",
-        reasoning: "Research shows stress hormones impair memory encoding. Brief regulation optimizes your brain for training.",
+        reasoning: "High stress detected. Regulation will improve all cognitive functions.",
         priority: 10
       });
     }
@@ -65,45 +65,45 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     if (upcomingEvents.length > 0 && attention > 60) {
       const nextEvent = upcomingEvents[0];
       suggestions.push({
-        text: `Mental rehearsal for "${nextEvent.title}" - proven to double success rates`,
+        text: `Rehearse "${nextEvent.title}" (${new Date(nextEvent.scheduledFor).toLocaleDateString()})`,
         action: "plan",
-        reasoning: "Implementation intentions research shows 2x improvement in goal achievement through mental rehearsal.",
+        reasoning: "Upcoming event detected. Mental rehearsal builds confidence and performance.",
         priority: 9
       });
     }
 
     if (energy > 70 && attention > 70 && timeOfDay === 'morning') {
       suggestions.push({
-        text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
+        text: "Create a rich, detailed memory while your mind is sharp",
         action: "weave",
-        reasoning: "High attention + energy creates optimal conditions for multi-sensory memory formation. Morning cortisol supports consolidation.",
+        reasoning: "Peak cognitive state + optimal timing = perfect for complex memory work.",
         priority: 8
       });
     }
 
     if (flowState === 'focused' || flowState === 'peak') {
       suggestions.push({
-        text: "Spaced retrieval training - strengthen neural pathways while focused",
+        text: "Practice memory recall - you're in the zone!",
         action: "train",
-        reasoning: "Flow state optimizes learning. Spaced retrieval during peak focus creates 60% stronger memory consolidation.",
+        reasoning: "Flow state detected. This is ideal for challenging retrieval practice.",
         priority: 8
       });
     }
 
     // Always offer gentle capture option
     suggestions.push({
-      text: "Daily memory capture - build autobiographical memory strength",
+      text: "Capture a meaningful moment from today",
       action: "capture",
-      reasoning: "Regular autobiographical memory practice strengthens narrative coherence and life satisfaction.",
+      reasoning: "Daily memory capture builds consistency and preserves important moments.",
       priority: 6
     });
 
     // Focus sprint for medium energy
     if (energy > 40 && energy < 80 && attention > 50) {
       suggestions.push({
-        text: "Focused attention training - build sustained concentration",
+        text: "6-minute focus sprint for a meaningful win",
         action: "sprint",
-        reasoning: "Moderate arousal is optimal for attention training. Short bursts build sustained focus capacity.",
+        reasoning: "Moderate energy is perfect for focused bursts that create real progress.",
         priority: 7
       });
     }
@@ -219,8 +219,8 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
             <span className="text-gray-600">Stress: <span className="font-medium">{cognitiveState.stress}%</span></span>
           </div>
           <span className={`text-${getActionColor(cognitiveState.flowState)}-600 font-medium capitalize`}>
-          <h3 className="text-xl font-semibold text-gray-900">Memory Training Assistant</h3>
-          <p className="text-sm text-gray-600">Evidence-based recommendations for your cognitive state</p>
+            {cognitiveState.flowState}
+          </span>
         </div>
       </div>
     </div>
