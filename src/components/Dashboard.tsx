@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield } from 'lucide-react';
+import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield, Heart, Trophy } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import { useChallenge } from '../contexts/ChallengeContext';
 import DailyMemoryMoments from './DailyMemoryMoments';
@@ -7,6 +7,11 @@ import ProgressiveChallenges from './ProgressiveChallenges';
 import RealWorldImpactTracker from './RealWorldImpactTracker';
 import CognitiveStateOptimizer from './CognitiveStateOptimizer';
 import ProfileInsights from './ProfileInsights';
+import StoryGraph from './StoryGraph';
+import FocusSprints from './FocusSprints';
+import AnxietyRegulationToolkit from './AnxietyRegulationToolkit';
+import TransferLab from './TransferLab';
+import MeaningfulWinsTracker from './MeaningfulWinsTracker';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
@@ -21,6 +26,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const activeChallenge = getActiveChallenge();
   const [showCognitiveOptimizer, setShowCognitiveOptimizer] = useState(false);
   const [cognitiveState, setCognitiveState] = useState<any>(null);
+  const [showStoryGraph, setShowStoryGraph] = useState(false);
+  const [showFocusSprints, setShowFocusSprints] = useState(false);
+  const [showAnxietyToolkit, setShowAnxietyToolkit] = useState(false);
+  const [showTransferLab, setShowTransferLab] = useState(false);
+  const [showMeaningfulWins, setShowMeaningfulWins] = useState(false);
   
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
@@ -296,283 +306,4 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               
               <div className="space-y-4">
                 {recentWeaves.map((weave) => (
-                  <div key={weave.id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className={`w-3 h-3 rounded-full mt-2 ${
-                      weave.type === 'past' ? 'bg-indigo-500' : 'bg-emerald-500'
-                    }`} />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">{weave.title}</h4>
-                      <p className="text-sm text-gray-600 mt-1">"{weave.seed}"</p>
-                      <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                        <span>Score: {weave.coherenceScore}</span>
-                        <span>•</span>
-                        <span>{formatDate(weave.createdAt)}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Upcoming Scenarios */}
-          {upcomingScenarios.length > 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Upcoming Events</h3>
-                <button
-                  onClick={() => onNavigate('scenario')}
-                  className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
-                >
-                  View all
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                {upcomingScenarios.map((scenario) => (
-                  <div key={scenario.id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="w-3 h-3 rounded-full bg-emerald-500 mt-2" />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">{scenario.title}</h4>
-                      <p className="text-sm text-gray-600 mt-1">"{scenario.seed}"</p>
-                      <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                        <span>Scheduled: {scenario.scheduledFor ? formatDate(scenario.scheduledFor) : 'Not set'}</span>
-                        {scenario.ifThenPlans && scenario.ifThenPlans.length > 0 && (
-                          <>
-                            <span>•</span>
-                            <span>{scenario.ifThenPlans.length} plan{scenario.ifThenPlans.length !== 1 ? 's' : ''}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Weekly Progress - Only show if user has activity */}
-      {metrics.weeklyProgress.some(day => day > 0) && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">This Week's Progress</h3>
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <TrendingUp className="w-4 h-4" />
-              <span>{metrics.weeklyProgress.reduce((sum, day) => sum + day, 0)} sessions</span>
-            </div>
-          </div>
-          
-          <div className="flex items-end space-x-2 h-24">
-            {metrics.weeklyProgress.map((sessions, index) => {
-              const maxSessions = Math.max(...metrics.weeklyProgress, 1);
-              const height = (sessions / maxSessions) * 100;
-              const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-              const dayIndex = (new Date().getDay() - 6 + index + 7) % 7;
-              const isToday = index === 6;
-              
-              return (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div className="w-full bg-gray-200 rounded-t-lg relative" style={{ height: '80px' }}>
-                    <div
-                      className={`rounded-t-lg transition-all duration-300 ${
-                        isToday 
-                          ? 'bg-gradient-to-t from-emerald-500 to-emerald-400' 
-                          : 'bg-gradient-to-t from-indigo-500 to-indigo-400'
-                      }`}
-                      style={{ height: `${height}%`, position: 'absolute', bottom: 0, width: '100%' }}
-                    />
-                  </div>
-                  <div className="mt-2 text-xs text-center">
-                    <div className={`font-medium ${isToday ? 'text-emerald-600' : 'text-gray-600'}`}>
-                      {dayNames[dayIndex]}
-                    </div>
-                    <div className="text-gray-500">{sessions}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Real-World Impact - Show value */}
-      <RealWorldImpactTracker />
-
-      {/* Cognitive State Optimizer - Advanced Feature */}
-      {weaves.length >= 3 && (
-        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Cognitive Optimization</h3>
-                <p className="text-sm text-gray-600">AI-powered cognitive state management</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowCognitiveOptimizer(!showCognitiveOptimizer)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              {showCognitiveOptimizer ? 'Hide' : 'Optimize'}
-            </button>
-          </div>
-          
-          {showCognitiveOptimizer && (
-            <CognitiveStateOptimizer
-              onStateChange={setCognitiveState}
-              onOptimizationRecommendation={(rec) => {
-                console.log('Cognitive optimization:', rec);
-              }}
-            />
-          )}
-          
-          {cognitiveState && (
-            <div className="mt-4 grid grid-cols-3 gap-4">
-              <div className="text-center p-3 bg-white rounded-lg">
-                <div className="text-lg font-bold text-indigo-600">{cognitiveState.overallOptimization?.toFixed(0)}%</div>
-                <div className="text-xs text-gray-600">Optimization</div>
-              </div>
-              <div className="text-center p-3 bg-white rounded-lg">
-                <div className="text-lg font-bold text-purple-600">{cognitiveState.attention?.toFixed(0)}%</div>
-                <div className="text-xs text-gray-600">Attention</div>
-              </div>
-              <div className="text-center p-3 bg-white rounded-lg">
-                <div className="text-lg font-bold text-pink-600">{cognitiveState.workingMemory?.toFixed(0)}%</div>
-                <div className="text-xs text-gray-600">Working Memory</div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Getting Started Guide - For new users */}
-      {weaves.length === 0 && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-8">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Star className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Welcome to Eidolon!</h3>
-            <p className="text-gray-600 max-w-md mx-auto">
-              Evidence-based memory training that strengthens your mind and builds confidence for life's important moments.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center p-4">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Eye className="w-6 h-6 text-indigo-600" />
-              </div>
-              <h4 className="font-medium text-gray-900 mb-2">1. Create Rich Memories</h4>
-              <p className="text-sm text-gray-600">Use all five senses to build stronger, more vivid memories</p>
-            </div>
-            
-            <div className="text-center p-4">
-              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Target className="w-6 h-6 text-emerald-600" />
-              </div>
-              <h4 className="font-medium text-gray-900 mb-2">2. Practice Retrieval</h4>
-              <p className="text-sm text-gray-600">Strengthen memories through spaced practice sessions</p>
-            </div>
-            
-            <div className="text-center p-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Calendar className="w-6 h-6 text-purple-600" />
-              </div>
-              <h4 className="font-medium text-gray-900 mb-2">3. Plan Success</h4>
-              <p className="text-sm text-gray-600">Rehearse future scenarios to build unshakeable confidence</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Advanced Features - Only for experienced users */}
-      {weaves.length >= 5 && retrievalSessions.length >= 3 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Advanced Features</h3>
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Unlocked</span>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-4">
-            <button
-              onClick={() => onNavigate('insights')}
-              className="flex items-center space-x-3 p-4 bg-purple-50 rounded-lg border border-purple-200 hover:border-purple-300 hover:bg-purple-100 transition-all"
-            >
-              <TrendingUp className="w-5 h-5 text-purple-600" />
-              <div className="text-left">
-                <div className="font-medium text-gray-900">Memory Insights</div>
-                <div className="text-sm text-gray-600">AI analysis of your patterns</div>
-              </div>
-            </button>
-            
-            <ProfileInsights />
-          </div>
-        </div>
-      )}
-
-      {/* Training Profile Analytics - Show if user has created profiles */}
-      {(localStorage.getItem('eidolon-focus-profiles') || 
-        localStorage.getItem('eidolon-memory-profiles') || 
-        localStorage.getItem('eidolon-scenario-profiles')) && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Training Profile Analytics</h3>
-            <span className="text-xs text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">Wellness Tracking</span>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="flex items-center space-x-2 mb-2">
-                <Brain className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-blue-900">Focus Profiles</span>
-              </div>
-              <div className="text-sm text-blue-800">
-                {JSON.parse(localStorage.getItem('eidolon-focus-profiles') || '[]').length} active profiles
-              </div>
-            </div>
-            
-            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-              <div className="flex items-center space-x-2 mb-2">
-                <Target className="w-4 h-4 text-indigo-600" />
-                <span className="font-medium text-indigo-900">Memory Profiles</span>
-              </div>
-              <div className="text-sm text-indigo-800">
-                {JSON.parse(localStorage.getItem('eidolon-memory-profiles') || '[]').length} active profiles
-              </div>
-            </div>
-            
-            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-              <div className="text-left">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Calendar className="w-4 h-4 text-emerald-600" />
-                  <span className="font-medium text-emerald-900">Scenario Profiles</span>
-                </div>
-                <div className="text-sm text-emerald-800">
-                  {JSON.parse(localStorage.getItem('eidolon-scenario-profiles') || '[]').length} active profiles
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-            <div className="flex items-center space-x-2 mb-1">
-              <Shield className="w-3 h-3 text-green-600" />
-              <span className="text-xs font-medium text-green-800">Wellness & Fitness Focus</span>
-            </div>
-            <p className="text-xs text-green-700">
-              Training profiles are for <strong>cognitive fitness and skill building</strong> - similar to having different workout routines. 
-              This is not medical testing and makes no health claims.
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Dashboard;
+                  <div key={weave.id} className="flex items-start space-x-4
