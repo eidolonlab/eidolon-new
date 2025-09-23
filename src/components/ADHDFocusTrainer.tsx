@@ -134,6 +134,11 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
   }, [isActive, timeRemaining]);
 
   const startSession = () => {
+    if (useCustomProfile && !profileName.trim()) {
+      alert('Please enter a profile name or uncheck the custom profile option.');
+      return;
+    }
+    
     setIsActive(true);
     setStartTime(new Date());
     setTimeRemaining(selectedDuration);
@@ -164,8 +169,9 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
         // Suggest a micro-break
         setIsActive(false);
         setTimeout(() => {
-          alert("💡 Micro-break: Take 30 seconds to look out a window or do deep breathing");
-          setIsActive(true);
+          if (window.confirm("💡 Micro-break recommended: Take 30 seconds to look out a window or do deep breathing. Continue?")) {
+            setIsActive(true);
+          }
         }, 1000);
       } else {
         // Brief acknowledgment
@@ -232,6 +238,8 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
     setTaskCompleted(false);
     setStartTime(null);
     setCurrentTask('');
+    setProfileName('');
+    setUseCustomProfile(false);
   };
 
   const formatTime = (seconds: number) => {
@@ -256,7 +264,7 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
         </div>
       </div>
 
-      {!isActive && timeRemaining === selectedDuration ? (
+      {(!isActive && timeRemaining === selectedDuration) || (timeRemaining === 0) ? (
         // Setup Phase
         <div className="space-y-6">
           <div>
