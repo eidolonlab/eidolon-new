@@ -4,14 +4,14 @@ import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface ConversationalInterfaceProps {
   cognitiveState: CognitiveState;
-  upcomingEvents: any[];
+  upcomingEvents?: any[];
   onActionSelect: (action: string) => void;
   onDismiss: () => void;
 }
 
 const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
   cognitiveState,
-  upcomingEvents,
+  upcomingEvents = [],
   onActionSelect,
   onDismiss
 }) => {
