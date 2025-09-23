@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Zap, Calendar, Target, Heart, Eye, Sunrise, Coffee, Moon, Star, ArrowRight, Play, CheckCircle, Lightbulb, TrendingUp, Search } from 'lucide-react';
+import { Brain, Zap, Calendar, Target, Heart, Eye, Sunrise, Coffee, Moon, Star, ArrowRight, Play, CheckCircle, Lightbulb, TrendingUp, Search, ArrowLeft } from 'lucide-react';
 import { useCognitiveState } from '../contexts/CognitiveStateContext';
 import { useWeave } from '../contexts/WeaveContext';
 import ConversationalInterface from './ConversationalInterface';
@@ -174,24 +174,54 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       {showConversation && (
         <ConversationalInterface
           cognitiveState={cognitiveState}
-          upcomingEvents={upcomingEvents}
-          onActionSelect={(action) => {
-            setCurrentFocus(action);
-            setShowConversation(false);
-          }}
-          onDismiss={() => setShowConversation(false)}
-        />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => {
+                setCurrentFocus(null);
+                setShowConversation(true);
+              }}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Dashboard</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Memory Capture</h1>
+          </div>
+          <AdaptiveMemoryCapture 
+            cognitiveState={cognitiveState}
+            onComplete={() => {
+              setCurrentFocus(null);
+              setShowConversation(true);
+            }}
+          />
+        </div>
       )}
 
-      {/* Contextual Activity Rendering */}
-      {currentFocus === 'capture' && (
-        <AdaptiveMemoryCapture 
-          cognitiveState={cognitiveState}
-          onComplete={() => {
-            setCurrentFocus(null);
-            setShowConversation(true);
-          }}
-        />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => {
+                setCurrentFocus(null);
+                setShowConversation(true);
+              }}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Dashboard</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Memory Retrieval Guide</h1>
+          </div>
+          <MemoryRetrievalGuide
+            cognitiveState={cognitiveState}
+            onMemoryRetrieved={(memory) => {
+              console.log('Memory retrieved:', memory);
+              setCurrentFocus(null);
+              setShowConversation(true);
+            }}
+            onCreateWeave={() => onNavigate('weave')}
+          />
+        </div>
       )}
 
       {currentFocus === 'weave' && (
@@ -208,35 +238,80 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       )}
 
       {currentFocus === 'plan' && (
-        <SmartScenarioPlanner
-          cognitiveState={cognitiveState}
-          upcomingEvents={upcomingEvents}
-          onComplete={() => {
-            setCurrentFocus(null);
-            setShowConversation(true);
-          }}
-        />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => {
+                setCurrentFocus(null);
+                setShowConversation(true);
+              }}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Dashboard</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Smart Scenario Planning</h1>
+          </div>
+          <SmartScenarioPlanner
+            cognitiveState={cognitiveState}
+            upcomingEvents={upcomingEvents}
+            onComplete={() => {
+              setCurrentFocus(null);
+              setShowConversation(true);
+            }}
+          />
+        </div>
       )}
 
       {currentFocus === 'train' && (
-        <IntelligentTrainingCoach
-          cognitiveState={cognitiveState}
-          userPattern={userPattern}
-          onComplete={() => {
-            setCurrentFocus(null);
-            setShowConversation(true);
-          }}
-        />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => {
+                setCurrentFocus(null);
+                setShowConversation(true);
+              }}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Dashboard</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Intelligent Training Coach</h1>
+          </div>
+          <IntelligentTrainingCoach
+            cognitiveState={cognitiveState}
+            userPattern={userPattern}
+            onComplete={() => {
+              setCurrentFocus(null);
+              setShowConversation(true);
+            }}
+          />
+        </div>
       )}
 
       {currentFocus === 'regulate' && (
-        <CognitiveRegulationTools
-          cognitiveState={cognitiveState}
-          onComplete={() => {
-            setCurrentFocus(null);
-            setShowConversation(true);
-          }}
-        />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => {
+                setCurrentFocus(null);
+                setShowConversation(true);
+              }}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Dashboard</span>
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">Cognitive State Optimization</h1>
+          </div>
+          <CognitiveRegulationTools
+            cognitiveState={cognitiveState}
+            onComplete={() => {
+              setCurrentFocus(null);
+              setShowConversation(true);
+            }}
+          />
+        </div>
       )}
 
       {/* Adaptive Progress Display */}
@@ -285,7 +360,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       )}
 
       {/* Upcoming Events Preview */}
-      {upcomingEvents.length > 0 && (
+      {!currentFocus && !showConversation && weaves.length >= 3 && (
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>
           <div className="space-y-3">
