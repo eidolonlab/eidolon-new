@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Brain, Calendar, Target, Heart, Zap, ArrowRight, X, Sparkles, Clock, Star } from 'lucide-react';
+import { MessageSquare, Brain, Calendar, Target, Heart, Zap, ArrowRight, X, Sparkles, Clock, Star, Users, Shield } from 'lucide-react';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface ConversationalInterfaceProps {
@@ -27,9 +27,6 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
   useEffect(() => {
     generateIntelligentSuggestions();
   }, [cognitiveState, upcomingEvents]);
-
-  // Add missing imports
-  const { Users, Shield } = require('lucide-react');
 
   const generateIntelligentSuggestions = () => {
     const { attention, energy, stress, timeOfDay, flowState } = cognitiveState;
