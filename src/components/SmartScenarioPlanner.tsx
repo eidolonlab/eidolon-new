@@ -320,5 +320,3 @@ const SmartScenarioPlanner: React.FC<SmartScenarioPlannerProps> = ({
 };
 
 export default SmartScenarioPlanner;
-
-export default SmartScenarioPlanner
