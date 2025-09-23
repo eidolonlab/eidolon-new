@@ -142,7 +142,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   }
 
   return (
-    <div className="space-y-8">
+    <>
+      <div className="space-y-8">
       {/* Intelligent Header */}
       <div className="text-center">
         <div className="flex items-center justify-center space-x-3 mb-4">
@@ -915,8 +916,9 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
             )}
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
