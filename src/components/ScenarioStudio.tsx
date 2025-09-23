@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Clock, MapPin, Plus, Trash2, Save, Zap, Target, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import InteractiveCueEngine from './InteractiveCueEngine';
