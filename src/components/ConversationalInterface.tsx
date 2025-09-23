@@ -294,4 +294,4 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
   );
 };
 
-export default IntelligentDashboard;
+export default ConversationalInterface;
