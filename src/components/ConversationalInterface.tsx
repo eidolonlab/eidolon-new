@@ -32,33 +32,29 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     const { attention, energy, stress, timeOfDay, flowState } = cognitiveState;
     const suggestions = [];
 
-    // Advanced contextual greeting and analysis based on circadian rhythms
+    // Advanced contextual greeting based on circadian rhythms
     let greeting = '';
     const hour = new Date().getHours();
     
     if (hour < 12) {
-      // Morning Flow (Before 12 PM)
       greeting = energy > 70 && attention > 70 ? 
-        "🌅 Morning Flow Active! Peak cognitive state detected - ideal for multi-sensory memory weaving." :
+        "🌅 Morning Flow Active! Peak cognitive state detected - ideal for guided memory retrieval and multi-sensory encoding." :
         energy > 50 ?
-        "🌅 Morning Flow Active! Building clarity - perfect for autobiographical memory capture." :
-        "🌅 Morning Flow Active! Gentle start recommended - let's ease into cognitive work.";
+        "🌅 Morning Flow Active! Building clarity - perfect for autobiographical memory recovery with intelligent cues." :
+        "🌅 Morning Flow Active! Gentle start recommended - let's ease into memory work with supportive guidance.";
     } else if (hour < 17) {
-      // Afternoon Flow (12-5 PM)
       greeting = attention > 70 ?
-        "☀️ Afternoon Flow Active! Focus peak detected - optimal for spaced retrieval training." :
+        "☀️ Afternoon Flow Active! Focus peak detected - optimal for spaced retrieval training and memory strengthening." :
         attention > 50 ?
-        "☀️ Afternoon Flow Active! Steady state - excellent for memory strengthening practice." :
-        "☀️ Afternoon Flow Active! Natural dip - scenario planning works well now.";
+        "☀️ Afternoon Flow Active! Steady state - excellent for guided memory recovery and scenario rehearsal." :
+        "☀️ Afternoon Flow Active! Natural dip - gentle memory capture and reflection work well now.";
     } else if (hour < 21) {
-      // Evening Flow (5-9 PM)
       greeting = stress < 40 ?
-        "🌆 Evening Flow Active! Peaceful state - perfect for reflection and capturing today's moments." :
+        "🌆 Evening Flow Active! Peaceful state - perfect for reflection and capturing today's meaningful moments." :
         stress < 60 ?
         "🌆 Evening Flow Active! Winding down - gentle memory work supports overnight consolidation." :
         "🌆 Evening Flow Active! Busy day detected - stress regulation recommended before memory work.";
     } else {
-      // Night Flow (After 9 PM)
       greeting = stress < 40 ?
         "🌙 Night Flow Active! Calm evening - gentle memory capture before sleep consolidation." :
         "🌙 Night Flow Active! Late night energy - quick moment preservation recommended.";
@@ -66,7 +62,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
     setCurrentMessage(greeting);
 
-    // Advanced time-based and state-based recommendations
+    // Intelligent recommendations based on time and state
     if (hour >= 21) {
       // Night Flow - Only gentle activities
       suggestions.push({
@@ -78,47 +74,53 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       
       if (stress > 50) {
         suggestions.push({
-          text: "Stress regulation - calm your mind for better sleep and memory consolidation",
+          text: "Memory state optimization - calm your mind for better consolidation",
           action: "regulate",
-          reasoning: "High evening stress impairs sleep quality and memory consolidation. Regulation is essential.",
+          reasoning: "High evening stress impairs sleep quality and memory consolidation. Regulation enhances overnight memory processing.",
           priority: 9
         });
       }
     } else if (stress > 60) {
-      // High stress - prioritize regulation regardless of time
+      // High stress - prioritize regulation
+      suggestions.push({
+        text: "Memory state optimization - reduce stress for better encoding",
+        action: "regulate",
+        reasoning: "High stress impairs memory formation by 50%. Regulation restores optimal encoding conditions.",
+        priority: 10
+      });
       suggestions.push({
         text: "ADHD support tools - stress often worsens attention challenges",
         action: "adhd",
-        reasoning: "High stress compounds ADHD symptoms. Our focus training includes stress regulation techniques.",
-        priority: 10
+        reasoning: "Stress compounds attention difficulties. Our focus training includes integrated stress regulation.",
+        priority: 9
       });
     } else if (hour < 12 && energy > 70 && attention > 70) {
       // Morning Flow - Peak cognitive state
       suggestions.push({
-        text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
-        action: "weave",
-        reasoning: "Morning cortisol + high attention creates optimal conditions for complex memory formation. 65% stronger encoding.",
-        priority: 9
+        text: "Guided memory retrieval - recover forgotten experiences with AI cues",
+        action: "retrieve",
+        reasoning: "Morning cortisol + high attention creates optimal conditions for memory reconstruction. 65% stronger retrieval success.",
+        priority: 10
       });
       suggestions.push({
-        text: "ADHD focus training - build sustained attention capacity",
-        action: "adhd", 
-        reasoning: "High energy state perfect for challenging attention exercises. Morning focus training shows 40% better results.",
-        priority: 8
+        text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
+        action: "weave",
+        reasoning: "Peak cognitive state enables complex multi-sensory memory formation with 40% better consolidation.",
+        priority: 9
       });
     } else if (hour >= 12 && hour < 17 && attention > 60) {
       // Afternoon Flow - Sustained attention optimal
       suggestions.push({
         text: "Spaced retrieval training - strengthen neural pathways while focused",
         action: "train",
-        reasoning: "Afternoon attention stability optimal for retrieval practice. Spaced training during steady focus creates 50% stronger consolidation.",
-        priority: 8
+        reasoning: "Afternoon attention stability optimal for retrieval practice. Spaced training creates 50% stronger consolidation.",
+        priority: 9
       });
       suggestions.push({
-        text: "Future scenario rehearsal - plan for upcoming events",
-        action: "scenario",
-        reasoning: "Afternoon planning cognition is optimal for implementation intentions and mental rehearsal.",
-        priority: 7
+        text: "Smart scenario planning - prepare for upcoming events with AI guidance",
+        action: "plan",
+        reasoning: "Afternoon planning cognition optimal for implementation intentions and detailed mental rehearsal.",
+        priority: 8
       });
     } else if (hour >= 17 && hour < 21) {
       // Evening Flow - Reflection and preparation
@@ -126,103 +128,50 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         text: "Daily memory capture - reflect on today's meaningful moments",
         action: "capture",
         reasoning: "Evening reflection enhances memory consolidation. Capturing daily moments improves autobiographical coherence.",
-        priority: 8
+        priority: 9
       });
       suggestions.push({
         text: "Tomorrow's scenario planning - prepare for upcoming events",
-        action: "scenario",
+        action: "plan",
         reasoning: "Evening planning for next-day events improves implementation success by 60%.",
-        priority: 7
+        priority: 8
       });
     }
 
-    // Always suggest ADHD support prominently (but adapt priority by time)
-    suggestions.push({
-      text: "ADHD support - build focus, working memory & executive function",
-      action: "adhd",
-      reasoning: "8-12% of adults have ADHD. Even neurotypical users benefit from attention training for productivity and focus.",
-      priority: hour >= 21 ? 6 : 9 // Lower priority during night flow
-    });
-
-    // Always offer gentle capture option (but adapt messaging by time)
-    suggestions.push({
-      text: hour >= 21 ? "Gentle moment capture - preserve today before sleep" : 
-            hour >= 17 ? "Daily memory capture - reflect on today's meaningful moments" :
-            "Memory capture - build autobiographical memory strength",
-      action: "capture",
-      reasoning: hour >= 21 ? "Evening memory capture before sleep enhances overnight consolidation." :
-                hour >= 17 ? "Evening reflection improves memory consolidation and life satisfaction." :
-                "Regular autobiographical memory practice strengthens narrative coherence and life satisfaction.",
-      priority: hour >= 21 ? 8 : 6
-    });
-
-    // Focus sprint for medium energy (not during night flow)
-    if (hour < 21 && energy > 40 && energy < 80 && attention > 50) {
+    // Always available but time-adapted
+    if (hour < 21) {
       suggestions.push({
-        text: "Focused attention training - build sustained concentration",
-        action: "sprint",
-        reasoning: "Moderate arousal is optimal for attention training. Short bursts build sustained focus capacity.",
-        priority: 4
+        text: "ADHD support - build focus, working memory & executive function",
+        action: "adhd",
+        reasoning: "Attention training benefits everyone. Optimal during active hours for sustained focus building.",
+        priority: 7
       });
     }
 
     setSuggestions(suggestions.sort((a, b) => b.priority - a.priority).slice(0, 4));
   };
 
-  // Always available core actions regardless of time/state
-  const coreActions = [
-    {
-      text: "Future scenario rehearsal - build confidence for upcoming events",
-      action: "scenario",
-      icon: Calendar,
-      color: "emerald",
-      description: "Mental rehearsal with implementation intentions"
-    },
-    {
-      text: "Memory training - strengthen recall through spaced practice", 
-      action: "training",
-      icon: Target,
-      color: "orange",
-      description: "Evidence-based retrieval training"
-    },
-    {
-      text: "ADHD support - focus, working memory & executive function",
-      action: "adhd", 
-      icon: Brain,
-      color: "blue",
-      description: "Attention and cognitive control training"
-    },
-    {
-      text: "Memory weaving - create rich multi-sensory memories",
-      action: "weave",
-      icon: Sparkles, 
-      color: "purple",
-      description: "Transform moments into vivid memories"
-    }
-  ];
-
   const getActionIcon = (action: string) => {
     switch (action) {
+      case 'retrieve': return Search;
       case 'capture': return Star;
-      case 'weave': return Brain;
+      case 'weave': return Sparkles;
       case 'plan': return Calendar;
       case 'train': return Target;
       case 'regulate': return Heart;
-      case 'sprint': return Zap;
-      case 'adhd': return Brain;
-      default: return Sparkles;
+      case 'adhd': return Shield;
+      default: return Brain;
     }
   };
 
   const getActionColor = (action: string) => {
     switch (action) {
       case 'retrieve': return 'indigo';
-      case 'capture': return 'indigo';
-      case 'weave': return 'emerald';
+      case 'capture': return 'emerald';
+      case 'weave': return 'purple';
       case 'plan': return 'blue';
       case 'train': return 'orange';
       case 'regulate': return 'red';
-      case 'sprint': return 'purple';
       case 'adhd': return 'blue';
       default: return 'gray';
     }
@@ -310,27 +259,65 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
           <span className="text-xs text-gray-500">Access anytime, optimized for your state</span>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          {coreActions.map((action, index) => {
-            const ActionIcon = action.icon;
-            
-            return (
-              <button
-                key={index}
-                onClick={() => onActionSelect(action.action)}
-                className={`p-4 bg-${action.color}-50 border border-${action.color}-200 rounded-lg hover:bg-${action.color}-100 transition-all text-left group`}
-              >
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className={`w-8 h-8 bg-${action.color}-100 rounded-lg flex items-center justify-center group-hover:bg-${action.color}-200 transition-colors`}>
-                    <ActionIcon className={`w-4 h-4 text-${action.color}-600`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h5 className="font-medium text-gray-900 text-sm leading-tight">{action.text.split(' - ')[0]}</h5>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600">{action.description}</p>
-              </button>
-            );
-          })}
+          <button
+            onClick={() => onActionSelect('plan')}
+            className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-all text-left group"
+          >
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                <Calendar className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="font-medium text-gray-900 text-sm leading-tight">Future scenario rehearsal</h5>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600">Mental rehearsal with implementation intentions</p>
+          </button>
+
+          <button
+            onClick={() => onActionSelect('train')}
+            className="p-4 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 transition-all text-left group"
+          >
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                <Target className="w-4 h-4 text-orange-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="font-medium text-gray-900 text-sm leading-tight">Memory training</h5>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600">Evidence-based retrieval training</p>
+          </button>
+
+          <button
+            onClick={() => onActionSelect('adhd')}
+            className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-all text-left group"
+          >
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                <Shield className="w-4 h-4 text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="font-medium text-gray-900 text-sm leading-tight">ADHD support</h5>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600">Attention and cognitive control training</p>
+          </button>
+
+          <button
+            onClick={() => onActionSelect('weave')}
+            className="p-4 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-all text-left group"
+          >
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                <Sparkles className="w-4 h-4 text-purple-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="font-medium text-gray-900 text-sm leading-tight">Memory weaving</h5>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600">Transform moments into vivid memories</p>
+          </button>
         </div>
         <p className="text-xs text-gray-500 mt-3 text-center">
           💡 Recommendations above are optimized for your current state, but all features work anytime
@@ -345,7 +332,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
             <span className="text-gray-600">Energy: <span className="font-medium">{cognitiveState.energy}%</span></span>
             <span className="text-gray-600">Stress: <span className="font-medium">{cognitiveState.stress}%</span></span>
           </div>
-          <span className={`text-${getActionColor(cognitiveState.flowState)}-600 font-medium capitalize`}>
+          <span className="text-indigo-600 font-medium capitalize">
             {cognitiveState.flowState}
           </span>
         </div>

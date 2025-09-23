@@ -6,7 +6,7 @@ export interface CognitiveState {
   stress: number; // 0-100
   mood: number; // 0-100
   cognitiveLoad: 'light' | 'medium' | 'high';
-  optimalActivity: 'capture' | 'weave' | 'train' | 'plan' | 'rest';
+  optimalActivity: 'retrieve' | 'capture' | 'plan' | 'train' | 'regulate';
   flowState: 'disrupted' | 'building' | 'focused' | 'peak';
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
   lastUpdated: Date;
@@ -47,7 +47,7 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     stress: 30,
     mood: 75,
     cognitiveLoad: 'medium',
-    optimalActivity: 'capture',
+    optimalActivity: 'retrieve',
     flowState: 'building',
     timeOfDay: getTimeOfDay(),
     lastUpdated: new Date()
@@ -70,7 +70,7 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     return 'night';
   }
 
-  // Auto-update time of day
+  // Auto-update time of day every minute
   useEffect(() => {
     const interval = setInterval(() => {
       setCognitiveState(prev => ({
@@ -187,6 +187,9 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
   const getOptimalActivity = (): string => {
     const { attention, energy, stress, timeOfDay } = cognitiveState;
     
+    // Night flow - only gentle activities
+    if (timeOfDay === 'night') return 'capture';
+    
     // High stress = need regulation first
     if (stress > 70) return 'regulate';
     
@@ -195,15 +198,15 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     
     // High attention + energy = complex work
     if (attention > 70 && energy > 70) {
-      if (timeOfDay === userPattern.bestTimeForMemory) return 'weave';
+      if (timeOfDay === userPattern.bestTimeForMemory) return 'retrieve';
       return 'train';
     }
     
     // Medium state = scenario planning
     if (attention > 50) return 'plan';
     
-    // Default = capture moments
-    return 'capture';
+    // Default = guided retrieval
+    return 'retrieve';
   };
 
   const getAdaptiveMessage = (): string => {
@@ -211,18 +214,18 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     
     const messages = {
       morning: {
-        high: "Good morning! Peak cognitive state detected - ideal for multi-sensory memory weaving.",
-        medium: "Morning clarity building - perfect for autobiographical memory capture.",
+        high: "Good morning! Peak cognitive state detected - ideal for guided memory retrieval and multi-sensory encoding.",
+        medium: "Morning clarity building - perfect for autobiographical memory recovery with intelligent cues.",
         low: "Gentle morning start - stress regulation will optimize your memory systems."
       },
       afternoon: {
-        high: "Afternoon focus peak! Optimal for spaced retrieval training or scenario rehearsal.",
-        medium: "Steady afternoon state - excellent for memory strengthening through practice.",
-        low: "Natural afternoon dip - gentle memory capture or stress regulation recommended."
+        high: "Afternoon focus peak! Optimal for spaced retrieval training and memory strengthening.",
+        medium: "Steady afternoon state - excellent for guided memory recovery and scenario rehearsal.",
+        low: "Natural afternoon dip - gentle memory capture and reflection work well now."
       },
       evening: {
-        high: "Evening clarity! Perfect for future scenario planning or memory consolidation.",
-        medium: "Reflection time - capture today's meaningful moments for long-term storage.",
+        high: "Evening clarity! Perfect for reflection and capturing today's meaningful moments.",
+        medium: "Reflection time - capture today's highlights and prepare for tomorrow's scenarios.",
         low: "Peaceful evening - gentle memory work supports overnight consolidation."
       },
       night: {
