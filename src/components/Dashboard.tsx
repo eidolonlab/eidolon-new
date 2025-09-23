@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield, Heart, Trophy, Sparkles, MessageSquare, ArrowRight, X, Search } from 'lucide-react';
+import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield, Heart, Trophy, Sparkles, MessageSquare, ArrowRight, X, Search, Sunrise, Coffee, Moon, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import { useChallenge } from '../contexts/ChallengeContext';
 import ConversationalInterface from './ConversationalInterface';
@@ -18,6 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const totalXP = getTotalXP();
   const activeChallenge = getActiveChallenge();
   const [showConversationalAI, setShowConversationalAI] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
   
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
@@ -25,29 +26,175 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     .sort((a, b) => (a.scheduledFor!.getTime() - b.scheduledFor!.getTime()))
     .slice(0, 2);
 
+  // Update time every minute for adaptive flow
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Adaptive flow based on time of day
+  const getTimeOfDay = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return 'morning';
+    if (hour < 17) return 'afternoon';
+    if (hour < 21) return 'evening';
+    return 'night';
+  };
+
+  const getTimeIcon = () => {
+    const timeOfDay = getTimeOfDay();
+    switch (timeOfDay) {
+      case 'morning': return Sunrise;
+      case 'afternoon': return Coffee;
+      case 'evening': return Heart;
+      case 'night': return Moon;
+      default: return Sunrise;
+    }
+  };
+
+  const getAdaptiveMessage = () => {
+    const timeOfDay = getTimeOfDay();
+    const { attention, energy, stress } = cognitiveState;
+    
+    switch (timeOfDay) {
+      case 'morning':
+        return energy > 70 ? 
+          "Good morning! Peak cognitive state detected - ideal for multi-sensory memory weaving." :
+          "Morning clarity building - perfect for autobiographical memory capture.";
+      case 'afternoon':
+        return attention > 70 ?
+          "Afternoon focus peak! Optimal for spaced retrieval training or scenario rehearsal." :
+          "Steady afternoon state - excellent for memory strengthening through practice.";
+      case 'evening':
+        return stress < 40 ?
+          "Peaceful evening - perfect for reflection and capturing today's meaningful moments." :
+          "Busy day? Let's wind down with gentle memory work that supports overnight consolidation.";
+      case 'night':
+        return "Late night clarity! Quick memory capture before sleep consolidation.";
+      default:
+        return "Ready to strengthen your memories?";
+    }
+  };
+
+  const getOptimalActivities = () => {
+    const timeOfDay = getTimeOfDay();
+    const { attention, energy, stress } = cognitiveState;
+    
+    if (timeOfDay === 'night') {
+      return [
+        {
+          action: 'capture',
+          title: 'Gentle Memory Capture',
+          description: 'Preserve today\'s moments before sleep',
+          priority: 10,
+          reasoning: 'Night time is optimal for gentle reflection and memory consolidation preparation'
+        }
+      ];
+    }
+    
+    if (stress > 60) {
+      return [
+        {
+          action: 'adhd',
+          title: 'Stress Regulation & Focus',
+          description: 'Calm your mind and build attention',
+          priority: 10,
+          reasoning: 'High stress impairs memory formation - regulation comes first'
+        }
+      ];
+    }
+    
+    if (timeOfDay === 'morning' && energy > 70 && attention > 70) {
+      return [
+        {
+          action: 'weave',
+          title: 'Multi-Sensory Memory Weaving',
+          description: 'Peak state for rich memory formation',
+          priority: 9,
+          reasoning: 'Morning cortisol and high attention create optimal encoding conditions'
+        },
+        {
+          action: 'adhd',
+          title: 'Advanced Focus Training',
+          description: 'Build sustained attention capacity',
+          priority: 8,
+          reasoning: 'High energy state perfect for challenging attention exercises'
+        }
+      ];
+    }
+    
+    return [
+      {
+        action: 'adhd',
+        title: 'ADHD Support & Focus Training',
+        description: 'Build attention and cognitive control',
+        priority: 9,
+        reasoning: 'Attention training benefits everyone and adapts to your current state'
+      },
+      {
+        action: 'capture',
+        title: 'Memory Capture',
+        description: 'Preserve meaningful moments',
+        priority: 7,
+        reasoning: 'Always beneficial for autobiographical memory strength'
+      }
+    ];
+  };
+
+  const timeOfDay = getTimeOfDay();
+  const TimeIcon = getTimeIcon();
+  const adaptiveMessage = getAdaptiveMessage();
+  const optimalActivities = getOptimalActivities();
   return (
     <div className="space-y-8">
-      {/* ADHD Support Hero Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-8">
+      {/* Adaptive Time-Based Hero Section */}
+      <div className={`rounded-2xl border p-8 ${
+        timeOfDay === 'morning' ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' :
+        timeOfDay === 'afternoon' ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200' :
+        timeOfDay === 'evening' ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200' :
+        'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200'
+      }`}>
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Struggling with Focus & Attention?
-          </h2>
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <TimeIcon className={`w-8 h-8 ${
+              timeOfDay === 'morning' ? 'text-yellow-600' :
+              timeOfDay === 'afternoon' ? 'text-blue-600' :
+              timeOfDay === 'evening' ? 'text-purple-600' :
+              'text-indigo-600'
+            }`} />
+            <h2 className="text-2xl font-bold text-gray-900 capitalize">
+              {timeOfDay} Flow Active
+            </h2>
+          </div>
           <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-            Get immediate relief with evidence-based ADHD support. Build sustained attention, working memory, 
-            and executive function with tools designed by cognitive scientists.
+            {adaptiveMessage}
           </p>
           
-          <button
-            onClick={() => onNavigate('adhd')}
-            className="inline-flex items-center space-x-3 px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all text-lg font-medium shadow-lg hover:shadow-xl"
-          >
-            <Brain className="w-6 h-6" />
-            <span>Start ADHD Support Now</span>
-          </button>
+          {optimalActivities.length > 0 && (
+            <button
+              onClick={() => onNavigate(optimalActivities[0].action as any)}
+              className={`inline-flex items-center space-x-3 px-8 py-4 text-white rounded-xl hover:shadow-xl transition-all text-lg font-medium shadow-lg ${
+                timeOfDay === 'morning' ? 'bg-yellow-600 hover:bg-yellow-700' :
+                timeOfDay === 'afternoon' ? 'bg-blue-600 hover:bg-blue-700' :
+                timeOfDay === 'evening' ? 'bg-purple-600 hover:bg-purple-700' :
+                'bg-indigo-600 hover:bg-indigo-700'
+              }`}
+            >
+              <Brain className="w-6 h-6" />
+              <span>{optimalActivities[0].title}</span>
+            </button>
+          )}
           
-          <div className="mt-4 text-sm text-blue-700">
-            <span className="font-medium">✨ 25-40% improvement in sustained attention • Research-backed</span>
+          <div className={`mt-4 text-sm font-medium ${
+            timeOfDay === 'morning' ? 'text-yellow-700' :
+            timeOfDay === 'afternoon' ? 'text-blue-700' :
+            timeOfDay === 'evening' ? 'text-purple-700' :
+            'text-indigo-700'
+          }`}>
+            <span>✨ Optimized for {timeOfDay} cognitive state • Updates every minute</span>
           </div>
         </div>
       </div>
