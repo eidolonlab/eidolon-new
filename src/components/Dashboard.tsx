@@ -215,7 +215,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 <Award className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">{metrics.avgCoherenceScore}</div>
+                   <div key={weave.id} className="flex items-start space-x-4">
                 <div className="text-sm text-gray-600">Quality Score</div>
               </div>
             </div>
