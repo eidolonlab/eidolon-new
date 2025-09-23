@@ -247,8 +247,11 @@ function App() {
               
               {/* Settings Panel */}
               {showSettings && (
-                  <p className="text-sm text-red-600 font-medium">ADHD Relief & Memory Training</p>
+                <SettingsPanel onClose={() => setShowSettings(false)} />
               )}
+                  <p className="text-sm text-red-600 font-medium">ADHD Relief & Memory Training</p>
+              </div>
+              </header>
               </div>
             } />
           </Routes>
