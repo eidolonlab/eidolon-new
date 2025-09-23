@@ -238,16 +238,16 @@ function App() {
                     ))}
                   </div>
                 </nav>
-              
+        <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50 shadow-sm">
               {/* PWA Install Prompt */}
               <InstallPrompt />
               
-              {/* Consent Banner */}
+                <div className="w-10 h-10 bg-gradient-to-br from-red-600 via-orange-600 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
               <ConsentBanner />
               
               {/* Settings Panel */}
               {showSettings && (
-                <SettingsPanel onClose={() => setShowSettings(false)} />
+                  <p className="text-sm text-red-600 font-medium">ADHD Relief & Memory Training</p>
               )}
               </div>
             } />

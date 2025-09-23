@@ -28,6 +28,9 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     generateIntelligentSuggestions();
   }, [cognitiveState, upcomingEvents]);
 
+  // Add missing imports
+  const { Users, Shield } = require('lucide-react');
+
   const generateIntelligentSuggestions = () => {
     const { attention, energy, stress, timeOfDay, flowState } = cognitiveState;
     const suggestions = [];
