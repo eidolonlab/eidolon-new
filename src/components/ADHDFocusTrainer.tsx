@@ -309,12 +309,81 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
             </label>
           </div>
 
+          {/* Training Profile Selection */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="useProfile"
+                checked={useCustomProfile}
+                onChange={(e) => setUseCustomProfile(e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label htmlFor="useProfile" className="text-sm text-gray-700">
+                Create named training profile (track progress separately)
+              </label>
+            </div>
+            
+            {useCustomProfile && (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Focus Training Profile Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    placeholder="e.g., Morning Focus, Post-Coffee, Deep Work"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Track different focus training conditions separately
+                  </p>
+                </div>
+                
+                {/* Existing Profiles */}
+                {savedProfiles.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Or select existing profile:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {savedProfiles.map((profile, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setProfileName(profile.name)}
+                          className={`p-2 text-left border rounded-lg transition-colors ${
+                            profileName === profile.name
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="font-medium text-sm">{profile.name}</div>
+                          <div className="text-xs text-gray-500">
+                            {profile.sessions} sessions • Avg: {Math.round(profile.avgFocusScore)}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <button
             onClick={startSession}
+            disabled={useCustomProfile && !profileName.trim()}
             className="w-full flex items-center justify-center space-x-2 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium"
           >
             <Play className="w-5 h-5" />
-            <span>Start {formatTime(selectedDuration)} Focus Session</span>
+            <span>
+              {useCustomProfile && profileName.trim() ? 
+                `Start "${profileName}" Session (${formatTime(selectedDuration)})` : 
+                `Start ${formatTime(selectedDuration)} Focus Session`
+              }
+            </span>
           </button>
         </div>
       ) : (
@@ -472,81 +541,12 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
               <span>{isActive ? 'Pause' : 'Resume'}</span>
             </button>
             
-            {/* Training Profile Selection */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  id="useProfile"
-                  checked={useCustomProfile}
-                  onChange={(e) => setUseCustomProfile(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label htmlFor="useProfile" className="text-sm text-gray-700">
-                  Create named training profile (track progress separately)
-                </label>
-              </div>
-              
-              {useCustomProfile && (
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Focus Training Profile Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profileName}
-                      onChange={(e) => setProfileName(e.target.value)}
-                      placeholder="e.g., Morning Focus, Post-Coffee, Deep Work"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Track different focus training conditions separately
-                    </p>
-                  </div>
-                  
-                  {/* Existing Profiles */}
-                  {savedProfiles.length > 0 && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Or select existing profile:
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {savedProfiles.map((profile, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setProfileName(profile.name)}
-                            className={`p-2 text-left border rounded-lg transition-colors ${
-                              profileName === profile.name
-                                ? 'border-blue-500 bg-blue-50'
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                          >
-                            <div className="font-medium text-sm">{profile.name}</div>
-                            <div className="text-xs text-gray-500">
-                              {profile.sessions} sessions • Avg: {Math.round(profile.avgFocusScore)}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-            
             <button
               onClick={reset}
-              disabled={useCustomProfile && !profileName.trim()}
               className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>
-                {useCustomProfile && profileName.trim() ? 
-                  `Start "${profileName}" Session (${formatTime(selectedDuration)})` : 
-                  `Continue Main Training (${formatTime(selectedDuration)})`
-                }
-              </span>
+              <span>Reset</span>
             </button>
           </div>
 
