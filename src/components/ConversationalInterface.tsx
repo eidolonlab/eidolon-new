@@ -62,16 +62,6 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       });
     }
 
-    if (upcomingEvents && upcomingEvents.length > 0 && attention > 60) {
-      const nextEvent = upcomingEvents[0];
-      suggestions.push({
-        text: `Mental rehearsal for "${nextEvent.title}" - proven to double success rates`,
-        action: "plan",
-        reasoning: "Implementation intentions research shows 2x improvement in goal achievement through mental rehearsal.",
-        priority: 9
-      });
-    }
-
     if (energy > 70 && attention > 70 && timeOfDay === 'morning') {
       suggestions.push({
         text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
