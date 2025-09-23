@@ -149,6 +149,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       case 'train': return Target;
       case 'regulate': return Heart;
       case 'sprint': return Zap;
+      case 'adhd': return Brain;
       default: return Sparkles;
     }
   };
