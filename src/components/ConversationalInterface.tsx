@@ -32,72 +32,132 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     const { attention, energy, stress, timeOfDay, flowState } = cognitiveState;
     const suggestions = [];
 
-    // Contextual greeting and analysis
+    // Advanced contextual greeting and analysis based on circadian rhythms
     let greeting = '';
-    if (timeOfDay === 'morning') {
-      greeting = energy > 70 ? 
-        "Good morning! You're starting strong today." :
-        "Good morning! Let's ease into the day gently.";
-    } else if (timeOfDay === 'afternoon') {
+    const hour = new Date().getHours();
+    
+    if (hour < 12) {
+      // Morning Flow (Before 12 PM)
+      greeting = energy > 70 && attention > 70 ? 
+        "🌅 Morning Flow Active! Peak cognitive state detected - ideal for multi-sensory memory weaving." :
+        energy > 50 ?
+        "🌅 Morning Flow Active! Building clarity - perfect for autobiographical memory capture." :
+        "🌅 Morning Flow Active! Gentle start recommended - let's ease into cognitive work.";
+    } else if (hour < 17) {
+      // Afternoon Flow (12-5 PM)
       greeting = attention > 70 ?
-        "Afternoon focus is looking good!" :
-        "Afternoon energy dip? That's totally normal.";
-    } else if (timeOfDay === 'evening') {
+        "☀️ Afternoon Flow Active! Focus peak detected - optimal for spaced retrieval training." :
+        attention > 50 ?
+        "☀️ Afternoon Flow Active! Steady state - excellent for memory strengthening practice." :
+        "☀️ Afternoon Flow Active! Natural dip - scenario planning works well now.";
+    } else if (hour < 21) {
+      // Evening Flow (5-9 PM)
       greeting = stress < 40 ?
-        "Peaceful evening - perfect for reflection." :
-        "Busy day? Let's wind down mindfully.";
+        "🌆 Evening Flow Active! Peaceful state - perfect for reflection and capturing today's moments." :
+        stress < 60 ?
+        "🌆 Evening Flow Active! Winding down - gentle memory work supports overnight consolidation." :
+        "🌆 Evening Flow Active! Busy day detected - stress regulation recommended before memory work.";
     } else {
-      greeting = "Late night clarity can be powerful for memory work.";
+      // Night Flow (After 9 PM)
+      greeting = stress < 40 ?
+        "🌙 Night Flow Active! Calm evening - gentle memory capture before sleep consolidation." :
+        "🌙 Night Flow Active! Late night energy - quick moment preservation recommended.";
     }
 
     setCurrentMessage(greeting);
 
-    // Intelligent action suggestions based on state
-    if (stress > 60) {
+    // Advanced time-based and state-based recommendations
+    if (hour >= 21) {
+      // Night Flow - Only gentle activities
+      suggestions.push({
+        text: "Gentle memory capture - preserve today's moments before sleep",
+        action: "capture",
+        reasoning: "Night time is optimal for gentle reflection. Sleep consolidates memories formed in the evening.",
+        priority: 10
+      });
+      
+      if (stress > 50) {
+        suggestions.push({
+          text: "Stress regulation - calm your mind for better sleep and memory consolidation",
+          action: "regulate",
+          reasoning: "High evening stress impairs sleep quality and memory consolidation. Regulation is essential.",
+          priority: 9
+        });
+      }
+    } else if (stress > 60) {
+      // High stress - prioritize regulation regardless of time
       suggestions.push({
         text: "ADHD support tools - stress often worsens attention challenges",
         action: "adhd",
         reasoning: "High stress compounds ADHD symptoms. Our focus training includes stress regulation techniques.",
         priority: 10
       });
-    }
-
-    // Always suggest ADHD support prominently
-    suggestions.push({
-      text: "ADHD support - build focus, working memory & executive function",
-      action: "adhd",
-      reasoning: "8-12% of adults have ADHD. Even neurotypical users benefit from attention training for productivity and focus.",
-      priority: 9
-    });
-
-    if (energy > 70 && attention > 70 && timeOfDay === 'morning') {
+    } else if (hour < 12 && energy > 70 && attention > 70) {
+      // Morning Flow - Peak cognitive state
       suggestions.push({
         text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
         action: "weave",
-        reasoning: "High attention + energy creates optimal conditions for multi-sensory memory formation. Morning cortisol supports consolidation.",
+        reasoning: "Morning cortisol + high attention creates optimal conditions for complex memory formation. 65% stronger encoding.",
+        priority: 9
+      });
+      suggestions.push({
+        text: "ADHD focus training - build sustained attention capacity",
+        action: "adhd", 
+        reasoning: "High energy state perfect for challenging attention exercises. Morning focus training shows 40% better results.",
+        priority: 8
+      });
+    } else if (hour >= 12 && hour < 17 && attention > 60) {
+      // Afternoon Flow - Sustained attention optimal
+      suggestions.push({
+        text: "Spaced retrieval training - strengthen neural pathways while focused",
+        action: "train",
+        reasoning: "Afternoon attention stability optimal for retrieval practice. Spaced training during steady focus creates 50% stronger consolidation.",
+        priority: 8
+      });
+      suggestions.push({
+        text: "Future scenario rehearsal - plan for upcoming events",
+        action: "scenario",
+        reasoning: "Afternoon planning cognition is optimal for implementation intentions and mental rehearsal.",
+        priority: 7
+      });
+    } else if (hour >= 17 && hour < 21) {
+      // Evening Flow - Reflection and preparation
+      suggestions.push({
+        text: "Daily memory capture - reflect on today's meaningful moments",
+        action: "capture",
+        reasoning: "Evening reflection enhances memory consolidation. Capturing daily moments improves autobiographical coherence.",
+        priority: 8
+      });
+      suggestions.push({
+        text: "Tomorrow's scenario planning - prepare for upcoming events",
+        action: "scenario",
+        reasoning: "Evening planning for next-day events improves implementation success by 60%.",
         priority: 7
       });
     }
 
-    if (flowState === 'focused' || flowState === 'peak') {
-      suggestions.push({
-        text: "Spaced retrieval training - strengthen neural pathways while focused",
-        action: "train",
-        reasoning: "Flow state optimizes learning. Spaced retrieval during peak focus creates 60% stronger memory consolidation.",
-        priority: 5
-      });
-    }
-
-    // Always offer gentle capture option
+    // Always suggest ADHD support prominently (but adapt priority by time)
     suggestions.push({
-      text: "Daily memory capture - build autobiographical memory strength",
-      action: "capture",
-      reasoning: "Regular autobiographical memory practice strengthens narrative coherence and life satisfaction.",
-      priority: 6
+      text: "ADHD support - build focus, working memory & executive function",
+      action: "adhd",
+      reasoning: "8-12% of adults have ADHD. Even neurotypical users benefit from attention training for productivity and focus.",
+      priority: hour >= 21 ? 6 : 9 // Lower priority during night flow
     });
 
-    // Focus sprint for medium energy
-    if (energy > 40 && energy < 80 && attention > 50) {
+    // Always offer gentle capture option (but adapt messaging by time)
+    suggestions.push({
+      text: hour >= 21 ? "Gentle moment capture - preserve today before sleep" : 
+            hour >= 17 ? "Daily memory capture - reflect on today's meaningful moments" :
+            "Memory capture - build autobiographical memory strength",
+      action: "capture",
+      reasoning: hour >= 21 ? "Evening memory capture before sleep enhances overnight consolidation." :
+                hour >= 17 ? "Evening reflection improves memory consolidation and life satisfaction." :
+                "Regular autobiographical memory practice strengthens narrative coherence and life satisfaction.",
+      priority: hour >= 21 ? 8 : 6
+    });
+
+    // Focus sprint for medium energy (not during night flow)
+    if (hour < 21 && energy > 40 && energy < 80 && attention > 50) {
       suggestions.push({
         text: "Focused attention training - build sustained concentration",
         action: "sprint",

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield, Heart, Trophy, Sparkles, MessageSquare, ArrowRight, X, Search, Sunrise, Coffee, Moon, Lightbulb } from 'lucide-react';
+import { Plus, Calendar, Brain, TrendingUp, Clock, Target, Award, ChevronRight, Zap, Play, Star, Eye, Users, Shield, Heart, Trophy, Sparkles, MessageSquare, ArrowRight, X, Search, Sunrise, Coffee, Moon, Lightbulb, Beaker, Rocket } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import { useChallenge } from '../contexts/ChallengeContext';
 import ConversationalInterface from './ConversationalInterface';
 import { useCognitiveState } from '../contexts/CognitiveStateContext';
+import LabsPreview from './LabsPreview';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
@@ -19,6 +20,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const activeChallenge = getActiveChallenge();
   const [showConversationalAI, setShowConversationalAI] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showLabsPreview, setShowLabsPreview] = useState(false);
   
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
@@ -292,7 +294,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200 p-8">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <Brain className="w-8 h-8 text-white" />
+            <Beaker className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Eidolon Labs</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -301,65 +303,126 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </p>
         </div>
 
+        {/* Competitive Advantage Banner */}
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6 mb-8">
+          <div className="flex items-center space-x-3 mb-4">
+            <Rocket className="w-6 h-6 text-indigo-600" />
+            <h3 className="text-xl font-semibold text-indigo-900">Our Competitive Edge</h3>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
+            <div className="p-3 bg-white rounded-lg border border-indigo-200">
+              <div className="font-medium text-indigo-900 mb-1">🧠 Narrative-Based Cognition</div>
+              <div className="text-indigo-700">Autobiographical memory vs. abstract puzzles</div>
+            </div>
+            <div className="p-3 bg-white rounded-lg border border-indigo-200">
+              <div className="font-medium text-indigo-900 mb-1">🎯 Real-Life Transfer</div>
+              <div className="text-indigo-700">Meaningful wins vs. game scores</div>
+            </div>
+            <div className="p-3 bg-white rounded-lg border border-indigo-200">
+              <div className="font-medium text-indigo-900 mb-1">👥 Professional Integration</div>
+              <div className="text-indigo-700">Coach protocols vs. solo training</div>
+            </div>
+          </div>
+        </div>
+
         {/* Phase Roadmap */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <div className="w-6 h-6 bg-emerald-100 rounded-lg flex items-center justify-center">
-                <span className="text-xs font-bold text-emerald-700">1</span>
+        <div className="space-y-4 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900">Development Roadmap</h3>
+          <div className="space-y-3">
+            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-700">1</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Phase 1 - Foundation</h4>
+                    <p className="text-sm text-gray-600">Q4 2025</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-emerald-200 text-emerald-800 rounded-full text-xs font-medium">
+                  Live
+                </span>
               </div>
-              <span className="font-semibold text-emerald-900">Phase 1 - Foundation</span>
+              <div className="flex flex-wrap gap-2">
+                {['Memory Weaving', 'Spaced Retrieval', 'ADHD Support', 'Meaningful Wins', 'Anxiety Toolkit'].map(feature => (
+                  <span key={feature} className="px-2 py-1 bg-white text-emerald-700 text-xs rounded-full border border-emerald-200">
+                    {feature}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="text-sm text-emerald-800 mb-2">Q4 2025 - Live Now</div>
-            <div className="space-y-1">
-              <div className="text-xs text-emerald-700 bg-white rounded px-2 py-1">Memory Weaving</div>
-              <div className="text-xs text-emerald-700 bg-white rounded px-2 py-1">Spaced Retrieval</div>
-              <div className="text-xs text-emerald-700 bg-white rounded px-2 py-1">ADHD Support</div>
-            </div>
-          </div>
 
-          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                <span className="text-xs font-bold text-blue-700">2</span>
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-700">2</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Phase 2 - Intelligence</h4>
+                    <p className="text-sm text-gray-600">Q2 2026</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-xs font-medium">
+                  Development
+                </span>
               </div>
-              <span className="font-semibold text-blue-900">Phase 2 - Intelligence</span>
+              <div className="flex flex-wrap gap-2">
+                {['StoryGraph', 'Transfer Lab', 'Context-Aware Resurfacing', 'Advanced Analytics'].map(feature => (
+                  <span key={feature} className="px-2 py-1 bg-white text-blue-700 text-xs rounded-full border border-blue-200">
+                    {feature}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="text-sm text-blue-800 mb-2">Q2 2026</div>
-            <div className="space-y-1">
-              <div className="text-xs text-blue-700 bg-white rounded px-2 py-1">StoryGraph</div>
-              <div className="text-xs text-blue-700 bg-white rounded px-2 py-1">Transfer Lab</div>
-              <div className="text-xs text-blue-700 bg-white rounded px-2 py-1">Context-Aware AI</div>
-            </div>
-          </div>
 
-          <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center">
-                <span className="text-xs font-bold text-purple-700">3</span>
+            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-700">3</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Phase 3 - Professional</h4>
+                    <p className="text-sm text-gray-600">Q3 2026</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-purple-200 text-purple-800 rounded-full text-xs font-medium">
+                  Planning
+                </span>
               </div>
-              <span className="font-semibold text-purple-900">Phase 3 - Professional</span>
+              <div className="flex flex-wrap gap-2">
+                {['Coach Protocols', 'Protocol Marketplace', 'Team Features', 'Clinical Integration'].map(feature => (
+                  <span key={feature} className="px-2 py-1 bg-white text-purple-700 text-xs rounded-full border border-purple-200">
+                    {feature}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="text-sm text-purple-800 mb-2">Q3 2026</div>
-            <div className="space-y-1">
-              <div className="text-xs text-purple-700 bg-white rounded px-2 py-1">Coach Protocols</div>
-              <div className="text-xs text-purple-700 bg-white rounded px-2 py-1">Team Features</div>
-              <div className="text-xs text-purple-700 bg-white rounded px-2 py-1">Clinical Integration</div>
-            </div>
-          </div>
 
-          <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <div className="w-6 h-6 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <span className="text-xs font-bold text-indigo-700">4</span>
+            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <span className="text-sm font-bold text-gray-700">4</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Phase 4 - AI Enhancement</h4>
+                    <p className="text-sm text-gray-600">Q4 2026</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-indigo-200 text-indigo-800 rounded-full text-xs font-medium">
+                  Research
+                </span>
               </div>
-              <span className="font-semibold text-indigo-900">Phase 4 - AI Enhancement</span>
-            </div>
-            <div className="text-sm text-indigo-800 mb-2">Q4 2026</div>
-            <div className="space-y-1">
-              <div className="text-xs text-indigo-700 bg-white rounded px-2 py-1">Predictive Analytics</div>
-              <div className="text-xs text-indigo-700 bg-white rounded px-2 py-1">AI Coach</div>
-              <div className="text-xs text-indigo-700 bg-white rounded px-2 py-1">Natural Language</div>
+              <div className="flex flex-wrap gap-2">
+                {['Predictive Memory Analytics', 'Personalized AI Coach', 'Natural Language Interface'].map(feature => (
+                  <span key={feature} className="px-2 py-1 bg-white text-indigo-700 text-xs rounded-full border border-indigo-200">
+                    {feature}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -390,7 +453,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <span className="font-medium text-gray-900">Meaningful Wins</span>
             </div>
             <p className="text-sm text-gray-600 mb-2">Track real-world outcomes instead of abstract scores</p>
-            <div className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded">Phase 1 - Live Now</div>
+            <div className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded">Phase 1 - Available Now</div>
           </div>
 
           <div className="p-4 bg-white rounded-lg border border-blue-200">
@@ -408,7 +471,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
               <span className="font-medium text-gray-900">Anxiety Regulation</span>
             </div>
             <p className="text-sm text-gray-600 mb-2">60-120 second acute relief + preventive tools</p>
-            <div className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded">Phase 1 - Live Now</div>
+            <div className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded">Phase 1 - Available Now</div>
           </div>
 
           <div className="p-4 bg-white rounded-lg border border-indigo-200">
@@ -421,17 +484,66 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Early Access CTA */}
-        <div className="text-center">
-          <button
-            onClick={() => alert('🎉 Early Access Interest Recorded!\n\nWe\'ll notify you when these features become available for testing. Thank you for your interest in shaping the future of memory training!')}
-            className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all font-medium shadow-lg"
-          >
-            🚀 Request Early Access to Labs Features
-          </button>
-          <p className="text-sm text-gray-600 mt-3">
-            Be among the first to test revolutionary memory features and help shape the future of cognitive training
+        {/* Early Access Signup */}
+        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200 p-6 mb-6">
+          <div className="flex items-center space-x-3 mb-4">
+            <Star className="w-6 h-6 text-yellow-600" />
+            <h3 className="text-xl font-semibold text-yellow-900">Join Early Access</h3>
+          </div>
+          <p className="text-yellow-800 mb-4">
+            Be among the first to test revolutionary memory features. Early access users help shape 
+            the future of cognitive training and get lifetime benefits.
           </p>
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
+            <div className="text-center p-3 bg-white rounded-lg border border-yellow-200">
+              <Brain className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
+              <div className="font-medium text-gray-900">First Access</div>
+              <div className="text-xs text-gray-600">Try features before public release</div>
+            </div>
+            <div className="text-center p-3 bg-white rounded-lg border border-yellow-200">
+              <Lightbulb className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
+              <div className="font-medium text-gray-900">Shape Development</div>
+              <div className="text-xs text-gray-600">Your feedback guides feature design</div>
+            </div>
+            <div className="text-center p-3 bg-white rounded-lg border border-yellow-200">
+              <Shield className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
+              <div className="font-medium text-gray-900">Lifetime Benefits</div>
+              <div className="text-xs text-gray-600">Special pricing and exclusive features</div>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              alert('🎉 Early Access Interest Recorded!\n\nWe\'ll notify you when these features become available for testing. Thank you for your interest in shaping the future of memory training!');
+            }}
+            className="w-full px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all font-medium"
+          >
+            Request Early Access
+          </button>
+        </div>
+
+        {/* Why This Matters */}
+        <div className="bg-gray-50 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Why Eidolon Will Lead the Market</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">🧠 Unique Approach</h4>
+              <div className="text-sm text-gray-700 space-y-1">
+                <p>• <strong>Autobiographical focus:</strong> Real memories, not abstract puzzles</p>
+                <p>• <strong>Transfer-first design:</strong> Every feature improves real life</p>
+                <p>• <strong>Professional integration:</strong> Built for coaches and therapists</p>
+                <p>• <strong>Evidence-based:</strong> Clinical techniques, not gamification</p>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">📊 Market Differentiation</h4>
+              <div className="text-sm text-gray-700 space-y-1">
+                <p>• <strong>No direct competitors</strong> in autobiographical memory training</p>
+                <p>• <strong>First to offer</strong> personal memory science experiments</p>
+                <p>• <strong>Only app</strong> with coach protocol customization</p>
+                <p>• <strong>Unique integration</strong> of memory + anxiety + ADHD support</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
