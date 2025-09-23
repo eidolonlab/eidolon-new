@@ -139,20 +139,20 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Heart className="w-8 h-8 text-blue-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Gentle Memory Capture</h2>
-          <p className="text-gray-600">Let's capture something meaningful without pressure</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Gentle Memory Formation</h2>
+          <p className="text-gray-600">Stress-optimized memory encoding - no pressure, just preservation</p>
         </div>
 
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              What moment from today would you like to remember?
+              What moment from today deserves to be preserved?
             </label>
             <input
               type="text"
               value={memoryData.seed}
               onChange={(e) => setMemoryData(prev => ({ ...prev, seed: e.target.value }))}
-              placeholder="e.g., morning coffee, kind gesture, beautiful view"
+              placeholder="e.g., morning coffee ritual, unexpected kindness, moment of beauty"
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               autoFocus
             />
@@ -160,12 +160,12 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tell me about it (as much or as little as you want)
+              Describe this memory (include what you saw, heard, or felt)
             </label>
             <textarea
               value={memoryData.quickDetails}
               onChange={(e) => setMemoryData(prev => ({ ...prev, quickDetails: e.target.value }))}
-              placeholder="Describe this moment in your own words..."
+              placeholder="What made this moment special? Include sensory details and emotions..."
               rows={4}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             />
