@@ -108,28 +108,28 @@ const LabsPreview: React.FC<LabsPreviewProps> = ({ onClose }) => {
   const phaseRoadmap = [
     {
       phase: 'Phase 1 - Foundation',
-      timeline: 'Current - Q1 2025',
+      timeline: 'Current - Q1 2026',
       status: 'Live',
       features: ['Memory Weaving', 'Spaced Retrieval', 'ADHD Support', 'Meaningful Wins', 'Anxiety Toolkit'],
       color: 'emerald'
     },
     {
       phase: 'Phase 2 - Intelligence',
-      timeline: 'Q2 2025',
+      timeline: 'Q2 2026',
       status: 'Development',
       features: ['StoryGraph', 'Transfer Lab', 'Context-Aware Resurfacing', 'Advanced Analytics'],
       color: 'blue'
     },
     {
       phase: 'Phase 3 - Professional',
-      timeline: 'Q3 2025',
+      timeline: 'Q3 2026',
       status: 'Planning',
       features: ['Coach Protocols', 'Protocol Marketplace', 'Team Features', 'Clinical Integration'],
       color: 'purple'
     },
     {
       phase: 'Phase 4 - AI Enhancement',
-      timeline: 'Q4 2025',
+      timeline: 'Q4 2026',
       status: 'Research',
       features: ['Predictive Memory Analytics', 'Personalized AI Coach', 'Natural Language Interface'],
       color: 'indigo'
