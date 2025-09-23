@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Zap, Calendar, Target, Heart, Eye, Sunrise, Coffee, Moon, Star, ArrowRight, Play, CheckCircle, Lightbulb, TrendingUp } from 'lucide-react';
+import { Brain, Zap, Calendar, Target, Heart, Eye, Sunrise, Coffee, Moon, Star, ArrowRight, Play, CheckCircle, Lightbulb, TrendingUp, BarChart3, Plus, Sparkles } from 'lucide-react';
 import { useCognitiveState } from '../contexts/CognitiveStateContext';
 import { useWeave } from '../contexts/WeaveContext';
 import ConversationalInterface from './ConversationalInterface';
@@ -7,6 +7,7 @@ import AdaptiveMemoryCapture from './AdaptiveMemoryCapture';
 import SmartScenarioPlanner from './SmartScenarioPlanner';
 import IntelligentTrainingCoach from './IntelligentTrainingCoach';
 import CognitiveRegulationTools from './CognitiveRegulationTools';
+import MemoryRetrievalGuide from './MemoryRetrievalGuide';
 
 interface IntelligentDashboardProps {
   onNavigate: (view: string) => void;
@@ -19,6 +20,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const [currentFocus, setCurrentFocus] = useState<string | null>(null);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [personalizedInsights, setPersonalizedInsights] = useState<string[]>([]);
+  const [showAdvancedTools, setShowAdvancedTools] = useState(false);
 
   const metrics = getMetrics();
   const interfaceMode = getInterfaceMode();
@@ -279,6 +281,105 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
                 <div className="text-sm text-gray-600">Flow State</div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Advanced Tools Access */}
+      {weaves.length >= 3 && (
+        <div className="text-center">
+          <button
+            onClick={() => setShowAdvancedTools(!showAdvancedTools)}
+            className="flex items-center space-x-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span>{showAdvancedTools ? 'Hide' : 'Show'} Advanced Tools</span>
+          </button>
+        </div>
+      )}
+
+      {/* Advanced Tools Grid - Only shown when requested */}
+      {showAdvancedTools && (
+        <div className="grid md:grid-cols-3 gap-6">
+          <button
+            onClick={() => onNavigate('weave')}
+            className="group bg-white border-2 border-gray-200 hover:border-indigo-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                <Plus className="w-6 h-6 text-indigo-600" />
+              </div>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Memory Weaving</h3>
+            <p className="text-gray-600">Advanced multi-sensory memory construction</p>
+          </button>
+
+          <button
+            onClick={() => onNavigate('scenario')}
+            className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                <Calendar className="w-6 h-6 text-emerald-600" />
+              </div>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Scenario Studio</h3>
+            <p className="text-gray-600">Future event rehearsal with implementation intentions</p>
+          </button>
+
+          <button
+            onClick={() => onNavigate('training')}
+            className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                <Target className="w-6 h-6 text-orange-600" />
+              </div>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Spaced Training</h3>
+            <p className="text-gray-600">Evidence-based retrieval practice sessions</p>
+          </button>
+
+          <button
+            onClick={() => onNavigate('adhd')}
+            className="group bg-white border-2 border-gray-200 hover:border-blue-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                <Brain className="w-6 h-6 text-blue-600" />
+              </div>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">ADHD Support</h3>
+            <p className="text-gray-600">Attention and executive function training</p>
+          </button>
+
+          <button
+            onClick={() => onNavigate('insights')}
+            className="group bg-white border-2 border-gray-200 hover:border-purple-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                <BarChart3 className="w-6 h-6 text-purple-600" />
+              </div>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-600 transition-colors" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Memory Analytics</h3>
+            <p className="text-gray-600">Clinical insights and progress tracking</p>
+          </button>
+
+          <div className="group bg-gray-50 border-2 border-dashed border-gray-300 p-6 rounded-2xl text-left">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-gray-500" />
+              </div>
+              <div className="text-xs text-gray-500">Coming Soon</div>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-500 mb-2">Memory Palace</h3>
+            <p className="text-gray-500">Advanced spatial memory techniques</p>
           </div>
         </div>
       )}

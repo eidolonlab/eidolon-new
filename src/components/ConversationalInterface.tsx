@@ -83,10 +83,10 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
     if (flowState === 'focused' || flowState === 'peak') {
       suggestions.push({
-        text: "Spaced retrieval training - strengthen neural pathways while focused",
+        text: "Spaced retrieval practice - strengthen memories through testing effect",
         action: "train",
         reasoning: "Flow state optimizes learning. Spaced retrieval during peak focus creates 60% stronger memory consolidation.",
-        priority: 8
+        priority: 7
       });
     }
 
