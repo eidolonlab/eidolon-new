@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Zap, Calendar, Target, Heart, Eye, Sunrise, Coffee, Moon, Star, ArrowRight, Play, CheckCircle, Lightbulb, TrendingUp } from 'lucide-react';
+import { Brain, Zap, Calendar, Target, Heart, Eye, Sunrise, Coffee, Moon, Star, ArrowRight, Play, CheckCircle, Lightbulb, TrendingUp, Search } from 'lucide-react';
 import { useCognitiveState } from '../contexts/CognitiveStateContext';
 import { useWeave } from '../contexts/WeaveContext';
 import ConversationalInterface from './ConversationalInterface';
