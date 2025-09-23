@@ -290,8 +290,8 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
           </span>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default ConversationalInterface;
+export default IntelligentDashboard;
