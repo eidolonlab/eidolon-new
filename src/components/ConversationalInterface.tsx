@@ -285,5 +285,3 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 };
 
 export default ConversationalInterface;
-
-export default ConversationalInterface
