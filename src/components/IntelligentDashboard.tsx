@@ -173,6 +173,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       {/* Conversational Interface */}
       {showConversation && (
         <ConversationalInterface
+          cognitiveState={cognitiveState}
+          upcomingEvents={upcomingEvents}
           onAction={(action) => {
             setCurrentFocus(action);
             setShowConversation(false);
