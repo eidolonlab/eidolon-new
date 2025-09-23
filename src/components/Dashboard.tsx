@@ -12,6 +12,7 @@ import FocusSprints from './FocusSprints';
 import AnxietyRegulationToolkit from './AnxietyRegulationToolkit';
 import TransferLab from './TransferLab';
 import MeaningfulWinsTracker from './MeaningfulWinsTracker';
+import LabsPreview from './LabsPreview';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
@@ -31,6 +32,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const [showAnxietyToolkit, setShowAnxietyToolkit] = useState(false);
   const [showTransferLab, setShowTransferLab] = useState(false);
   const [showMeaningfulWins, setShowMeaningfulWins] = useState(false);
+  const [showLabsPreview, setShowLabsPreview] = useState(false);
   
   const recentWeaves = weaves.slice(0, 3);
   const upcomingScenarios = weaves
@@ -378,6 +380,36 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
       {/* Advanced Tools - Conditional Display */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Hidden Labs Access - Easter Egg */}
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Eidolon Labs</h3>
+            </div>
+            <button
+              onClick={() => setShowLabsPreview(true)}
+              className="text-purple-600 hover:text-purple-700"
+            >
+              <Eye className="w-5 h-5" />
+            </button>
+          </div>
+         <button
+           onClick={() => setShowLabsPreview(true)}
+           className="w-full text-left"
+         >
+           <p className="text-sm text-gray-600 mb-4">
+             🧪 Preview next-generation memory features in development
+           </p>
+           <div className="flex items-center justify-between text-xs text-gray-500">
+             <span>5 experimental features</span>
+             <span className="text-purple-600 font-medium">Preview Labs</span>
+           </div>
+         </button>
+        </div>
+
         {/* Cognitive State Optimizer */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
@@ -602,6 +634,32 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             setShowMeaningfulWins(false);
           }}
         />
+      )}
+
+      {/* Labs Preview Modal */}
+      {showLabsPreview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Eidolon Labs</h2>
+                  <p className="text-sm text-gray-600">Next-generation memory features in development</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowLabsPreview(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <LabsPreview onClose={() => setShowLabsPreview(false)} />
+          </div>
+        </div>
       )}
 
       {/* Modal Overlays */}
