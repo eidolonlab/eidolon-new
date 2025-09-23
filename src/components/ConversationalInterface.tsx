@@ -55,19 +55,27 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     // Intelligent action suggestions based on state
     if (stress > 60) {
       suggestions.push({
-        text: "Regulate stress first - it improves memory formation by 40%",
-        action: "regulate",
-        reasoning: "Research shows stress hormones impair memory encoding. Brief regulation optimizes your brain for training.",
+        text: "ADHD support tools - stress often worsens attention challenges",
+        action: "adhd",
+        reasoning: "High stress compounds ADHD symptoms. Our focus training includes stress regulation techniques.",
         priority: 10
       });
     }
+
+    // Always suggest ADHD support prominently
+    suggestions.push({
+      text: "ADHD support - build focus, working memory & executive function",
+      action: "adhd",
+      reasoning: "8-12% of adults have ADHD. Even neurotypical users benefit from attention training for productivity and focus.",
+      priority: 9
+    });
 
     if (energy > 70 && attention > 70 && timeOfDay === 'morning') {
       suggestions.push({
         text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
         action: "weave",
         reasoning: "High attention + energy creates optimal conditions for multi-sensory memory formation. Morning cortisol supports consolidation.",
-        priority: 8
+        priority: 7
       });
     }
 
@@ -76,7 +84,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         text: "Spaced retrieval training - strengthen neural pathways while focused",
         action: "train",
         reasoning: "Flow state optimizes learning. Spaced retrieval during peak focus creates 60% stronger memory consolidation.",
-        priority: 8
+        priority: 5
       });
     }
 
@@ -94,7 +102,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         text: "Focused attention training - build sustained concentration",
         action: "sprint",
         reasoning: "Moderate arousal is optimal for attention training. Short bursts build sustained focus capacity.",
-        priority: 7
+        priority: 4
       });
     }
 
