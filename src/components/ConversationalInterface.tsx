@@ -290,7 +290,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
           </span>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
