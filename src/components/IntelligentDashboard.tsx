@@ -8,6 +8,7 @@ import SmartScenarioPlanner from './SmartScenarioPlanner';
 import IntelligentTrainingCoach from './IntelligentTrainingCoach';
 import CognitiveRegulationTools from './CognitiveRegulationTools';
 import MemoryRetrievalGuide from './MemoryRetrievalGuide';
+import LabsPreview from './LabsPreview';
 
 interface IntelligentDashboardProps {
   onNavigate: (view: string) => void;
@@ -20,6 +21,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const [currentFocus, setCurrentFocus] = useState<string | null>(null);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [personalizedInsights, setPersonalizedInsights] = useState<string[]>([]);
+  const [showLabsPreview, setShowLabsPreview] = useState(false);
 
   const metrics = getMetrics();
   const interfaceMode = getInterfaceMode();
@@ -581,6 +583,27 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       {/* Direct navigation fallback for core actions */}
       {!currentFocus && !showConversation && (
         <div className="text-center py-8">
+          {/* Hidden Labs Access */}
+          <div className="mb-8">
+            <button
+              onClick={() => setShowLabsPreview(true)}
+              className="group bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 hover:border-purple-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg"
+            >
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">🧪 Eidolon Labs</h3>
+                  <p className="text-sm text-gray-600">Preview next-generation memory features</p>
+                </div>
+              </div>
+              <div className="text-xs text-purple-600 bg-purple-100 rounded-full px-3 py-1">
+                5 revolutionary features in development
+              </div>
+            </button>
+          </div>
+          
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
             <button
               onClick={() => onNavigate('weave')}
@@ -617,6 +640,32 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               <h3 className="font-medium text-gray-900">ADHD Support</h3>
               <p className="text-sm text-gray-600 mt-1">Build focus</p>
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Labs Preview Modal */}
+      {showLabsPreview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Eidolon Labs</h2>
+                  <p className="text-sm text-gray-600">Revolutionary memory features in development</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowLabsPreview(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <LabsPreview onClose={() => setShowLabsPreview(false)} />
           </div>
         </div>
       )}
