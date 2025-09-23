@@ -501,9 +501,9 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               </div>
               <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Capture Moment</h3>
-            <p className="text-white opacity-90">Preserve today's meaningful experiences</p>
-            <div className="mt-3 text-sm text-white opacity-75">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Capture Moment</h3>
+            <p className="text-gray-600">Preserve today's meaningful experiences</p>
+            <div className="mt-3 text-sm text-gray-600">
               ⭐ Quick capture • Autobiographical coherence
             </div>
           </button>
