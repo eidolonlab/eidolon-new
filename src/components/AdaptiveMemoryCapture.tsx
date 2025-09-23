@@ -75,9 +75,16 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
 
   const generateEncouragement = () => {
     const wordCount = memoryData.quickDetails.split(' ').filter(w => w.length > 0).length;
+    const hour = new Date().getHours();
     
     if (wordCount === 0) {
-      setEncouragement("Every detail you add makes this memory stronger and more retrievable.");
+      if (hour < 10) {
+        setEncouragement("What are you noticing or feeling as your day begins?");
+      } else if (hour < 12) {
+        setEncouragement("What has caught your attention this morning?");
+      } else {
+        setEncouragement("Every detail you add makes this memory stronger and more retrievable.");
+      }
     } else if (wordCount < 10) {
       setEncouragement("Great start! Your memory is beginning to take shape.");
     } else if (wordCount < 25) {
@@ -146,13 +153,33 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              What moment from today deserves to be preserved?
+              {(() => {
+                const hour = new Date().getHours();
+                if (hour < 10) {
+                  return "What are you noticing or feeling as your day begins?";
+                } else if (hour < 12) {
+                  return "What has caught your attention this morning?";
+                } else if (hour < 17) {
+                  return "What moment from today stands out so far?";
+                } else {
+                  return "What was meaningful about your day?";
+                }
+              })()}
             </label>
             <input
               type="text"
               value={memoryData.seed}
               onChange={(e) => setMemoryData(prev => ({ ...prev, seed: e.target.value }))}
-              placeholder="e.g., morning coffee ritual, unexpected kindness, moment of beauty"
+              placeholder={(() => {
+                const hour = new Date().getHours();
+                if (hour < 10) {
+                  return "e.g., excited about today's plans, peaceful morning routine, beautiful sunrise";
+                } else if (hour < 12) {
+                  return "e.g., interesting email, productive work start, moment of clarity";
+                } else {
+                  return "e.g., unexpected compliment, beautiful sunset, good conversation";
+                }
+              })()}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               autoFocus
             />
@@ -327,13 +354,33 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            What moment stands out from today?
+            {(() => {
+              const hour = new Date().getHours();
+              if (hour < 10) {
+                return "What are you noticing or feeling as your day begins?";
+              } else if (hour < 12) {
+                return "What has caught your attention this morning?";
+              } else if (hour < 17) {
+                return "What moment from today stands out so far?";
+              } else {
+                return "What was meaningful about your day?";
+              }
+            })()}
           </label>
           <input
             type="text"
             value={memoryData.seed}
             onChange={(e) => setMemoryData(prev => ({ ...prev, seed: e.target.value }))}
-            placeholder="e.g., unexpected compliment, beautiful sunset, good conversation"
+            placeholder={(() => {
+              const hour = new Date().getHours();
+              if (hour < 10) {
+                return "e.g., excited about today's plans, peaceful morning routine, beautiful sunrise";
+              } else if (hour < 12) {
+                return "e.g., interesting email, productive work start, moment of clarity";
+              } else {
+                return "e.g., unexpected compliment, beautiful sunset, good conversation";
+              }
+            })()}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg"
             autoFocus
           />
