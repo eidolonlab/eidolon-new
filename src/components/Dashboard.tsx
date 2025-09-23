@@ -567,8 +567,158 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
       {showMeaningfulWins && (
         <MeaningfulWinsTracker
-          onClose={() => setShowMeaningfulWins(false)}
+          onWinAdded={(win) => {
+            console.log('Win added:', win);
+            setShowMeaningfulWins(false);
+          }}
         />
+      )}
+
+      {/* Modal Overlays */}
+      {showCognitiveOptimizer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Cognitive State Optimizer</h2>
+              <button
+                onClick={() => setShowCognitiveOptimizer(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <CognitiveStateOptimizer
+                onStateChange={setCognitiveState}
+                onOptimizationRecommendation={(rec) => {
+                  console.log('Optimization recommendation:', rec);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showStoryGraph && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">StoryGraph - Your Knowledge Map</h2>
+              <button
+                onClick={() => setShowStoryGraph(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <StoryGraph
+                onNodeSelect={(node) => console.log('Node selected:', node)}
+                onCreateMemory={(nodeId) => {
+                  console.log('Create memory for node:', nodeId);
+                  setShowStoryGraph(false);
+                  onNavigate('weave');
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFocusSprints && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Focus Sprints</h2>
+              <button
+                onClick={() => setShowFocusSprints(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <FocusSprints
+                onMeaningfulWin={(action, time) => {
+                  console.log('Meaningful win:', action, time);
+                  setShowFocusSprints(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAnxietyToolkit && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Anxiety Regulation Toolkit</h2>
+              <button
+                onClick={() => setShowAnxietyToolkit(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <AnxietyRegulationToolkit
+                onRegulationComplete={(results) => {
+                  console.log('Regulation complete:', results);
+                  setShowAnxietyToolkit(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showTransferLab && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Transfer Lab - N-of-1 Experiments</h2>
+              <button
+                onClick={() => setShowTransferLab(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <TransferLab
+                onExperimentComplete={(experiment) => {
+                  console.log('Experiment complete:', experiment);
+                  setShowTransferLab(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showMeaningfulWins && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Meaningful Wins Tracker</h2>
+              <button
+                onClick={() => setShowMeaningfulWins(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <MeaningfulWinsTracker
+                onWinAdded={(win) => {
+                  console.log('Win added:', win);
+                  setShowMeaningfulWins(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
