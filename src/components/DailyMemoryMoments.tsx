@@ -105,10 +105,37 @@ const DailyMemoryMoments: React.FC = () => {
 
   const getTimeOfDayGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
+    if (hour < 10) return "Good morning";
+    if (hour < 12) return "Late morning";
     if (hour < 17) return "Good afternoon";
     if (hour < 21) return "Good evening";
     return "Good night";
+  };
+
+  const getTimeAwarePrompt = () => {
+    const hour = new Date().getHours();
+    if (hour < 10) {
+      return "What are you looking forward to today?";
+    } else if (hour < 12) {
+      return "What has caught your attention this morning?";
+    } else if (hour < 17) {
+      return "What moment from today stands out so far?";
+    } else if (hour < 21) {
+      return "What was meaningful about your day?";
+    } else {
+      return "What moment from today deserves to be remembered?";
+    }
+  };
+
+  const getTimeAwarePlaceholder = () => {
+    const hour = new Date().getHours();
+    if (hour < 10) {
+      return "e.g., excited about meeting, peaceful morning coffee, beautiful sunrise";
+    } else if (hour < 12) {
+      return "e.g., interesting conversation, productive work session, moment of clarity";
+    } else {
+      return "e.g., unexpected compliment, beautiful sunset, good conversation";
+    }
   };
 
   const TimeIcon = getTimeOfDayIcon();
@@ -138,9 +165,11 @@ const DailyMemoryMoments: React.FC = () => {
       <div className="mb-6 p-4 bg-white rounded-lg border border-amber-200">
         <div className="flex items-center space-x-2 mb-2">
           <Star className="w-4 h-4 text-amber-600" />
-          <span className="font-medium text-amber-900">Today's Prompt</span>
+          <span className="font-medium text-amber-900">
+            {new Date().getHours() < 10 ? "Morning Intention" : "Today's Prompt"}
+          </span>
         </div>
-        <p className="text-amber-800 italic">"{dailyPrompt}"</p>
+        <p className="text-amber-800 italic">"{getTimeAwarePrompt()}"</p>
       </div>
 
       {/* Quick Capture */}
@@ -156,13 +185,13 @@ const DailyMemoryMoments: React.FC = () => {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              What moment from today stands out?
+              {getTimeAwarePrompt()}
             </label>
             <input
               type="text"
               value={currentMoment}
               onChange={(e) => setCurrentMoment(e.target.value)}
-              placeholder="e.g., morning coffee ritual, unexpected compliment, beautiful sunset"
+              placeholder={getTimeAwarePlaceholder()}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
               autoFocus
               onKeyPress={(e) => e.key === 'Enter' && captureQuickMoment()}
