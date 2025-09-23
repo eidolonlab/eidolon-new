@@ -143,7 +143,7 @@ function App() {
                         <div>
                           <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
                           <p className="text-sm text-gray-600">Intelligent Memory Companion</p>
-                        </div>
+                        <p className="text-sm text-gray-600">Memory Training & Recall</p>
                       </div>
                       
                       {/* Simplified Navigation */}
@@ -216,7 +216,6 @@ function App() {
               <LegalFooter />
 
               {/* Mobile Navigation */}
-                {/* Simplified Mobile Navigation */}
                 <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
                   <div className="flex items-center justify-around py-2">
                     {[
@@ -238,21 +237,17 @@ function App() {
                     ))}
                   </div>
                 </nav>
-        <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+              
               {/* PWA Install Prompt */}
               <InstallPrompt />
               
-                <div className="w-10 h-10 bg-gradient-to-br from-red-600 via-orange-600 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
               <ConsentBanner />
               
               {/* Settings Panel */}
               {showSettings && (
                 <SettingsPanel onClose={() => setShowSettings(false)} />
               )}
-                  <p className="text-sm text-red-600 font-medium">ADHD Relief & Memory Training</p>
-              </div>
-              </header>
-              </div>
+            </div>
             } />
           </Routes>
         </ChallengeProvider>
