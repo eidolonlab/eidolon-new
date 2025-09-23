@@ -83,10 +83,10 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
     if (flowState === 'focused' || flowState === 'peak') {
       suggestions.push({
-        text: "Spaced retrieval practice - strengthen memories through testing effect",
+        text: "Spaced retrieval training - strengthen neural pathways while focused",
         action: "train",
         reasoning: "Flow state optimizes learning. Spaced retrieval during peak focus creates 60% stronger memory consolidation.",
-        priority: 7
+        priority: 8
       });
     }
 
@@ -125,6 +125,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
   const getActionColor = (action: string) => {
     switch (action) {
+      case 'retrieve': return 'indigo';
       case 'capture': return 'indigo';
       case 'weave': return 'emerald';
       case 'plan': return 'blue';
