@@ -246,6 +246,7 @@ export const WeaveProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return {
       totalWeaves,
       avgCoherenceScore: Math.round(avgCoherenceScore),
+      avgQualityScore: Math.round(avgCoherenceScore),
       avgRecallLatency: Math.round(avgRecallLatency),
       completionRate: Math.round(completionRate),
       weeklyProgress,
