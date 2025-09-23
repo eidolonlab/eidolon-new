@@ -249,7 +249,9 @@ const DailyMemoryMoments: React.FC = () => {
                `Amazing ${streak}-day streak! You're a memory master.`}
             </p>
           </div>
-          <p className="text-sm text-gray-600">{getTimeOfDayGreeting()}! What made today special?</p>
+          <p className="text-sm text-gray-600">
+            {getTimeOfDayGreeting()}! {new Date().getHours() < 10 ? 'What are you excited about today?' : 'What made today special?'}
+          </p>
         </div>
       </div>
     </div>
