@@ -327,6 +327,17 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
                   className="p-4 bg-white rounded-lg border border-purple-200 hover:border-purple-300 hover:shadow-md transition-all text-left group"
                 >
                   <div className="flex items-center space-x-2 mb-2">
+                    <Sparkles className="w-5 h-5 text-purple-600" />
+                    <span className="font-semibold text-purple-900">Story Graph</span>
+                  </div>
+                  <p className="text-sm text-gray-600">Interactive memory visualization</p>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* AI Memory Companion */}
       {showConversationalAI && (
         <ConversationalInterface
@@ -347,4 +358,3 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
 };
 
 export default IntelligentDashboard;
-      {progressiveLayer >= 3 && !showConversationalAI && (
