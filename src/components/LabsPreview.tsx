@@ -4,6 +4,7 @@ import {
   Eye, Heart, Sparkles, Lock, Clock, Star, ArrowRight,
   Beaker, Rocket, Shield, Globe, Lightbulb
 } from 'lucide-react';
+import StoryGraphPreview from './StoryGraphPreview';
 
 interface LabsPreviewProps {
   onClose: () => void;
@@ -11,6 +12,7 @@ interface LabsPreviewProps {
 
 const LabsPreview: React.FC<LabsPreviewProps> = ({ onClose }) => {
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
+  const [showStoryGraph, setShowStoryGraph] = useState(false);
 
   const labsFeatures = [
     {
@@ -277,17 +279,33 @@ const LabsPreview: React.FC<LabsPreviewProps> = ({ onClose }) => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          onClose();
-                          // Navigate to the actual feature
-                          if (feature.id === 'meaningful-wins') {
-                            // Would trigger meaningful wins tracker
-                          } else if (feature.id === 'anxiety-regulation') {
-                            // Would trigger anxiety toolkit
+                          if (feature.id === 'story-graph') {
+                            setShowStoryGraph(true);
+                          } else {
+                            onClose();
+                            // Navigate to the actual feature
+                            if (feature.id === 'meaningful-wins') {
+                              // Would trigger meaningful wins tracker
+                            } else if (feature.id === 'anxiety-regulation') {
+                              // Would trigger anxiety toolkit
+                            }
                           }
                         }}
                         className={`w-full px-4 py-2 bg-${feature.color}-600 text-white rounded-lg hover:bg-${feature.color}-700 transition-colors`}
                       >
-                        Try This Feature Now
+                        {feature.id === 'story-graph' ? 'Preview StoryGraph' : 'Try This Feature Now'}
+                      </button>
+                    )}
+
+                    {feature.id === 'story-graph' && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowStoryGraph(true);
+                        }}
+                        className={`w-full px-4 py-2 bg-${feature.color}-600 text-white rounded-lg hover:bg-${feature.color}-700 transition-colors mt-2`}
+                      >
+                        Interactive Demo
                       </button>
                     )}
                   </div>
@@ -297,6 +315,31 @@ const LabsPreview: React.FC<LabsPreviewProps> = ({ onClose }) => {
           })}
         </div>
       </div>
+
+      {/* StoryGraph Modal */}
+      {showStoryGraph && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">StoryGraph - Interactive Preview</h2>
+              <button
+                onClick={() => setShowStoryGraph(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <StoryGraphPreview
+                onEarlyAccess={() => {
+                  alert('🎉 StoryGraph Early Access Interest Recorded!\n\nWe\'ll notify you when this revolutionary feature becomes available for testing. Thank you for your interest in the future of memory training!');
+                  setShowStoryGraph(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Early Access Signup */}
       <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200 p-6">
