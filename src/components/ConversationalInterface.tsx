@@ -248,7 +248,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-lg">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
@@ -267,86 +267,57 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         </button>
       </div>
 
-      {/* Intelligent Message */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-        <div className="flex items-center space-x-2 mb-2">
-          <Brain className="w-4 h-4 text-blue-600" />
-          <span className="font-medium text-blue-900">Cognitive State Analysis</span>
-        </div>
-        <p className="text-blue-900 font-medium leading-relaxed">{currentMessage}</p>
+      {/* Status Message */}
+      <div className="text-center mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+        <p className="text-blue-900 font-medium text-lg">
+          {getTimeOfDay() === 'morning' ? 'Morning clarity is building!' :
+           getTimeOfDay() === 'afternoon' ? 'Afternoon focus is looking good!' :
+           getTimeOfDay() === 'evening' ? 'Evening reflection time!' :
+           'Night time for gentle memory work!'}
+        </p>
       </div>
 
-      {/* Intelligent Insights */}
-      {intelligentInsights.length > 0 && (
-        <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
-          <div className="flex items-center space-x-2 mb-3">
-            <Lightbulb className="w-4 h-4 text-purple-600" />
-            <span className="font-medium text-purple-900">Cognitive Insights</span>
-          </div>
-          <div className="space-y-2">
-            {intelligentInsights.map((insight, index) => (
-              <div key={index} className="text-sm text-purple-800 bg-white rounded p-2 border border-purple-200">
-                {insight}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Intelligent Suggestions */}
-      <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">Recommended for you right now:</h4>
-        {suggestions.map((suggestion, index) => {
+      {/* Recommendations */}
+      <div className="space-y-4 mb-8">
+        <h4 className="font-medium text-gray-900 text-lg">Recommended for you right now:</h4>
+        
+        {suggestions.slice(0, 3).map((suggestion, index) => {
           const ActionIcon = getActionIcon(suggestion.action);
-          const color = getActionColor(suggestion.action);
           
           return (
-            <div key={index} className="space-y-2">
-              <button
-                onClick={() => onActionSelect(suggestion.action)}
-                className={`w-full flex items-center justify-between p-4 bg-${color}-50 border border-${color}-200 rounded-xl hover:bg-${color}-100 transition-all group`}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 bg-${color}-100 rounded-lg flex items-center justify-center group-hover:bg-${color}-200 transition-colors`}>
-                    <ActionIcon className={`w-5 h-5 text-${color}-600`} />
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-medium text-gray-900">{suggestion.text}</h4>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500">Priority: {suggestion.priority}/10</span>
-                      <span className="text-xs text-gray-400">•</span>
-                      <span className="text-xs text-gray-500">{suggestion.effectiveness}% effective</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowReasoningFor(showReasoningFor === suggestion.action ? null : suggestion.action);
-                        }}
-                        className="text-xs text-gray-400 hover:text-gray-600"
-                      >
-                        Why?
-                      </button>
-                    </div>
+            <button
+              key={index}
+              onClick={() => onActionSelect(suggestion.action)}
+              className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all group"
+            >
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <ActionIcon className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div className="text-left">
+                  <h4 className="font-medium text-gray-900">{suggestion.text}</h4>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <span>Priority: {suggestion.priority}/10</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alert(`🧠 AI Reasoning:\n\n${suggestion.reasoning}`);
+                      }}
+                      className="text-indigo-600 hover:text-indigo-700 underline"
+                    >
+                      Why?
+                    </button>
                   </div>
                 </div>
-                <ArrowRight className={`w-5 h-5 text-${color}-600 group-hover:translate-x-1 transition-transform`} />
-              </button>
-              
-              {showReasoningFor === suggestion.action && (
-                <div className={`p-3 bg-${color}-25 border border-${color}-200 rounded-lg ml-4`}>
-                  <div className="flex items-center space-x-2 mb-1">
-                    <Brain className={`w-3 h-3 text-${color}-600`} />
-                    <span className={`text-xs font-medium text-${color}-800`}>AI Reasoning</span>
-                  </div>
-                  <p className={`text-xs text-${color}-700 leading-relaxed`}>{suggestion.reasoning}</p>
-                </div>
-              )}
-            </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+            </button>
           );
         })}
       </div>
 
-      {/* Quick Actions */}
-      <div className="mt-6 pt-6 border-t border-gray-200">
+      {/* All Features Available */}
+      <div className="border-t border-gray-200 pt-6">
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-medium text-gray-900">All Features Available</h4>
           <span className="text-xs text-gray-500">Access anytime, optimized for your state</span>
@@ -415,23 +386,6 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         <p className="text-xs text-gray-500 mt-3 text-center">
           💡 Recommendations above are optimized for your current state, but all features work anytime
         </p>
-      </div>
-
-      {/* Cognitive State Summary */}
-      <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-600">Attention: <span className="font-medium">{cognitiveState.attention}%</span></span>
-            <span className="text-gray-600">Energy: <span className="font-medium">{cognitiveState.energy}%</span></span>
-            <span className="text-gray-600">Stress: <span className="font-medium">{cognitiveState.stress}%</span></span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Activity className="w-4 h-4 text-indigo-600" />
-            <span className="text-indigo-600 font-medium capitalize">
-              {cognitiveState.flowState} Flow
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );
