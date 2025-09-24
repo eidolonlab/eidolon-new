@@ -351,7 +351,6 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         Use ↑↓ arrow keys to navigate, Enter to select, Esc to close
       </div>
     </div>
-    </ErrorBoundary>
   );
 };
 
