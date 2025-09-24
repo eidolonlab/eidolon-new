@@ -18,7 +18,6 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const { weaves } = useWeave();
   const [focusedActivity, setFocusedActivity] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [showConversationalAI, setShowConversationalAI] = useState(true);
   const [showLabsDetails, setShowLabsDetails] = useState(false);
   const [showStoryGraphModal, setShowStoryGraphModal] = useState(false);
 
