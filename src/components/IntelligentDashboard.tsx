@@ -315,6 +315,51 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         </div>
       )}
 
+      {/* Bottom Action Cards - Always Visible */}
+      <div className="grid md:grid-cols-2 gap-6 mt-12">
+        {/* Retrieve Memory Card */}
+        <button
+          onClick={() => setFocusedActivity('retrieve')}
+          className="group bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8 rounded-2xl hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl text-left"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+              <Search className="w-8 h-8 text-white" />
+            </div>
+            <ArrowRight className="w-6 h-6 text-white opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+          </div>
+          
+          <h3 className="text-2xl font-bold text-white mb-3">Retrieve Memory</h3>
+          <p className="text-indigo-100 text-lg mb-4">Guided recovery of past experiences</p>
+          
+          <div className="flex items-center space-x-2 text-indigo-200">
+            <Brain className="w-4 h-4" />
+            <span className="text-sm">Evidence-based cues • Multi-sensory reconstruction</span>
+          </div>
+        </button>
+
+        {/* Capture Moment Card */}
+        <button
+          onClick={() => setFocusedActivity('capture')}
+          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-8 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-16 h-16 bg-emerald-100 group-hover:bg-emerald-200 rounded-2xl flex items-center justify-center transition-colors">
+              <Star className="w-8 h-8 text-emerald-600" />
+            </div>
+            <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all" />
+          </div>
+          
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">Capture Moment</h3>
+          <p className="text-gray-600 text-lg mb-4">Preserve today's meaningful experiences</p>
+          
+          <div className="flex items-center space-x-2 text-emerald-600">
+            <Star className="w-4 h-4" />
+            <span className="text-sm">Quick capture • Autobiographical coherence</span>
+          </div>
+        </button>
+      </div>
+
     </div>
   );
 };
