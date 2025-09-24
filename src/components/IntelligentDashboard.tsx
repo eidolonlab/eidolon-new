@@ -186,6 +186,42 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       </div>
 
       {/* Core Features Grid */}
+      {/* AI Memory Companion - Subtle and Contextual */}
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border border-indigo-200 p-6 mb-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">AI Memory Companion</h3>
+              <p className="text-sm text-gray-600">{getAdaptiveMessage()}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowConversationalAI(true)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm"
+          >
+            Get Recommendations
+          </button>
+        </div>
+        
+        <div className="mt-4 grid md:grid-cols-3 gap-4">
+          <div className="flex items-center space-x-2 text-sm text-indigo-700">
+            <Clock className="w-4 h-4" />
+            <span>Optimal for {getOptimalActivity()}</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-indigo-700">
+            <Brain className="w-4 h-4" />
+            <span>Flow state: {cognitiveState.flowState}</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-indigo-700">
+            <TrendingUp className="w-4 h-4" />
+            <span>Layer {getProgressiveLayer()} features</span>
+          </div>
+        </div>
+      </div>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* ADHD Support Card */}
         <button
