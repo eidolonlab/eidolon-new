@@ -353,9 +353,10 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           onDismiss={() => setShowConversationalAI(false)}
         />
       )}
+      {progressiveLayer >= 3 && !showConversationalAI && (
+      )}
     </div>
   );
 };
 
 export default IntelligentDashboard;
-      {progressiveLayer >= 3 && !showConversationalAI && (
