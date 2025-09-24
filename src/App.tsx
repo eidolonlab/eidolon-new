@@ -34,6 +34,49 @@ function App() {
 
   const currentPath = location.pathname;
   
+  const checkAdminStatus = async () => {
+    setCheckingAuth(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.email) {
+        setIsAuthenticated(true);
+        
+        // Check if user is admin, if not, make them admin automatically for demo
+        const { data, error } = await supabase
+          .from('admin_users')
+          .select('role')
+          .eq('email', user.email)
+          .single();
+        
+        if (error || !data) {
+          // Auto-create admin user
+          const { error: createError } = await supabase
+            .from('admin_users')
+            .insert({
+              email: user.email,
+              role: 'admin',
+              permissions: { dashboard: true, analytics: true, users: true }
+            });
+          
+          if (!createError) {
+            setIsAdmin(true);
+          }
+        } else {
+          setIsAdmin(true);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      // Not an admin or not authenticated
+      setIsAuthenticated(false);
+      setIsAdmin(false);
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
+
   // Check if user needs onboarding
   useEffect(() => {
     const hasCompletedOnboarding = localStorage.getItem('eidolon-onboarding-complete');
@@ -79,48 +122,6 @@ function App() {
       </ErrorBoundary>
     );
   }
-  const checkAdminStatus = async () => {
-    setCheckingAuth(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email) {
-        setIsAuthenticated(true);
-        
-        // Check if user is admin, if not, make them admin automatically for demo
-        const { data, error } = await supabase
-          .from('admin_users')
-          .select('role')
-          .eq('email', user.email)
-          .single();
-        
-        if (error || !data) {
-          // Auto-create admin user
-          const { error: createError } = await supabase
-            .from('admin_users')
-            .insert({
-              email: user.email,
-              role: 'admin',
-              permissions: { dashboard: true, analytics: true, users: true }
-            });
-          
-          if (!createError) {
-            setIsAdmin(true);
-          }
-        } else {
-          setIsAdmin(true);
-        }
-      } else {
-        setIsAuthenticated(false);
-        setIsAdmin(false);
-      }
-    } catch (error) {
-      // Not an admin or not authenticated
-      setIsAuthenticated(false);
-      setIsAdmin(false);
-    } finally {
-      setCheckingAuth(false);
-    }
-  };
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
