@@ -430,14 +430,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
         {/* Revolutionary Features Preview */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <div className="p-4 bg-white rounded-lg border border-purple-200">
+          <button
+            onClick={() => setShowStoryGraph(true)}
+            className="p-4 bg-white rounded-lg border border-purple-200 hover:border-purple-300 hover:bg-purple-50 transition-all text-left"
+          >
             <div className="flex items-center space-x-2 mb-2">
               <Users className="w-5 h-5 text-purple-600" />
               <span className="font-medium text-gray-900">StoryGraph</span>
             </div>
             <p className="text-sm text-gray-600 mb-2">Visual network of people, places, projects & promises</p>
             <div className="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded">Phase 2 - Q2 2026</div>
-          </div>
+          </button>
 
           <div className="p-4 bg-white rounded-lg border border-emerald-200">
             <div className="flex items-center space-x-2 mb-2">
