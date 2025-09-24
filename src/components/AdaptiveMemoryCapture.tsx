@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Brain, Heart, Eye, Ear, Save, Sparkles, Clock, Target, CheckCircle } from 'lucide-react';
+import { Star, Brain, Heart, Eye, Ear, Save, Sparkles, Clock, Target, CheckCircle, Zap, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
@@ -25,19 +25,25 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
   const [startTime] = useState(new Date());
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
   const [encouragement, setEncouragement] = useState('');
+  const [adaptiveFlow, setAdaptiveFlow] = useState<'gentle' | 'standard' | 'rich'>('standard');
 
   // Adaptive flow based on cognitive state
-  const getAdaptiveFlow = () => {
-    if (!cognitiveState) return 'standard';
+  useEffect(() => {
+    if (!cognitiveState) {
+      setAdaptiveFlow('standard');
+      return;
+    }
     
     const { attention, energy, stress } = cognitiveState;
     
-    if (stress > 60 || attention < 40) return 'gentle';
-    if (energy > 70 && attention > 70) return 'rich';
-    return 'standard';
-  };
-
-  const adaptiveFlow = getAdaptiveFlow();
+    if (stress > 60 || attention < 40) {
+      setAdaptiveFlow('gentle');
+    } else if (energy > 70 && attention > 70) {
+      setAdaptiveFlow('rich');
+    } else {
+      setAdaptiveFlow('standard');
+    }
+  }, [cognitiveState]);
 
   useEffect(() => {
     generateContextualSuggestions();
@@ -50,7 +56,7 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
     const seed = memoryData.seed.toLowerCase();
     const suggestions = [];
 
-    // Context-aware suggestions
+    // Context-aware suggestions based on cognitive science
     if (seed.includes('conversation') || seed.includes('talk')) {
       suggestions.push("What was their tone of voice like?");
       suggestions.push("How did their words make you feel?");
@@ -122,7 +128,7 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
         tactile: '',
         emotional: memoryData.expandedDetails.emotional,
       },
-      tags: ['quick-capture', adaptiveFlow],
+      tags: ['adaptive-capture', adaptiveFlow],
       errorlessMode: adaptiveFlow === 'gentle',
       difficultyLevel: adaptiveFlow === 'gentle' ? 'easy' as const : 'medium' as const
     };

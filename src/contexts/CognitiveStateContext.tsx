@@ -10,6 +10,8 @@ export interface CognitiveState {
   flowState: 'disrupted' | 'building' | 'focused' | 'peak';
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
   lastUpdated: Date;
+  interfaceMode: 'simple' | 'standard' | 'advanced';
+  progressiveLayer: 1 | 2 | 3;
 }
 
 export interface UserPattern {
@@ -19,6 +21,9 @@ export interface UserPattern {
   strongestSenses: string[];
   improvementRate: number;
   consistencyScore: number;
+  cognitiveProfile: 'visual' | 'auditory' | 'kinesthetic' | 'mixed';
+  optimalCognitiveLoad: 'light' | 'medium' | 'high';
+  stressPatterns: Array<{ time: string; level: number }>;
 }
 
 interface CognitiveStateContextType {
@@ -28,6 +33,9 @@ interface CognitiveStateContextType {
   getOptimalActivity: () => string;
   getAdaptiveMessage: () => string;
   getInterfaceMode: () => 'simple' | 'standard' | 'advanced';
+  getProgressiveLayer: () => 1 | 2 | 3;
+  detectCognitiveLoad: () => 'light' | 'medium' | 'high';
+  predictOptimalTiming: (activity: string) => number;
 }
 
 const CognitiveStateContext = createContext<CognitiveStateContextType | undefined>(undefined);
@@ -50,7 +58,9 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     optimalActivity: 'retrieve',
     flowState: 'building',
     timeOfDay: getTimeOfDay(),
-    lastUpdated: new Date()
+    lastUpdated: new Date(),
+    interfaceMode: 'standard',
+    progressiveLayer: 1
   });
 
   const [userPattern, setUserPattern] = useState<UserPattern>({
@@ -59,7 +69,10 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     preferredDifficulty: 'medium',
     strongestSenses: ['visual', 'emotional'],
     improvementRate: 0,
-    consistencyScore: 0
+    consistencyScore: 0,
+    cognitiveProfile: 'mixed',
+    optimalCognitiveLoad: 'medium',
+    stressPatterns: []
   });
 
   function getTimeOfDay(): 'morning' | 'afternoon' | 'evening' | 'night' {
@@ -70,12 +83,16 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     return 'night';
   }
 
-  // Auto-update time of day every minute
+  // Auto-update time of day and cognitive state every minute
   useEffect(() => {
     const interval = setInterval(() => {
+      const newTimeOfDay = getTimeOfDay();
+      const newState = adaptCognitiveState(newTimeOfDay);
+      
       setCognitiveState(prev => ({
         ...prev,
-        timeOfDay: getTimeOfDay(),
+        timeOfDay: newTimeOfDay,
+        ...newState,
         lastUpdated: new Date()
       }));
     }, 60000); // Update every minute
@@ -86,7 +103,41 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
   // Analyze user patterns from localStorage data
   useEffect(() => {
     analyzeUserPatterns();
+    detectProgressiveLayer();
   }, []);
+
+  const adaptCognitiveState = (timeOfDay: string) => {
+    const hour = new Date().getHours();
+    let adaptations: Partial<CognitiveState> = {};
+
+    // Circadian rhythm-based adaptations
+    if (timeOfDay === 'morning') {
+      adaptations = {
+        energy: Math.min(cognitiveState.energy + 10, 100),
+        attention: Math.min(cognitiveState.attention + 15, 100),
+        optimalActivity: 'retrieve'
+      };
+    } else if (timeOfDay === 'afternoon') {
+      adaptations = {
+        attention: Math.max(cognitiveState.attention - 5, 40),
+        optimalActivity: 'train'
+      };
+    } else if (timeOfDay === 'evening') {
+      adaptations = {
+        energy: Math.max(cognitiveState.energy - 10, 30),
+        stress: Math.max(cognitiveState.stress - 5, 10),
+        optimalActivity: 'capture'
+      };
+    } else { // night
+      adaptations = {
+        energy: Math.max(cognitiveState.energy - 20, 20),
+        attention: Math.max(cognitiveState.attention - 15, 30),
+        optimalActivity: 'capture'
+      };
+    }
+
+    return adaptations;
+  };
 
   const analyzeUserPatterns = () => {
     const savedWeaves = localStorage.getItem('eidolon-weaves');
@@ -141,15 +192,31 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
       .slice(0, 2)
       .map(([sense]) => sense);
 
-    setUserPattern({
+    setUserPattern(prev => ({
+      ...prev,
       bestTimeForMemory: bestTime,
       averageSessionLength: sessions.length > 0 ? 
         sessions.reduce((sum: number, s: any) => sum + (s.latencyMs || 0), 0) / sessions.length / 1000 : 300,
-      preferredDifficulty: 'medium', // Could be calculated from success rates
       strongestSenses,
       improvementRate: calculateImprovementRate(sessions),
       consistencyScore: calculateConsistencyScore(weaves)
-    });
+    }));
+  };
+
+  const detectProgressiveLayer = () => {
+    const weaveCount = JSON.parse(localStorage.getItem('eidolon-weaves') || '[]').length;
+    const sessionCount = JSON.parse(localStorage.getItem('eidolon-sessions') || '[]').length;
+    
+    let layer: 1 | 2 | 3 = 1;
+    
+    if (weaveCount >= 5 && sessionCount >= 3) {
+      layer = 2; // Contextual features
+    }
+    if (weaveCount >= 15 && sessionCount >= 10) {
+      layer = 3; // Advanced features
+    }
+
+    setCognitiveState(prev => ({ ...prev, progressiveLayer: layer }));
   };
 
   const calculateImprovementRate = (sessions: any[]) => {
@@ -214,24 +281,24 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     
     const messages = {
       morning: {
-        high: "Good morning! Peak cognitive state detected - ideal for guided memory retrieval and multi-sensory encoding.",
-        medium: "Morning clarity building - perfect for autobiographical memory recovery with intelligent cues.",
-        low: "Gentle morning start - stress regulation will optimize your memory systems."
+        high: "🌅 Morning Flow Active! Peak cognitive state detected - ideal for guided memory retrieval and multi-sensory encoding.",
+        medium: "🌅 Morning Flow Active! Building clarity - perfect for autobiographical memory recovery with intelligent cues.",
+        low: "🌅 Morning Flow Active! Gentle start recommended - stress regulation will optimize your memory systems."
       },
       afternoon: {
-        high: "Afternoon focus peak! Optimal for spaced retrieval training and memory strengthening.",
-        medium: "Steady afternoon state - excellent for guided memory recovery and scenario rehearsal.",
-        low: "Natural afternoon dip - gentle memory capture and reflection work well now."
+        high: "☀️ Afternoon Flow Active! Focus peak detected - optimal for spaced retrieval training and memory strengthening.",
+        medium: "☀️ Afternoon Flow Active! Steady state - excellent for guided memory recovery and scenario rehearsal.",
+        low: "☀️ Afternoon Flow Active! Natural dip - gentle memory capture and reflection work well now."
       },
       evening: {
-        high: "Evening clarity! Perfect for reflection and capturing today's meaningful moments.",
-        medium: "Reflection time - capture today's highlights and prepare for tomorrow's scenarios.",
-        low: "Peaceful evening - gentle memory work supports overnight consolidation."
+        high: "🌆 Evening Flow Active! Peaceful state - perfect for reflection and capturing today's meaningful moments.",
+        medium: "🌆 Evening Flow Active! Reflection time - capture today's highlights and prepare for tomorrow's scenarios.",
+        low: "🌆 Evening Flow Active! Busy day detected - gentle memory work supports overnight consolidation."
       },
       night: {
-        high: "Late night clarity! Quick memory capture before sleep consolidation.",
-        medium: "Pre-sleep reflection - capture today's highlights for overnight processing.",
-        low: "Rest preparation - gentle regulation supports memory consolidation during sleep."
+        high: "🌙 Night Flow Active! Late night clarity - quick memory capture before sleep consolidation.",
+        medium: "🌙 Night Flow Active! Pre-sleep reflection - capture today's highlights for overnight processing.",
+        low: "🌙 Night Flow Active! Rest preparation - gentle regulation supports memory consolidation during sleep."
       }
     };
 
@@ -247,6 +314,33 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     return 'standard';
   };
 
+  const getProgressiveLayer = (): 1 | 2 | 3 => {
+    return cognitiveState.progressiveLayer;
+  };
+
+  const detectCognitiveLoad = (): 'light' | 'medium' | 'high' => {
+    const { attention, energy, stress } = cognitiveState;
+    
+    if (stress > 60 || energy < 40) return 'light';
+    if (attention > 80 && energy > 70 && stress < 30) return 'high';
+    return 'medium';
+  };
+
+  const predictOptimalTiming = (activity: string): number => {
+    const hour = new Date().getHours();
+    const { attention, energy } = cognitiveState;
+    
+    // Predict success probability for activity at current time
+    let baseScore = 50;
+    
+    if (activity === 'retrieve' && hour < 12 && energy > 70) baseScore += 30;
+    if (activity === 'train' && hour >= 12 && hour < 17 && attention > 60) baseScore += 25;
+    if (activity === 'capture' && hour >= 17) baseScore += 20;
+    if (activity === 'regulate' && stress > 50) baseScore += 35;
+    
+    return Math.min(baseScore, 95);
+  };
+
   return (
     <CognitiveStateContext.Provider value={{
       cognitiveState,
@@ -254,7 +348,10 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
       updateCognitiveState,
       getOptimalActivity,
       getAdaptiveMessage,
-      getInterfaceMode
+      getInterfaceMode,
+      getProgressiveLayer,
+      detectCognitiveLoad,
+      predictOptimalTiming
     }}>
       {children}
     </CognitiveStateContext.Provider>

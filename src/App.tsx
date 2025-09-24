@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
-import IntelligentDashboard from './components/IntelligentDashboard';
+import Dashboard from './components/Dashboard';
 import WeaveCanvas from './components/WeaveCanvas';
 import RetrievalTrainer from './components/RetrievalTrainer';
 import ScenarioStudio from './components/ScenarioStudio';
@@ -203,7 +203,7 @@ function App() {
                 {/* Main Content */}
                 <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
                   <Routes>
-                    <Route path="/" element={<IntelligentDashboard onNavigate={(view) => navigate(`/${view}`)} />} />
+                    <Route path="/" element={<Dashboard onNavigate={(view) => navigate(`/${view}`)} />} />
                     <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
                     <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
                     <Route path="/training" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
