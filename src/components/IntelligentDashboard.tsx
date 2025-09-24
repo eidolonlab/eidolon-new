@@ -221,77 +221,24 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           >
             <ArrowRight className="w-5 h-5 rotate-180" />
             <span>Back to Dashboard</span>
-          </button>
-          <h1 className="text-2xl font-bold text-gray-900">Memory State Optimization</h1>
-        </div>
-        <CognitiveRegulationTools
-          cognitiveState={cognitiveState}
-          onComplete={() => setFocusedActivity(null)}
-        />
-      </div>
-    );
-  }
-
-  const timeOfDay = getTimeOfDay();
-  const TimeIcon = getTimeIcon();
-  const adaptiveMessage = getAdaptiveMessage();
-  const optimalActivities = getOptimalActivities();
-  const progressiveLayer = getProgressiveLayer();
-
-  return (
-    <div className="space-y-8">
-      {/* Layer 1: Essential - Always Visible */}
-      {/* Adaptive Time-Based Hero Section */}
-      <div className={`rounded-2xl border p-8 ${
-        timeOfDay === 'morning' ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' :
-        timeOfDay === 'afternoon' ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200' :
-        timeOfDay === 'evening' ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200' :
-        'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200'
-      }`}>
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <TimeIcon className={`w-8 h-8 ${
-              timeOfDay === 'morning' ? 'text-yellow-600' :
-              timeOfDay === 'afternoon' ? 'text-blue-600' :
-              timeOfDay === 'evening' ? 'text-purple-600' :
-              'text-indigo-600'
-            }`} />
-            <h2 className="text-2xl font-bold text-gray-900 capitalize">
-              {timeOfDay} Flow Active
-            </h2>
-          </div>
-          <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-            {adaptiveMessage}
-          </p>
-          
-          {optimalActivities.length > 0 && (
-            <button
-              onClick={() => setFocusedActivity(optimalActivities[0].action)}
-              className={`inline-flex items-center space-x-3 px-8 py-4 text-white rounded-xl hover:shadow-xl transition-all text-lg font-medium shadow-lg ${
-                timeOfDay === 'morning' ? 'bg-yellow-600 hover:bg-yellow-700' :
-                timeOfDay === 'afternoon' ? 'bg-blue-600 hover:bg-blue-700' :
-                timeOfDay === 'evening' ? 'bg-purple-600 hover:bg-purple-700' :
-                'bg-indigo-600 hover:bg-indigo-700'
-              }`}
-            >
-              <Search className="w-6 h-6" />
-              <span>{optimalActivities[0].title}</span>
-            </button>
-          )}
-          
-          <div className={`mt-4 text-sm font-medium ${
-            timeOfDay === 'morning' ? 'text-yellow-700' :
-            timeOfDay === 'afternoon' ? 'text-blue-700' :
-            timeOfDay === 'evening' ? 'text-purple-700' :
-            'text-indigo-700'
-          }`}>
-            <span>✨ Optimized for {timeOfDay} cognitive state • Updates every minute</span>
-          </div>
-        </div>
-      </div>
-
       {/* AI Memory Companion */}
-      {showConversationalAI && (
+      {!showConversationalAI ? (
+        <div className="text-center">
+          <button
+            onClick={() => setShowConversationalAI(true)}
+            className="group bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl"
+          >
+            <div className="flex items-center space-x-3">
+              <MessageSquare className="w-6 h-6" />
+              <div className="text-left">
+                <div className="font-bold text-lg">AI Memory Companion</div>
+                <div className="text-indigo-100 text-sm">Personalized recommendations based on your state</div>
+              </div>
+              <ArrowRight className="w-5 h-5" />
+            </div>
+          </button>
+        </div>
+      ) : (
         <ConversationalInterface
           cognitiveState={cognitiveState}
           upcomingEvents={upcomingScenarios}
@@ -304,79 +251,6 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           }}
           onDismiss={() => setShowConversationalAI(false)}
         />
-      )}
-
-      {/* Layer 2: Contextual - Appears when relevant */}
-      {progressiveLayer >= 2 && (
-        <div className="grid md:grid-cols-4 gap-6">
-          <button
-            onClick={() => onNavigate('adhd')}
-            className="group bg-white border-2 border-gray-200 hover:border-blue-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                <Shield className="w-6 h-6 text-blue-600" />
-              </div>
-              <Play className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">ADHD Support</h3>
-            <p className="text-gray-600 mb-4">Focus, working memory & executive function training</p>
-            <div className="text-sm text-blue-600 font-medium">
-              🎯 Immediate relief • Evidence-based • 5-25 min sessions
-            </div>
-          </button>
-
-          <button
-            onClick={() => onNavigate('weave')}
-            className="group bg-white border-2 border-gray-200 hover:border-indigo-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
-                <Sparkles className="w-6 h-6 text-indigo-600" />
-              </div>
-              <Play className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Memory Weaving</h3>
-            <p className="text-gray-600 mb-4">Transform moments into rich, multi-sensory memories</p>
-            <div className="text-sm text-indigo-600 font-medium">
-              🌟 5-sense encoding • AI assistance • Clinical quality
-            </div>
-          </button>
-
-          <button
-            onClick={() => onNavigate('scenario')}
-            className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
-                <Calendar className="w-6 h-6 text-emerald-600" />
-              </div>
-              <Play className="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Future Scenarios</h3>
-            <p className="text-gray-600 mb-4">Rehearse events with confidence-building techniques</p>
-            <div className="text-sm text-emerald-600 font-medium">
-              🎯 Mental rehearsal • If-then planning • 2x success rate
-            </div>
-          </button>
-
-          <button
-            onClick={() => onNavigate('training')}
-            className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                <Target className="w-6 h-6 text-orange-600" />
-              </div>
-              <Play className="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Memory Training</h3>
-            <p className="text-gray-600 mb-4">Strengthen recall through spaced practice</p>
-            <div className="text-sm text-orange-600 font-medium">
-              📈 Spaced retrieval • 50% stronger memories • Clinical metrics
-            </div>
-          </button>
-        </div>
       )}
 
       {/* Layer 3: Advanced - Eidolon Labs */}
