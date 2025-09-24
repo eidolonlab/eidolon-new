@@ -221,6 +221,21 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           >
             <ArrowRight className="w-5 h-5 rotate-180" />
             <span>Back to Dashboard</span>
+          </button>
+          <h1 className="text-2xl font-bold text-gray-900">Cognitive Regulation</h1>
+        </div>
+        <CognitiveRegulationTools
+          cognitiveState={cognitiveState}
+          onComplete={() => setFocusedActivity(null)}
+        />
+      </div>
+    );
+  }
+
+  const progressiveLayer = getProgressiveLayer();
+
+  return (
+    <div className="space-y-8">
       {/* AI Memory Companion */}
       {!showConversationalAI ? (
         <div className="text-center">
