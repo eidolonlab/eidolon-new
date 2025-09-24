@@ -94,7 +94,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     if (timeOfDay === 'night') {
       // Night Flow - Only gentle activities
       suggestions.push({
-        text: "Gentle memory capture - preserve today's moments before sleep",
+        text: "Daily memory capture - build autobiographical memory strength",
         action: "capture",
         reasoning: "Night time is optimal for gentle reflection. Sleep consolidates memories formed in the evening, improving retention by 40%.",
         priority: 10,
@@ -113,33 +113,33 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     } else if (stress > 60) {
       // High stress - prioritize regulation
       suggestions.push({
-        text: "Memory state optimization - reduce stress for better encoding",
-        action: "regulate",
-        reasoning: "High stress impairs memory formation by 50% through cortisol interference. Regulation restores optimal encoding conditions.",
+        text: "ADHD support - stress often worsens attention challenges",
+        action: "adhd",
+        reasoning: "Stress compounds attention difficulties by 35%. Our focus training includes integrated stress regulation for dual benefit.",
         priority: 10,
         effectiveness: 95
       });
       suggestions.push({
-        text: "ADHD support tools - stress often worsens attention challenges",
-        action: "adhd",
-        reasoning: "Stress compounds attention difficulties by 35%. Our focus training includes integrated stress regulation for dual benefit.",
+        text: "Memory state optimization - reduce stress for better encoding",
+        action: "regulate",
+        reasoning: "High stress impairs memory formation by 50% through cortisol interference. Regulation restores optimal encoding conditions.",
         priority: 9,
-        effectiveness: 80
+        effectiveness: 90
       });
     } else if (timeOfDay === 'morning' && energy > 70 && attention > 70) {
       // Morning Flow - Peak cognitive state
       suggestions.push({
-        text: "Guided memory retrieval - recover forgotten experiences with AI cues",
-        action: "retrieve",
-        reasoning: "Morning cortisol + high attention creates optimal conditions for memory reconstruction. 65% stronger retrieval success in morning peak state.",
-        priority: 10,
+        text: "ADHD support - build focus, working memory & executive function",
+        action: "adhd",
+        reasoning: "Morning cortisol + high attention creates optimal conditions for attention training. 65% stronger focus building in morning peak state.",
+        priority: 9,
         effectiveness: 95
       });
       suggestions.push({
         text: "Multi-sensory memory weaving - your brain is primed for rich encoding",
         action: "weave",
         reasoning: "Peak cognitive state enables complex multi-sensory memory formation with 40% better consolidation than other times.",
-        priority: 9,
+        priority: 8,
         effectiveness: 90
       });
     } else if (timeOfDay === 'afternoon' && attention > 60) {
@@ -161,7 +161,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     } else if (timeOfDay === 'evening') {
       // Evening Flow - Reflection and preparation
       suggestions.push({
-        text: "Daily memory capture - reflect on today's meaningful moments",
+        text: "Daily memory capture - build autobiographical memory strength",
         action: "capture",
         reasoning: "Evening reflection enhances memory consolidation by 30%. Capturing daily moments improves autobiographical coherence and life satisfaction.",
         priority: 9,
@@ -179,15 +179,15 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     // Always available but time-adapted
     if (timeOfDay !== 'night') {
       suggestions.push({
-        text: "ADHD support - build focus, working memory & executive function",
+        text: "Focused attention training - build sustained concentration",
         action: "adhd",
         reasoning: "Attention training benefits everyone and adapts to your current state. Optimal during active hours for sustained focus building.",
-        priority: 7,
+        priority: 4,
         effectiveness: 75
       });
     }
 
-    setSuggestions(suggestions.sort((a, b) => b.priority - a.priority).slice(0, 4));
+    setSuggestions(suggestions.sort((a, b) => b.priority - a.priority).slice(0, 3));
   };
 
   const generateIntelligentInsights = () => {
@@ -256,7 +256,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
           </div>
           <div>
             <h3 className="text-xl font-semibold text-gray-900">AI Memory Companion</h3>
-            <p className="text-sm text-gray-600">Intelligent recommendations based on your cognitive state</p>
+            <p className="text-sm text-gray-600">Personalized recommendations based on your state</p>
           </div>
         </div>
         <button
@@ -295,7 +295,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
       {/* Intelligent Suggestions */}
       <div className="space-y-3">
-        <h4 className="font-medium text-gray-900">Recommended for your current state:</h4>
+        <h4 className="font-medium text-gray-900">Recommended for you right now:</h4>
         {suggestions.map((suggestion, index) => {
           const ActionIcon = getActionIcon(suggestion.action);
           const color = getActionColor(suggestion.action);
@@ -345,7 +345,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         })}
       </div>
 
-      {/* Always Available Core Features */}
+      {/* Quick Actions */}
       <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-medium text-gray-900">All Features Available</h4>

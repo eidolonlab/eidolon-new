@@ -25,12 +25,9 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [adminDemoMode, setAdminDemoMode] = useState(false);
 
   const currentPath = location.pathname;
   
-  // Debug logging
-  console.log('App - Current path:', currentPath);
 
   // Check admin status
   useEffect(() => {
@@ -107,6 +104,10 @@ function App() {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Brain className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Eidolon</h1>
               <p className="text-sm text-gray-600">Evidence-Based Memory Training</p>
             <p className="text-gray-600">Checking authentication...</p>
           </div>
@@ -142,8 +143,7 @@ function App() {
                         </div>
                         <div>
                           <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
-                          <p className="text-sm text-gray-600">Intelligent Memory Companion</p>
-                        <p className="text-sm text-gray-600">Memory Training & Recall</p>
+                          <p className="text-sm text-gray-600">Memory Training & Recall</p>
                         </div>
                       </div>
                       

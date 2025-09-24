@@ -150,6 +150,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const TimeIcon = getTimeIcon();
   const adaptiveMessage = getAdaptiveMessage();
   const optimalActivities = getOptimalActivities();
+
   return (
     <div className="space-y-8">
       {/* Adaptive Time-Based Hero Section */}
