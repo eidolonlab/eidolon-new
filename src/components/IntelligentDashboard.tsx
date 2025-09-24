@@ -20,7 +20,6 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showConversationalAI, setShowConversationalAI] = useState(true);
   const [showLabsDetails, setShowLabsDetails] = useState(false);
-  const [showLabsDetails, setShowLabsDetails] = useState(false);
   const [showStoryGraphModal, setShowStoryGraphModal] = useState(false);
 
   // Update time every minute for adaptive flow
