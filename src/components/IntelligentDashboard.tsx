@@ -20,7 +20,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const [focusedActivity, setFocusedActivity] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showLabsDetails, setShowLabsDetails] = useState(false);
-  const [showConversationalAI, setShowConversationalAI] = useState(true);
+  const [showConversationalAI, setShowConversationalAI] = useState(false);
   const [showStoryGraphModal, setShowStoryGraphModal] = useState(false);
   const [showLabsModal, setShowLabsModal] = useState(false);
 
@@ -37,90 +37,6 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
     .filter(w => w.type === 'future' && !w.completed && w.scheduledFor)
     .sort((a, b) => (a.scheduledFor!.getTime() - b.scheduledFor!.getTime()))
     .slice(0, 3);
-
-  const getTimeOfDay = () => {
-    const hour = currentTime.getHours();
-    if (hour < 12) return 'morning';
-    if (hour < 17) return 'afternoon';
-    if (hour < 21) return 'evening';
-    return 'night';
-  };
-
-  const getTimeIcon = () => {
-    const timeOfDay = getTimeOfDay();
-    switch (timeOfDay) {
-      case 'morning': return Sunrise;
-      case 'afternoon': return Coffee;
-      case 'evening': return Heart;
-      case 'night': return Moon;
-      default: return Sunrise;
-    }
-  };
-
-  const getOptimalActivities = () => {
-    const timeOfDay = getTimeOfDay();
-    const { attention, energy, stress } = cognitiveState;
-    
-    if (timeOfDay === 'night') {
-      return [
-        {
-          action: 'capture',
-          title: 'Gentle Memory Capture',
-          description: 'Preserve today\'s moments before sleep',
-          priority: 10,
-          reasoning: 'Night time is optimal for gentle reflection and memory consolidation preparation'
-        }
-      ];
-    }
-    
-    if (stress > 60) {
-      return [
-        {
-          action: 'regulate',
-          title: 'Memory State Optimization',
-          description: 'Calm your mind for better encoding',
-          priority: 10,
-          reasoning: 'High stress impairs memory formation - regulation comes first'
-        }
-      ];
-    }
-    
-    if (timeOfDay === 'morning' && energy > 70 && attention > 70) {
-      return [
-        {
-          action: 'retrieve',
-          title: 'Guided Memory Retrieval',
-          description: 'Peak state for memory reconstruction',
-          priority: 9,
-          reasoning: 'Morning cortisol and high attention create optimal encoding conditions'
-        },
-        {
-          action: 'adhd',
-          title: 'Advanced Focus Training',
-          description: 'Build sustained attention capacity',
-          priority: 8,
-          reasoning: 'High energy state perfect for challenging attention exercises'
-        }
-      ];
-    }
-    
-    return [
-      {
-        action: 'retrieve',
-        title: 'Guided Memory Retrieval',
-        description: 'Recover forgotten experiences',
-        priority: 9,
-        reasoning: 'Evidence-based cues help reconstruct autobiographical memories'
-      },
-      {
-        action: 'capture',
-        title: 'Memory Capture',
-        description: 'Preserve meaningful moments',
-        priority: 7,
-        reasoning: 'Always beneficial for autobiographical memory strength'
-      }
-    ];
-  };
 
   // Handle focused activities with proper navigation
   if (focusedActivity === 'retrieve') {
@@ -234,28 +150,150 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
     );
   }
 
-  const progressiveLayer = getProgressiveLayer();
-
   return (
     <div className="space-y-8">
-      {/* AI Memory Companion */}
-      {!showConversationalAI ? (
-        <div className="text-center">
-          <button
-            onClick={() => setShowConversationalAI(true)}
-            className="group bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-8 py-4 rounded-2xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl"
-          >
-            <div className="flex items-center space-x-3">
-              <MessageSquare className="w-6 h-6" />
-              <div className="text-left">
-                <div className="font-bold text-lg">AI Memory Companion</div>
-                <div className="text-indigo-100 text-sm">Personalized recommendations based on your state</div>
-              </div>
-              <ArrowRight className="w-5 h-5" />
-            </div>
-          </button>
+      {/* ADHD Focus Hero Section */}
+      <div className="text-center py-12">
+        <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <Brain className="w-10 h-10 text-white" />
         </div>
-      ) : (
+        
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Struggling with Focus & Attention?
+        </h1>
+        
+        <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 leading-relaxed">
+          Get immediate relief with evidence-based ADHD support. Build sustained attention, 
+          working memory, and executive function with tools designed by cognitive scientists.
+        </p>
+        
+        <button
+          onClick={() => onNavigate('adhd')}
+          className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-lg font-semibold"
+        >
+          <Brain className="w-6 h-6" />
+          <span>Start ADHD Support Now</span>
+        </button>
+        
+        <div className="flex items-center justify-center space-x-6 mt-4 text-sm text-gray-500">
+          <div className="flex items-center space-x-1">
+            <Sparkles className="w-4 h-4 text-yellow-500" />
+            <span>25-40% improvement in sustained attention</span>
+          </div>
+          <span>•</span>
+          <span>Research-backed</span>
+        </div>
+      </div>
+
+      {/* Core Features Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* ADHD Support Card */}
+        <button
+          onClick={() => onNavigate('adhd')}
+          className="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-left"
+        >
+          <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4">
+            <Brain className="w-6 h-6 text-white" />
+          </div>
+          
+          <h3 className="text-xl font-bold text-white mb-2">ADHD Support</h3>
+          <p className="text-blue-100 text-sm mb-4">
+            Focus, working memory & executive function training
+          </p>
+          
+          <div className="space-y-2 text-xs text-blue-200">
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+              <span>Immediate relief • Evidence-based</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+              <span>5-25 min sessions</span>
+            </div>
+          </div>
+        </button>
+
+        {/* Memory Weaving Card */}
+        <button
+          onClick={() => onNavigate('weave')}
+          className="group bg-white border-2 border-gray-200 hover:border-purple-300 p-6 rounded-2xl hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl text-left"
+        >
+          <div className="w-12 h-12 bg-purple-100 group-hover:bg-purple-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
+            <Sparkles className="w-6 h-6 text-purple-600" />
+          </div>
+          
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Memory Weaving</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Transform moments into rich, multi-sensory memories
+          </p>
+          
+          <div className="space-y-2 text-xs text-gray-500">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-3 h-3 text-yellow-500" />
+              <span>5-sense encoding • AI assistance</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-3 h-3 text-yellow-500" />
+              <span>Clinical quality</span>
+            </div>
+          </div>
+        </button>
+
+        {/* Future Scenarios Card */}
+        <button
+          onClick={() => onNavigate('scenario')}
+          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left"
+        >
+          <div className="w-12 h-12 bg-emerald-100 group-hover:bg-emerald-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
+            <Calendar className="w-6 h-6 text-emerald-600" />
+          </div>
+          
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Future Scenarios</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Rehearse events with confidence-building techniques
+          </p>
+          
+          <div className="space-y-2 text-xs text-gray-500">
+            <div className="flex items-center space-x-2">
+              <Brain className="w-3 h-3 text-purple-500" />
+              <span>Mental rehearsal • If-then planning</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Brain className="w-3 h-3 text-purple-500" />
+              <span>2x success rate</span>
+            </div>
+          </div>
+        </button>
+
+        {/* Memory Training Card */}
+        <button
+          onClick={() => onNavigate('training')}
+          className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl hover:bg-orange-50 transition-all shadow-lg hover:shadow-xl text-left"
+        >
+          <div className="w-12 h-12 bg-orange-100 group-hover:bg-orange-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
+            <Target className="w-6 h-6 text-orange-600" />
+          </div>
+          
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Memory Training</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Strengthen recall through spaced practice
+          </p>
+          
+          <div className="space-y-2 text-xs text-gray-500">
+            <div className="flex items-center space-x-2">
+              <Zap className="w-3 h-3 text-blue-500" />
+              <span>Spaced retrieval • 50% stronger memories</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Zap className="w-3 h-3 text-blue-500" />
+              <span>Clinical metrics</span>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      {/* AI Memory Companion - Optional */}
+      {showConversationalAI && (
         <ConversationalInterface
           cognitiveState={cognitiveState}
           upcomingEvents={upcomingScenarios}
@@ -275,7 +313,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200 p-6">
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+              <Beaker className="w-5 h-5 text-white" />
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Eidolon Labs</h2>
@@ -286,9 +324,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           <div className="text-center">
             <div className="text-purple-600 font-medium mb-2">5 revolutionary features in development</div>
             <button
-              onClick={() => {
-                setShowLabsModal(true);
-              }}
+              onClick={() => setShowLabsModal(true)}
               className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all"
             >
               Explore Labs Preview
@@ -316,7 +352,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       )}
 
       {/* Bottom Action Cards - Always Visible */}
-      <div className="grid md:grid-cols-2 gap-6 mt-12">
+      <div className="grid md:grid-cols-2 gap-6 mt-16">
         {/* Retrieve Memory Card */}
         <button
           onClick={() => setFocusedActivity('retrieve')}
@@ -360,6 +396,20 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         </button>
       </div>
 
+      {/* Toggle AI Companion */}
+      {!showConversationalAI && (
+        <div className="text-center">
+          <button
+            onClick={() => setShowConversationalAI(true)}
+            className="group bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
+          >
+            <div className="flex items-center space-x-2">
+              <MessageSquare className="w-5 h-5" />
+              <span>Show AI Memory Companion</span>
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
