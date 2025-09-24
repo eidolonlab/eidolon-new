@@ -440,6 +440,68 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
                   <div className="flex items-center space-x-2 mb-2">
                     <Users className="w-5 h-5 text-purple-600" />
                     <span className="font-medium text-gray-900">StoryGraph</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Interactive memory network visualization</p>
+                  <div className="text-xs text-purple-600 font-medium">🚀 Revolutionary • Click to preview</div>
+                </button>
+
+                <div className="p-4 bg-white rounded-lg border border-purple-200 text-left">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Lightbulb className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium text-gray-900">Memory Insights</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">AI-powered pattern recognition in your memories</p>
+                  <div className="text-xs text-purple-600 font-medium">🧠 Deep learning • Q2 2024</div>
+                </div>
+
+                <div className="p-4 bg-white rounded-lg border border-purple-200 text-left">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium text-gray-900">Predictive Coaching</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Anticipate memory challenges before they occur</p>
+                  <div className="text-xs text-purple-600 font-medium">🔮 Predictive AI • Q3 2024</div>
+                </div>
+
+                <div className="p-4 bg-white rounded-lg border border-purple-200 text-left">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Eye className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium text-gray-900">Memory Lens</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">AR overlay for real-world memory enhancement</p>
+                  <div className="text-xs text-purple-600 font-medium">🥽 AR/VR • 2025</div>
+                </div>
+
+                <div className="p-4 bg-white rounded-lg border border-purple-200 text-left">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Activity className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium text-gray-900">Biometric Sync</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Heart rate, sleep, stress integration</p>
+                  <div className="text-xs text-purple-600 font-medium">📱 Wearables • Q4 2024</div>
+                </div>
+
+                <div className="p-4 bg-white rounded-lg border border-purple-200 text-left">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Zap className="w-5 h-5 text-purple-600" />
+                    <span className="font-medium text-gray-900">Neural Feedback</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">EEG-guided memory training optimization</p>
+                  <div className="text-xs text-purple-600 font-medium">🧠 Neurofeedback • 2025</div>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full text-sm font-medium text-purple-800">
+                  <Clock className="w-4 h-4" />
+                  <span>6 features • 18 months development • $2M+ investment</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Quick Actions - Always Available */}
       <div className="grid md:grid-cols-2 gap-6">
         <button
