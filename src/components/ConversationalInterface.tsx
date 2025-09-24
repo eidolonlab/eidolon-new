@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Brain, Calendar, Target, Heart, Zap, ArrowRight, X, Sparkles, Clock, Star, Users, Shield, Search, Lightbulb, TrendingUp, Eye, Activity } from 'lucide-react';
+import AccessibleButton from './AccessibleButton';
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface ConversationalInterfaceProps {
@@ -23,9 +25,21 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
     priority: number;
     effectiveness: number;
   }>>([]);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0);
   const [showReasoningFor, setShowReasoningFor] = useState<string | null>(null);
   const [intelligentInsights, setIntelligentInsights] = useState<string[]>([]);
 
+  // Keyboard navigation
+  useKeyboardNavigation({
+    onEscape: onDismiss,
+    onArrowUp: () => setSelectedSuggestionIndex(prev => Math.max(0, prev - 1)),
+    onArrowDown: () => setSelectedSuggestionIndex(prev => Math.min(suggestions.length - 1, prev + 1)),
+    onEnter: () => {
+      if (suggestions[selectedSuggestionIndex]) {
+        onActionSelect(suggestions[selectedSuggestionIndex].action);
+      }
+    }
+  });
   useEffect(() => {
     generateIntelligentMessage();
     generateContextualSuggestions();
@@ -248,7 +262,11 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
+    <div 
+      className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg"
+      role="region"
+      aria-label="AI Memory Companion"
+    >
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
@@ -259,12 +277,14 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
             <p className="text-sm text-gray-600">Personalized recommendations based on your state</p>
           </div>
         </div>
-        <button
+        <AccessibleButton
           onClick={onDismiss}
-          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+          variant="ghost"
+          size="sm"
+          ariaLabel="Close AI companion"
         >
           <X className="w-5 h-5" />
-        </button>
+        </AccessibleButton>
       </div>
 
       {/* Status Message */}
@@ -279,44 +299,59 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
 
       {/* Recommendations */}
       <div className="space-y-4 mb-8">
-        <h4 className="font-medium text-gray-900 text-lg">Recommended for you right now:</h4>
+        <h4 className="font-medium text-gray-900 text-lg" id="recommendations-heading">
+          Recommended for you right now:
+        </h4>
         
-        {suggestions.slice(0, 3).map((suggestion, index) => {
-          const ActionIcon = getActionIcon(suggestion.action);
-          
-          return (
-            <button
-              key={index}
-              onClick={() => onActionSelect(suggestion.action)}
-              className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all group"
-            >
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <ActionIcon className="w-5 h-5 text-indigo-600" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-medium text-gray-900">{suggestion.text}</h4>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <span>Priority: {suggestion.priority}/10</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        alert(`🧠 AI Reasoning:\n\n${suggestion.reasoning}`);
-                      }}
-                      className="text-indigo-600 hover:text-indigo-700 underline"
-                    >
-                      Why?
-                    </button>
+        <div role="list" aria-labelledby="recommendations-heading">
+          {suggestions.slice(0, 3).map((suggestion, index) => {
+            const ActionIcon = getActionIcon(suggestion.action);
+            const isSelected = index === selectedSuggestionIndex;
+            
+            return (
+              <button
+                key={index}
+                onClick={() => onActionSelect(suggestion.action)}
+                className={`w-full flex items-center justify-between p-4 rounded-xl transition-all group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                  isSelected ? 'bg-indigo-100 border-2 border-indigo-300' : 'bg-gray-50 hover:bg-gray-100'
+                }`}
+                role="listitem"
+                aria-label={`${suggestion.text}. Priority ${suggestion.priority} out of 10. ${suggestion.effectiveness}% effectiveness.`}
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <ActionIcon className="w-5 h-5 text-indigo-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-medium text-gray-900">{suggestion.text}</h4>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <span>Priority: {suggestion.priority}/10</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          alert(`🧠 AI Reasoning:\n\n${suggestion.reasoning}`);
+                        }}
+                        className="text-indigo-600 hover:text-indigo-700 underline focus:outline-none focus:ring-1 focus:ring-indigo-500 rounded"
+                        aria-label={`Learn why this recommendation has ${suggestion.priority} out of 10 priority`}
+                      >
+                        Why?
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
-            </button>
-          );
-        })}
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
+      {/* Keyboard navigation hint */}
+      <div className="text-center text-xs text-gray-500">
+        Use ↑↓ arrow keys to navigate, Enter to select, Esc to close
+      </div>
     </div>
+    </ErrorBoundary>
   );
 };
 

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
+import ErrorBoundary from './components/ErrorBoundary';
+import LoadingSpinner from './components/LoadingSpinner';
+import OfflineDetector from './components/OfflineDetector';
+import OnboardingFlow from './components/OnboardingFlow';
 import IntelligentDashboard from './components/IntelligentDashboard';
 import WeaveCanvas from './components/WeaveCanvas';
 import RetrievalTrainer from './components/RetrievalTrainer';
@@ -22,18 +26,59 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showSettings, setShowSettings] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   const currentPath = location.pathname;
   
+  // Check if user needs onboarding
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem('eidolon-onboarding-complete');
+    const hasExistingData = localStorage.getItem('eidolon-weaves');
+    
+    if (!hasCompletedOnboarding && !hasExistingData) {
+      setShowOnboarding(true);
+    }
+    
+    // Simulate initial loading
+    setTimeout(() => setIsLoading(false), 1000);
+  }, []);
 
   // Check admin status
   useEffect(() => {
     checkAdminStatus();
   }, []);
 
+  // Show loading screen on initial load
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <Brain className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Eidolon</h1>
+          <p className="text-gray-600 mb-6">Evidence-Based Memory Training</p>
+          <LoadingSpinner variant="dots" message="Initializing your memory training environment..." />
+        </div>
+      </div>
+    );
+  }
+
+  // Show onboarding flow
+  if (showOnboarding) {
+    return (
+      <ErrorBoundary>
+        <OnboardingFlow
+          onComplete={() => setShowOnboarding(false)}
+          onSkip={() => setShowOnboarding(false)}
+        />
+      </ErrorBoundary>
+    );
+  }
   const checkAdminStatus = async () => {
     setCheckingAuth(true);
     try {
@@ -123,10 +168,11 @@ function App() {
   };
 
   return (
-    <CognitiveStateProvider>
+    <ErrorBoundary>
     <CognitiveStateProvider>
       <WeaveProvider>
         <ChallengeProvider>
+          <OfflineDetector />
           <Routes>
             {/* Admin route - completely separate */}
             <Route path="/admin" element={<AdminRoute />} />
@@ -202,7 +248,7 @@ function App() {
                 </header>
 
                 {/* Main Content */}
-                <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
+                <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen" role="main">
                   <Routes>
                     <Route path="/" element={<IntelligentDashboard onNavigate={(view) => navigate(`/${view}`)} />} />
                     <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
@@ -255,7 +301,7 @@ function App() {
         </ChallengeProvider>
       </WeaveProvider>
     </CognitiveStateProvider>
-    </CognitiveStateProvider>
+    </ErrorBoundary>
   );
 }
 

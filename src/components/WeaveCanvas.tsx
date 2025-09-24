@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Sparkles, Eye, Ear, DoorClosed as Nose, Hand, Heart, Save, Wand2, Music, Palette, HelpCircle, Brain, Lightbulb } from 'lucide-react';
+import ErrorBoundary from './ErrorBoundary';
+import LoadingSpinner from './LoadingSpinner';
+import ConfirmDialog from './ConfirmDialog';
+import AccessibleButton from './AccessibleButton';
 import { useWeave } from '../contexts/WeaveContext';
 import CueLibrary from './CueLibrary';
 import BridgeBack from './BridgeBack';
@@ -61,6 +65,8 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const [memoryPredictions, setMemoryPredictions] = useState<any>(null);
   const [profileName, setProfileName] = useState('');
   const [useCustomProfile, setUseCustomProfile] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [savedProfiles, setSavedProfiles] = useState<Array<{
     name: string;
     weaves: number;
@@ -150,6 +156,8 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const handleSave = () => {
     if (!seed || !title) return;
 
+    setIsSaving(true);
+
     // Update profile data if using custom profile
     if (useCustomProfile && profileName.trim()) {
       updateProfileData();
@@ -175,11 +183,21 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
     addWeave(newWeave);
     
     // Show success message
+    setIsSaving(false);
     const profileText = useCustomProfile && profileName ? ` to "${profileName}" profile` : '';
     alert(`${weaveType === 'past' ? 'Memory weave' : 'Future scenario'} "${title}" has been saved successfully${profileText}!`);
     onBack();
   };
 
+  const handleBack = () => {
+    const hasUnsavedChanges = seed.trim() || title.trim() || Object.values(sensoryDetails).some(d => d.trim());
+    
+    if (hasUnsavedChanges) {
+      setShowExitConfirm(true);
+    } else {
+      onBack();
+    }
+  };
   const updateProfileData = () => {
     const profiles = [...savedProfiles];
     const existingIndex = profiles.findIndex(p => p.name === profileName.trim());
@@ -219,40 +237,46 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   // If using simplified flow, render that instead
   if (useSimplifiedFlow) {
     return (
+      <ErrorBoundary>
       <div className="min-h-screen">
         <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={onBack}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+          <AccessibleButton
+            onClick={handleBack}
+            variant="ghost"
+            icon={ArrowLeft}
+            ariaLabel="Go back to dashboard"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Dashboard</span>
-          </button>
+            Back to Dashboard
+          </AccessibleButton>
           
           <div className="flex items-center space-x-4">
-            <button
+            <AccessibleButton
               onClick={() => setUseSimplifiedFlow(false)}
-              className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              variant="outline"
+              size="sm"
             >
               Advanced Mode
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               onClick={() => setUsePerfectFlow(true)}
-              className="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              variant="primary"
+              size="sm"
             >
               Perfect Flow
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               onClick={() => setShowAdvancedFeatures(!showAdvancedFeatures)}
-              className="px-3 py-1.5 text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors"
+              variant="primary"
+              size="sm"
             >
               🧠 Quantum Mode
-            </button>
+            </AccessibleButton>
             <h1 className="text-2xl font-bold text-gray-900">Create Memory Weave</h1>
           </div>
         </div>
         
         {usePerfectFlow ? (
+          <ErrorBoundary fallback={<LoadingSpinner message="Loading Perfect Flow..." />}>
           <PerfectMemoryFlow
             onComplete={(weave) => {
               console.log('Perfect weave completed:', weave);
@@ -260,7 +284,9 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             }}
             onCancel={onBack}
           />
+          </ErrorBoundary>
         ) : showAdvancedFeatures ? (
+          <ErrorBoundary fallback={<LoadingSpinner message="Loading advanced features..." />}>
           <div className="space-y-8">
             {/* Cognitive State Optimizer */}
             <CognitiveStateOptimizer
@@ -305,13 +331,16 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             
             {/* Enhanced Save Button */}
             <div className="text-center">
-              <button
+              <AccessibleButton
                 onClick={handleSave}
-                disabled={!seed || !title}
-                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg font-medium shadow-lg"
+                disabled={!seed || !title || isSaving}
+                loading={isSaving}
+                size="lg"
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all text-lg font-medium shadow-lg"
+                ariaLabel="Save quantum-enhanced memory weave"
               >
                 🧠 Save Quantum-Enhanced Memory
-              </button>
+              </AccessibleButton>
               {neuralNetworkStrength > 0 && (
                 <p className="text-sm text-gray-600 mt-2">
                   Neural network strength: {neuralNetworkStrength.toFixed(0)}% | 
@@ -320,7 +349,9 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
               )}
             </div>
           </div>
+          </ErrorBoundary>
         ) : (
+          <ErrorBoundary fallback={<LoadingSpinner message="Loading simplified flow..." />}>
           <SimplifiedWeaveFlow
             onComplete={(weave) => {
               console.log('Weave completed:', weave);
@@ -328,8 +359,25 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             }}
             onCancel={onBack}
           />
+          </ErrorBoundary>
         )}
+        
+        {/* Exit Confirmation Dialog */}
+        <ConfirmDialog
+          isOpen={showExitConfirm}
+          onClose={() => setShowExitConfirm(false)}
+          onConfirm={() => {
+            setShowExitConfirm(false);
+            onBack();
+          }}
+          title="Unsaved Changes"
+          message="You have unsaved changes to your memory weave. Are you sure you want to leave without saving?"
+          confirmText="Leave Without Saving"
+          cancelText="Continue Editing"
+          variant="warning"
+        />
       </div>
+      </ErrorBoundary>
     );
   }
   const renderStepContent = () => {
@@ -794,20 +842,22 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   };
 
   return (
+    <ErrorBoundary>
     <div className="min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <button
-          onClick={onBack}
-          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+        <AccessibleButton
+          onClick={handleBack}
+          variant="ghost"
+          icon={ArrowLeft}
+          ariaLabel="Go back to dashboard"
         >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Dashboard</span>
-        </button>
+          Back to Dashboard
+        </AccessibleButton>
         
         <div className="flex items-center space-x-4">
           {/* Progress Indicator */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2" role="progressbar" aria-valuenow={step} aria-valuemax={4}>
             {[1, 2, 3, 4].map((stepNum) => (
               <div
                 key={stepNum}
@@ -818,6 +868,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                     ? 'bg-indigo-100 text-indigo-600'
                     : 'bg-gray-200 text-gray-500'
                 }`}
+                aria-label={`Step ${stepNum} ${stepNum < step ? 'completed' : stepNum === step ? 'current' : 'upcoming'}`}
               >
                 {stepNum}
               </div>
@@ -833,35 +884,40 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
 
       {/* Navigation */}
       <div className="flex items-center justify-between">
-        <button
+        <AccessibleButton
           onClick={() => setStep(Math.max(1, step - 1))}
           disabled={step === 1}
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          variant="outline"
+          size="lg"
         >
           Previous
-        </button>
+        </AccessibleButton>
         
         {step < 4 ? (
-          <button
+          <AccessibleButton
             onClick={() => setStep(step + 1)}
             disabled={
               (step === 1) ||
               (step === 2 && (!seed || !title)) ||
               (step === 3 && Object.values(sensoryDetails).every(d => d.length === 0))
             }
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            variant="primary"
+            size="lg"
           >
             Next
-          </button>
+          </AccessibleButton>
         ) : (
-          <button
+          <AccessibleButton
             onClick={handleSave}
-            disabled={!narrative}
-            className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            disabled={!narrative || isSaving}
+            loading={isSaving}
+            icon={Save}
+            variant="primary"
+            size="lg"
+            className="bg-emerald-600 hover:bg-emerald-700"
           >
-            <Save className="w-4 h-4" />
-            <span>Save Weave</span>
-          </button>
+            Save Weave
+          </AccessibleButton>
         )}
       </div>
       
@@ -884,7 +940,23 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
           onClose={() => setShowBridgeBack(false)}
         />
       )}
+      
+      {/* Exit Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showExitConfirm}
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={() => {
+          setShowExitConfirm(false);
+          onBack();
+        }}
+        title="Unsaved Changes"
+        message="You have unsaved changes to your memory weave. Are you sure you want to leave without saving?"
+        confirmText="Leave Without Saving"
+        cancelText="Continue Editing"
+        variant="warning"
+      />
     </div>
+    </ErrorBoundary>
   );
 };
 

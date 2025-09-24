@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Search, Star, Target, Calendar, ArrowRight, Sunrise, Coffee, Heart, Moon, Shield, Sparkles, Users, Beaker, Rocket, Lightbulb, TrendingUp, Plus, X, Play, CheckCircle, Award, Eye, Activity, MessageSquare, Zap, Clock } from 'lucide-react';
+import ErrorBoundary from './ErrorBoundary';
+import LoadingSpinner from './LoadingSpinner';
+import EmptyState from './EmptyState';
 import { useCognitiveState } from '../contexts/CognitiveStateContext';
 import { useWeave } from '../contexts/WeaveContext';
 import ConversationalInterface from './ConversationalInterface';
@@ -18,6 +21,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const { cognitiveState, userPattern, getAdaptiveMessage, getOptimalActivity, getProgressiveLayer } = useCognitiveState();
   const { weaves } = useWeave();
   const [focusedActivity, setFocusedActivity] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showLabsDetails, setShowLabsDetails] = useState(false);
   const [showConversationalAI, setShowConversationalAI] = useState(false);
@@ -41,6 +45,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   // Handle focused activities with proper navigation
   if (focusedActivity === 'retrieve') {
     return (
+      <ErrorBoundary>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <button
@@ -61,11 +66,13 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           onCreateWeave={() => onNavigate('weave')}
         />
       </div>
+      </ErrorBoundary>
     );
   }
 
   if (focusedActivity === 'capture') {
     return (
+      <ErrorBoundary>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <button
@@ -82,11 +89,13 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           onComplete={() => setFocusedActivity(null)}
         />
       </div>
+      </ErrorBoundary>
     );
   }
 
   if (focusedActivity === 'plan') {
     return (
+      <ErrorBoundary>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <button
@@ -104,11 +113,13 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           onComplete={() => setFocusedActivity(null)}
         />
       </div>
+      </ErrorBoundary>
     );
   }
 
   if (focusedActivity === 'train') {
     return (
+      <ErrorBoundary>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <button
@@ -126,11 +137,13 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           onComplete={() => setFocusedActivity(null)}
         />
       </div>
+      </ErrorBoundary>
     );
   }
 
   if (focusedActivity === 'regulate') {
     return (
+      <ErrorBoundary>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <button
@@ -147,10 +160,16 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           onComplete={() => setFocusedActivity(null)}
         />
       </div>
+      </ErrorBoundary>
     );
   }
 
+  if (isLoading) {
+    return <LoadingSpinner variant="brain" message="Loading your memory dashboard..." fullScreen />;
+  }
+
   return (
+    <ErrorBoundary>
     <div className="space-y-8">
       {/* ADHD Focus Hero Section */}
       <div className="text-center py-12">
@@ -169,7 +188,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         
         <button
           onClick={() => onNavigate('adhd')}
-          className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-lg font-semibold"
+          className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label="Start ADHD support training"
         >
           <Brain className="w-6 h-6" />
           <span>Start ADHD Support Now</span>
@@ -226,7 +246,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* ADHD Support Card */}
         <button
           onClick={() => onNavigate('adhd')}
-          className="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-left"
+          className="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label="Access ADHD support tools and training"
         >
           <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4">
             <Brain className="w-6 h-6 text-white" />
@@ -252,7 +273,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Memory Weaving Card */}
         <button
           onClick={() => onNavigate('weave')}
-          className="group bg-white border-2 border-gray-200 hover:border-purple-300 p-6 rounded-2xl hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl text-left"
+          className="group bg-white border-2 border-gray-200 hover:border-purple-300 p-6 rounded-2xl hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          aria-label="Create new memory weave with multi-sensory details"
         >
           <div className="w-12 h-12 bg-purple-100 group-hover:bg-purple-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
             <Sparkles className="w-6 h-6 text-purple-600" />
@@ -278,7 +300,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Future Scenarios Card */}
         <button
           onClick={() => onNavigate('scenario')}
-          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left"
+          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          aria-label="Plan and rehearse future scenarios"
         >
           <div className="w-12 h-12 bg-emerald-100 group-hover:bg-emerald-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
             <Calendar className="w-6 h-6 text-emerald-600" />
@@ -304,7 +327,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Memory Training Card */}
         <button
           onClick={() => onNavigate('training')}
-          className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl hover:bg-orange-50 transition-all shadow-lg hover:shadow-xl text-left"
+          className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl hover:bg-orange-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+          aria-label="Practice memory retrieval and strengthening"
         >
           <div className="w-12 h-12 bg-orange-100 group-hover:bg-orange-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
             <Target className="w-6 h-6 text-orange-600" />
@@ -330,6 +354,11 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
 
       {/* AI Memory Companion - Optional */}
       {showConversationalAI && (
+        <ErrorBoundary fallback={
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-800">AI companion temporarily unavailable</p>
+          </div>
+        }>
         <ConversationalInterface
           cognitiveState={cognitiveState}
           upcomingEvents={upcomingScenarios}
@@ -342,6 +371,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
           }}
           onDismiss={() => setShowConversationalAI(false)}
         />
+        </ErrorBoundary>
       )}
 
       {/* Eidolon Labs - Shows when AI companion is dismissed */}
@@ -392,7 +422,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Retrieve Memory Card */}
         <button
           onClick={() => setFocusedActivity('retrieve')}
-          className="group bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8 rounded-2xl hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl text-left"
+          className="group bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8 rounded-2xl hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          aria-label="Start guided memory retrieval session"
         >
           <div className="flex items-center justify-between mb-6">
             <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
@@ -413,7 +444,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Capture Moment Card */}
         <button
           onClick={() => setFocusedActivity('capture')}
-          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-8 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left"
+          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-8 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          aria-label="Capture and preserve a meaningful moment"
         >
           <div className="flex items-center justify-between mb-6">
             <div className="w-16 h-16 bg-emerald-100 group-hover:bg-emerald-200 rounded-2xl flex items-center justify-center transition-colors">
@@ -437,7 +469,8 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         <div className="text-center">
           <button
             onClick={() => setShowConversationalAI(true)}
-            className="group bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
+            className="group bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            aria-label="Show AI memory companion for personalized recommendations"
           >
             <div className="flex items-center space-x-2">
               <MessageSquare className="w-5 h-5" />
@@ -447,6 +480,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         </div>
       )}
     </div>
+    </ErrorBoundary>
   );
 };
 

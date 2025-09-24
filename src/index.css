@@ -2,6 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Accessibility improvements */
+@layer base {
+  /* Focus styles */
+  *:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .bg-gray-50 {
+      @apply bg-white;
+    }
+    .text-gray-600 {
+      @apply text-gray-900;
+    }
+    .border-gray-200 {
+      @apply border-gray-400;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  /* Ensure minimum touch targets on mobile */
+  @media (max-width: 768px) {
+    button, 
+    input[type="button"], 
+    input[type="submit"], 
+    [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+}
 /* PWA specific styles */
 @media (display-mode: standalone) {
   body {
@@ -11,9 +54,38 @@
   }
 }
 
-/* Better mobile touch targets */
-@media (max-width: 768px) {
-  button, input, textarea {
-    min-height: 44px;
-  }
+/* Loading animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Skip link for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
 }
