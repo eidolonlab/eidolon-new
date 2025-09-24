@@ -268,91 +268,33 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         />
       )}
 
-      {/* Layer 3: Advanced - Eidolon Labs */}
-      {progressiveLayer >= 3 && (
-        <div className="text-center">
-          <button
-            onClick={() => setShowLabsDetails(!showLabsDetails)}
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-2xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
-          >
-            <div className="flex items-center space-x-3">
-              <Beaker className="w-6 h-6" />
-              <div className="text-left">
-                <div className="font-bold text-lg">Eidolon Labs</div>
-                <div className="text-purple-100 text-sm">6 revolutionary features in development</div>
-              </div>
-              <ArrowRight className={`w-5 h-5 transition-transform ${showLabsDetails ? 'rotate-90' : ''}`} />
+      {/* Eidolon Labs - Shows when AI companion is dismissed */}
+      {!showConversationalAI && (
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200 p-6">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
-          </button>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Eidolon Labs</h2>
+              <p className="text-sm text-gray-600">Preview next-generation memory features</p>
+            </div>
+          </div>
           
-          {showLabsDetails && (
-            <div className="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200 p-8">
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Beaker className="w-8 h-8 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Eidolon Labs</h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Peek behind the curtain at revolutionary memory features in development. 
-                  These innovations will set Eidolon apart from every competitor in the cognitive training space.
-                </p>
-              </div>
-
-              {/* Competitive Advantage Banner */}
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6 mb-8">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Rocket className="w-6 h-6 text-indigo-600" />
-                  <h3 className="text-xl font-semibold text-indigo-900">Our Competitive Edge</h3>
-                </div>
-                <div className="grid md:grid-cols-3 gap-4 text-sm">
-                  <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                    <div className="font-medium text-indigo-900 mb-1">🧠 Narrative-Based Cognition</div>
-                    <div className="text-indigo-700">Autobiographical memory vs. abstract puzzles</div>
-                  </div>
-                  <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                    <div className="font-medium text-indigo-900 mb-1">🎯 Real-Life Transfer</div>
-                    <div className="text-indigo-700">Meaningful wins vs. game scores</div>
-                  </div>
-                  <div className="p-3 bg-white rounded-lg border border-indigo-200">
-                    <div className="font-medium text-indigo-900 mb-1">👥 Professional Integration</div>
-                    <div className="text-indigo-700">Coach protocols vs. solo training</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Revolutionary Features Grid */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <button
-                  onClick={() => setShowStoryGraphModal(true)}
-                  className="p-4 bg-white rounded-lg border border-purple-200 hover:border-purple-300 hover:shadow-md transition-all text-left group"
-                >
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Sparkles className="w-5 h-5 text-purple-600" />
-                    <span className="font-semibold text-purple-900">Story Graph</span>
-                  </div>
-                  <p className="text-sm text-gray-600">Interactive memory visualization</p>
-                </button>
-              </div>
-            </div>
-          )}
+          <div className="text-center">
+            <div className="text-purple-600 font-medium mb-2">5 revolutionary features in development</div>
+            <button
+              onClick={() => {
+                alert('🧪 Eidolon Labs Preview\n\nRevolutionary features coming soon:\n• StoryGraph - Visual memory mapping\n• Transfer Lab - Personal memory experiments\n• Coach Protocols - Professional tools\n• Advanced AI - Predictive analytics\n• Social Features - Memory sharing\n\nStay tuned for these game-changing innovations!');
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all"
+            >
+              Explore Labs Preview
+            </button>
+          </div>
         </div>
       )}
 
-      {/* AI Memory Companion - Show by default, hide when dismissed */}
-      {showConversationalAI && (
-        <ConversationalInterface
-          cognitiveState={cognitiveState}
-          upcomingEvents={upcomingScenarios}
-          onActionSelect={(action) => {
-            if (['weave', 'scenario', 'training', 'adhd'].includes(action)) {
-              onNavigate(action as any);
-            } else {
-              setFocusedActivity(action);
-            }
-          }}
-          onDismiss={() => setShowConversationalAI(false)}
-        />
-      )}
     </div>
   );
 };
