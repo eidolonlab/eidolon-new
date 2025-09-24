@@ -4,7 +4,7 @@ import { useWeave } from '../contexts/WeaveContext';
 import { useChallenge } from '../contexts/ChallengeContext';
 import ConversationalInterface from './ConversationalInterface';
 import { useCognitiveState } from '../contexts/CognitiveStateContext';
-import LabsPreview from './LabsPreview';
+import StoryGraphPreview from './StoryGraphPreview';
 
 interface DashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
