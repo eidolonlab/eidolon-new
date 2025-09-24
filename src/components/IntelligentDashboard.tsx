@@ -8,6 +8,7 @@ import AdaptiveMemoryCapture from './AdaptiveMemoryCapture';
 import SmartScenarioPlanner from './SmartScenarioPlanner';
 import IntelligentTrainingCoach from './IntelligentTrainingCoach';
 import CognitiveRegulationTools from './CognitiveRegulationTools';
+import LabsPreview from './LabsPreview';
 
 interface IntelligentDashboardProps {
   onNavigate: (view: 'weave' | 'scenario' | 'training' | 'insights' | 'adhd') => void;
@@ -21,6 +22,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const [showLabsDetails, setShowLabsDetails] = useState(false);
   const [showConversationalAI, setShowConversationalAI] = useState(true);
   const [showStoryGraphModal, setShowStoryGraphModal] = useState(false);
+  const [showLabsModal, setShowLabsModal] = useState(false);
 
   // Update time every minute for adaptive flow
   useEffect(() => {
@@ -285,12 +287,30 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
             <div className="text-purple-600 font-medium mb-2">5 revolutionary features in development</div>
             <button
               onClick={() => {
-                alert('🧪 Eidolon Labs Preview\n\nRevolutionary features coming soon:\n• StoryGraph - Visual memory mapping\n• Transfer Lab - Personal memory experiments\n• Coach Protocols - Professional tools\n• Advanced AI - Predictive analytics\n• Social Features - Memory sharing\n\nStay tuned for these game-changing innovations!');
+                setShowLabsModal(true);
               }}
               className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all"
             >
               Explore Labs Preview
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Labs Preview Modal */}
+      {showLabsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Eidolon Labs - Revolutionary Features</h2>
+              <button
+                onClick={() => setShowLabsModal(false)}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <LabsPreview onClose={() => setShowLabsModal(false)} />
           </div>
         </div>
       )}
