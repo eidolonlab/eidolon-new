@@ -21,6 +21,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
   const [showLabsDetails, setShowLabsDetails] = useState(false);
   const [showConversationalAI, setShowConversationalAI] = useState(false);
   const [showStoryGraphModal, setShowStoryGraphModal] = useState(false);
+  const [showAICompanion, setShowAICompanion] = useState(true);
 
   // Update time every minute for adaptive flow
   useEffect(() => {
@@ -417,7 +418,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       </div>
 
       {/* AI Memory Companion - Show by default, hide Eidolon Labs when open */}
-      {!showConversationalAI ? (
+      {showAICompanion && (
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
@@ -430,7 +431,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               </div>
             </div>
             <button
-              onClick={() => setShowConversationalAI(true)}
+              onClick={() => setShowAICompanion(false)}
               className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <X className="w-5 h-5" />
@@ -572,10 +573,10 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
             </p>
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* Layer 3: Advanced - Eidolon Labs */}
-      {progressiveLayer >= 3 && showConversationalAI && (
+      {progressiveLayer >= 3 && !showAICompanion && (
         <div className="text-center">
           <button
             onClick={() => setShowLabsDetails(!showLabsDetails)}
