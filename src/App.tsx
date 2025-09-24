@@ -11,7 +11,6 @@ import ConsentBanner from './components/ConsentBanner';
 import SettingsPanel from './components/SettingsPanel';
 import { WeaveProvider } from './contexts/WeaveContext';
 import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
-import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { ChallengeProvider } from './contexts/ChallengeContext';
 import MemoryInsights from './components/MemoryInsights';
 import AdminDashboard from './components/AdminDashboard';
