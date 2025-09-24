@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Brain, Calendar, Target, Heart, Zap, ArrowRight, X, Sparkles, Clock, Star, Users, Shield } from 'lucide-react';
+import { MessageSquare, Brain, Calendar, Target, Heart, Zap, ArrowRight, X, Sparkles, Clock, Star, Users, Shield, Search } from 'lucide-react';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface ConversationalInterfaceProps {
