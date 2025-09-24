@@ -338,7 +338,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         </div>
       )}
 
-      {/* AI Memory Companion */}
+      {/* AI Memory Companion - Show by default, hide when dismissed */}
       {showConversationalAI && (
         <ConversationalInterface
           cognitiveState={cognitiveState}
@@ -358,3 +358,4 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
 };
 
 export default IntelligentDashboard;
+      {progressiveLayer >= 3 && !showConversationalAI && (
