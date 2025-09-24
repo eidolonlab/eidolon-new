@@ -270,9 +270,9 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       {/* Status Message */}
       <div className="text-center mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
         <p className="text-blue-900 font-medium text-lg">
-          {getTimeOfDay() === 'morning' ? 'Morning clarity is building!' :
-           getTimeOfDay() === 'afternoon' ? 'Afternoon focus is looking good!' :
-           getTimeOfDay() === 'evening' ? 'Evening reflection time!' :
+          {cognitiveState.timeOfDay === 'morning' ? 'Morning clarity is building!' :
+           cognitiveState.timeOfDay === 'afternoon' ? 'Afternoon focus is looking good!' :
+           cognitiveState.timeOfDay === 'evening' ? 'Evening reflection time!' :
            'Night time for gentle memory work!'}
         </p>
       </div>
