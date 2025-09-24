@@ -315,7 +315,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                 <Shield className="w-6 h-6 text-blue-600" />
               </div>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+              <Play className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">ADHD Support</h3>
             <p className="text-gray-600 mb-4">Focus, working memory & executive function training</p>
@@ -332,7 +332,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
                 <Sparkles className="w-6 h-6 text-indigo-600" />
               </div>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+              <Play className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Memory Weaving</h3>
             <p className="text-gray-600 mb-4">Transform moments into rich, multi-sensory memories</p>
@@ -349,7 +349,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
                 <Calendar className="w-6 h-6 text-emerald-600" />
               </div>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
+              <Play className="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Future Scenarios</h3>
             <p className="text-gray-600 mb-4">Rehearse events with confidence-building techniques</p>
@@ -366,7 +366,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
               <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-200 transition-colors">
                 <Target className="w-6 h-6 text-orange-600" />
               </div>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors" />
+              <Play className="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Memory Training</h3>
             <p className="text-gray-600 mb-4">Strengthen recall through spaced practice</p>

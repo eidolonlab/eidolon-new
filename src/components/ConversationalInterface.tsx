@@ -146,14 +146,14 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       // Afternoon Flow - Sustained attention optimal
       suggestions.push({
         text: "Spaced retrieval training - strengthen neural pathways while focused",
-        action: "train",
+        action: "training",
         reasoning: "Afternoon attention stability optimal for retrieval practice. Spaced training creates 50% stronger consolidation than massed practice.",
         priority: 9,
         effectiveness: 88
       });
       suggestions.push({
         text: "Smart scenario planning - prepare for upcoming events with AI guidance",
-        action: "plan",
+        action: "scenario",
         reasoning: "Afternoon planning cognition optimal for implementation intentions. Mental rehearsal improves real-world performance by 60%.",
         priority: 8,
         effectiveness: 85
@@ -169,7 +169,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       });
       suggestions.push({
         text: "Tomorrow's scenario planning - prepare for upcoming events",
-        action: "plan",
+        action: "scenario",
         reasoning: "Evening planning for next-day events improves implementation success by 60% through overnight mental rehearsal processing.",
         priority: 8,
         effectiveness: 78
@@ -226,8 +226,8 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       case 'retrieve': return Search;
       case 'capture': return Star;
       case 'weave': return Sparkles;
-      case 'plan': return Calendar;
-      case 'train': return Target;
+      case 'scenario': return Calendar;
+      case 'training': return Target;
       case 'regulate': return Heart;
       case 'adhd': return Shield;
       default: return Brain;
@@ -239,8 +239,8 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
       case 'retrieve': return 'indigo';
       case 'capture': return 'emerald';
       case 'weave': return 'purple';
-      case 'plan': return 'blue';
-      case 'train': return 'orange';
+      case 'scenario': return 'blue';
+      case 'training': return 'orange';
       case 'regulate': return 'red';
       case 'adhd': return 'blue';
       default: return 'gray';
@@ -353,7 +353,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
         </div>
         <div className="grid grid-cols-2 gap-3">
           <button
-            onClick={() => onActionSelect('plan')}
+            onClick={() => onActionSelect('scenario')}
             className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-all text-left group"
           >
             <div className="flex items-center space-x-3 mb-2">
@@ -368,7 +368,7 @@ const ConversationalInterface: React.FC<ConversationalInterfaceProps> = ({
           </button>
 
           <button
-            onClick={() => onActionSelect('train')}
+            onClick={() => onActionSelect('training')}
             className="p-4 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 transition-all text-left group"
           >
             <div className="flex items-center space-x-3 mb-2">

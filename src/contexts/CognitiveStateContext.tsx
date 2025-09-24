@@ -281,24 +281,24 @@ export const CognitiveStateProvider: React.FC<{ children: React.ReactNode }> = (
     
     const messages = {
       morning: {
-        high: "🌅 Morning Flow Active! Peak cognitive state detected - ideal for guided memory retrieval and multi-sensory encoding.",
-        medium: "🌅 Morning Flow Active! Building clarity - perfect for autobiographical memory recovery with intelligent cues.",
-        low: "🌅 Morning Flow Active! Gentle start recommended - stress regulation will optimize your memory systems."
+        high: "🌅 Morning clarity! Peak cognitive state detected - ideal for guided memory retrieval and multi-sensory encoding.",
+        medium: "🌅 Morning flow building - perfect for autobiographical memory recovery with intelligent cues.",
+        low: "🌅 Gentle morning start - stress regulation will optimize your memory systems."
       },
       afternoon: {
-        high: "☀️ Afternoon Flow Active! Focus peak detected - optimal for spaced retrieval training and memory strengthening.",
-        medium: "☀️ Afternoon Flow Active! Steady state - excellent for guided memory recovery and scenario rehearsal.",
-        low: "☀️ Afternoon Flow Active! Natural dip - gentle memory capture and reflection work well now."
+        high: "☀️ Afternoon focus peak! Optimal for spaced retrieval training and memory strengthening.",
+        medium: "☀️ Steady afternoon state - excellent for guided memory recovery and scenario rehearsal.",
+        low: "☀️ Natural afternoon dip - gentle memory capture and reflection work well now."
       },
       evening: {
-        high: "🌆 Evening Flow Active! Peaceful state - perfect for reflection and capturing today's meaningful moments.",
-        medium: "🌆 Evening Flow Active! Reflection time - capture today's highlights and prepare for tomorrow's scenarios.",
-        low: "🌆 Evening Flow Active! Busy day detected - gentle memory work supports overnight consolidation."
+        high: "🌆 Peaceful evening - perfect for reflection and capturing today's meaningful moments.",
+        medium: "🌆 Evening transition - capture today's highlights and prepare for tomorrow's scenarios.",
+        low: "🌆 Busy day detected - gentle memory work supports overnight consolidation."
       },
       night: {
-        high: "🌙 Night Flow Active! Late night clarity - quick memory capture before sleep consolidation.",
-        medium: "🌙 Night Flow Active! Pre-sleep reflection - capture today's highlights for overnight processing.",
-        low: "🌙 Night Flow Active! Rest preparation - gentle regulation supports memory consolidation during sleep."
+        high: "🌙 Late night clarity - quick memory capture before sleep consolidation.",
+        medium: "🌙 Pre-sleep reflection - capture today's highlights for overnight processing.",
+        low: "🌙 Rest preparation - gentle regulation supports memory consolidation during sleep."
       }
     };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
-import Dashboard from './components/Dashboard';
+import IntelligentDashboard from './components/IntelligentDashboard';
 import WeaveCanvas from './components/WeaveCanvas';
 import RetrievalTrainer from './components/RetrievalTrainer';
 import ScenarioStudio from './components/ScenarioStudio';
@@ -10,6 +10,7 @@ import LegalFooter from './components/LegalFooter';
 import ConsentBanner from './components/ConsentBanner';
 import SettingsPanel from './components/SettingsPanel';
 import { WeaveProvider } from './contexts/WeaveContext';
+import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { ChallengeProvider } from './contexts/ChallengeContext';
 import MemoryInsights from './components/MemoryInsights';
@@ -124,6 +125,7 @@ function App() {
 
   return (
     <CognitiveStateProvider>
+    <CognitiveStateProvider>
       <WeaveProvider>
         <ChallengeProvider>
           <Routes>
@@ -203,7 +205,7 @@ function App() {
                 {/* Main Content */}
                 <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
                   <Routes>
-                    <Route path="/" element={<Dashboard onNavigate={(view) => navigate(`/${view}`)} />} />
+                    <Route path="/" element={<IntelligentDashboard onNavigate={(view) => navigate(`/${view}`)} />} />
                     <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
                     <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
                     <Route path="/training" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
@@ -253,6 +255,7 @@ function App() {
           </Routes>
         </ChallengeProvider>
       </WeaveProvider>
+    </CognitiveStateProvider>
     </CognitiveStateProvider>
   );
 }
