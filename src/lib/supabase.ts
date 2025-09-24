@@ -3,21 +3,38 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-let supabase: any;
+// Check if Supabase is properly configured
+const isSupabaseConfigured = supabaseUrl && 
+  supabaseAnonKey && 
+  !supabaseUrl.includes('your-project-id') && 
+  !supabaseAnonKey.includes('your-anon-key');
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Missing Supabase environment variables. Please configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.');
-  // Create a dummy client to prevent app crashes
+let supabase: any;
+export { supabase };
+
+if (!isSupabaseConfigured) {
+  console.warn('Supabase not configured - running in local-only mode');
+  // Create a dummy client that doesn't make network requests
   supabase = {
-    auth: { getUser: () => Promise.resolve({ data: { user: null } }) },
-    from: () => ({ select: () => ({ single: () => Promise.resolve({ data: null, error: null }) }) })
+    auth: { 
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+      signUp: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+      signInWithPassword: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+      signOut: () => Promise.resolve({ error: null })
+    },
+    from: () => ({ 
+      select: () => ({ 
+        single: () => Promise.resolve({ data: null, error: null }),
+        eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) })
+      }),
+      insert: () => Promise.resolve({ data: null, error: null }),
+      upsert: () => Promise.resolve({ data: null, error: null })
+    }),
+    rpc: () => Promise.resolve({ data: null, error: null })
   };
 } else {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
-
-export { supabase };
-
 
 // Types for our database
 export interface DatabaseUser {
@@ -83,18 +100,27 @@ export interface CohortData {
 // Admin functions
 export const adminAPI = {
   async getStats(): Promise<AdminStats> {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase not configured');
+    }
     const { data, error } = await supabase.rpc('get_admin_stats');
     if (error) throw error;
     return data;
   },
 
   async getCohortAnalysis(daysBack = 30): Promise<CohortData[]> {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase not configured');
+    }
     const { data, error } = await supabase.rpc('get_cohort_analysis', { days_back: daysBack });
     if (error) throw error;
     return data;
   },
 
   async getRecentWeaves(limit = 50): Promise<DatabaseMemoryWeave[]> {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase not configured');
+    }
     const { data, error } = await supabase
       .from('memory_weaves')
       .select('*')
@@ -106,6 +132,9 @@ export const adminAPI = {
   },
 
   async getRecentSessions(limit = 100): Promise<DatabaseRetrievalSession[]> {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase not configured');
+    }
     const { data, error } = await supabase
       .from('retrieval_sessions')
       .select('*')
@@ -125,6 +154,10 @@ export const userAPI = {
     consent_research: boolean;
     is_anonymous: boolean;
   }): Promise<DatabaseUser> {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase not configured - running in local-only mode');
+    }
+    
     // Generate a privacy-preserving hash for the user
     const userHash = await generateUserHash();
     
@@ -144,7 +177,7 @@ export const userAPI = {
   },
 
   async syncMemoryWeave(weave: any, userHash: string): Promise<void> {
-    if (!userHash) return; // Skip if user hasn't consented
+    if (!userHash || !isSupabaseConfigured) return; // Skip if user hasn't consented or Supabase not configured
     
     const weaveData: Partial<DatabaseMemoryWeave> = {
       user_hash: userHash,
@@ -169,7 +202,7 @@ export const userAPI = {
   },
 
   async syncRetrievalSession(session: any, userHash: string): Promise<void> {
-    if (!userHash) return; // Skip if user hasn't consented
+    if (!userHash || !isSupabaseConfigured) return; // Skip if user hasn't consented or Supabase not configured
     
     const sessionData: Partial<DatabaseRetrievalSession> = {
       user_hash: userHash,
@@ -191,7 +224,7 @@ export const userAPI = {
   },
 
   async trackAnalyticsEvent(eventType: string, eventData: any, userHash: string): Promise<void> {
-    if (!userHash) return; // Skip if user hasn't consented
+    if (!userHash || !isSupabaseConfigured) return; // Skip if user hasn't consented or Supabase not configured
     
     const { error } = await supabase
       .from('analytics_events')
