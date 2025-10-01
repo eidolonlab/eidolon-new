@@ -180,8 +180,9 @@ function AppContent() {
   };
 
   return (
-    <OfflineDetector />
-    <Routes>
+    <>
+      <OfflineDetector />
+      <Routes>
       {/* Admin route - completely separate */}
       <Route path="/admin" element={<AdminRoute />} />
       
@@ -305,7 +306,8 @@ function AppContent() {
           )}
         </div>
       } />
-    </Routes>
+      </Routes>
+    </>
   );
 }
 
