@@ -83,6 +83,11 @@ function App() {
     }
   }, [currentPath]);
 
+  const handleAuthSuccess = React.useCallback(() => {
+    setIsAuthenticated(true);
+    checkAdminStatus();
+  }, [checkAdminStatus]);
+
   // Check if user needs onboarding
   useEffect(() => {
     try {
@@ -133,11 +138,6 @@ function App() {
       </ErrorBoundary>
     );
   }
-
-  const handleAuthSuccess = React.useCallback(() => {
-    setIsAuthenticated(true);
-    checkAdminStatus();
-  }, [checkAdminStatus]);
 
   const InsightsPage = () => (
     <div className="space-y-8">
