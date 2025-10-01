@@ -172,36 +172,55 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
     <ErrorBoundary>
     <div className="space-y-8">
       {/* ADHD Focus Hero Section */}
-      <div className="text-center py-12">
-        <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+      <div className="text-center py-16">
+        <div className="w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
           <Brain className="w-10 h-10 text-white" />
         </div>
         
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Struggling with Focus & Attention?
+          Strengthen Your Memory, Master Your Future
         </h1>
         
         <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 leading-relaxed">
-          Get immediate relief with evidence-based ADHD support. Build sustained attention, 
-          working memory, and executive function with tools designed by cognitive scientists.
+          Transform fleeting moments into lasting memories with evidence-based training. 
+          Use multi-sensory weaving and mental rehearsal to build cognitive resilience that lasts a lifetime.
         </p>
         
-        <button
-          onClick={() => onNavigate('adhd')}
-          className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          aria-label="Start ADHD support training"
-        >
-          <Brain className="w-6 h-6" />
-          <span>Start ADHD Support Now</span>
-        </button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+          <button
+            onClick={() => onNavigate('weave')}
+            className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            aria-label="Create your first memory weave"
+          >
+            <Sparkles className="w-6 h-6" />
+            <span>Create Your First Memory</span>
+          </button>
+          
+          <button
+            onClick={() => onNavigate('scenario')}
+            className="inline-flex items-center space-x-3 px-8 py-4 bg-white border-2 border-indigo-200 text-indigo-700 rounded-2xl hover:bg-indigo-50 hover:border-indigo-300 transition-all shadow-md hover:shadow-lg text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            aria-label="Plan a future scenario"
+          >
+            <Calendar className="w-6 h-6" />
+            <span>Plan Future Success</span>
+          </button>
+        </div>
         
-        <div className="flex items-center justify-center space-x-6 mt-4 text-sm text-gray-500">
+        <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
           <div className="flex items-center space-x-1">
-            <Sparkles className="w-4 h-4 text-yellow-500" />
-            <span>25-40% improvement in sustained attention</span>
+            <Award className="w-4 h-4 text-emerald-500" />
+            <span>40% stronger memory recall</span>
           </div>
           <span>•</span>
-          <span>Research-backed</span>
+          <div className="flex items-center space-x-1">
+            <Target className="w-4 h-4 text-blue-500" />
+            <span>2x goal achievement rate</span>
+          </div>
+          <span>•</span>
+          <div className="flex items-center space-x-1">
+            <Shield className="w-4 h-4 text-purple-500" />
+            <span>Privacy-first design</span>
+          </div>
         </div>
       </div>
 
@@ -245,53 +264,26 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* ADHD Support Card */}
         <button
-          onClick={() => onNavigate('adhd')}
-          className="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          aria-label="Access ADHD support tools and training"
-        >
-          <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4">
-            <Brain className="w-6 h-6 text-white" />
-          </div>
-          
-          <h3 className="text-xl font-bold text-white mb-2">ADHD Support</h3>
-          <p className="text-blue-100 text-sm mb-4">
-            Focus, working memory & executive function training
-          </p>
-          
-          <div className="space-y-2 text-xs text-blue-200">
-            <div className="flex items-center space-x-2">
-              <div className="w-1.5 h-1.5 bg-red-400 rounded-full" />
-              <span>Immediate relief • Evidence-based</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-1.5 h-1.5 bg-red-400 rounded-full" />
-              <span>5-25 min sessions</span>
-            </div>
-          </div>
-        </button>
-
-        {/* Memory Weaving Card */}
-        <button
           onClick={() => onNavigate('weave')}
-          className="group bg-white border-2 border-gray-200 hover:border-purple-300 p-6 rounded-2xl hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="group bg-gradient-to-br from-purple-500 to-pink-600 text-white p-6 rounded-2xl hover:from-purple-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           aria-label="Create new memory weave with multi-sensory details"
         >
-          <div className="w-12 h-12 bg-purple-100 group-hover:bg-purple-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
-            <Sparkles className="w-6 h-6 text-purple-600" />
+          <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4">
+            <Sparkles className="w-6 h-6 text-white" />
           </div>
           
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Memory Weaving</h3>
-          <p className="text-gray-600 text-sm mb-4">
+          <h3 className="text-xl font-bold text-white mb-2">Memory Weaving</h3>
+          <p className="text-purple-100 text-sm mb-4">
             Transform moments into rich, multi-sensory memories
           </p>
           
-          <div className="space-y-2 text-xs text-gray-500">
+          <div className="space-y-2 text-xs text-purple-200">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-3 h-3 text-yellow-500" />
+              <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full" />
               <span>5-sense encoding • AI assistance</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-3 h-3 text-yellow-500" />
+              <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full" />
               <span>Clinical quality</span>
             </div>
           </div>
@@ -300,25 +292,25 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Future Scenarios Card */}
         <button
           onClick={() => onNavigate('scenario')}
-          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          className="group bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 rounded-2xl hover:from-emerald-600 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
           aria-label="Plan and rehearse future scenarios"
         >
-          <div className="w-12 h-12 bg-emerald-100 group-hover:bg-emerald-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
-            <Calendar className="w-6 h-6 text-emerald-600" />
+          <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4">
+            <Calendar className="w-6 h-6 text-white" />
           </div>
           
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Future Scenarios</h3>
-          <p className="text-gray-600 text-sm mb-4">
+          <h3 className="text-xl font-bold text-white mb-2">Future Scenarios</h3>
+          <p className="text-emerald-100 text-sm mb-4">
             Rehearse events with confidence-building techniques
           </p>
           
-          <div className="space-y-2 text-xs text-gray-500">
+          <div className="space-y-2 text-xs text-emerald-200">
             <div className="flex items-center space-x-2">
-              <Brain className="w-3 h-3 text-purple-500" />
+              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
               <span>Mental rehearsal • If-then planning</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Brain className="w-3 h-3 text-purple-500" />
+              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
               <span>2x success rate</span>
             </div>
           </div>
@@ -327,26 +319,53 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         {/* Memory Training Card */}
         <button
           onClick={() => onNavigate('training')}
-          className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl hover:bg-orange-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+          className="group bg-gradient-to-br from-orange-500 to-red-600 text-white p-6 rounded-2xl hover:from-orange-600 hover:to-red-700 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           aria-label="Practice memory retrieval and strengthening"
         >
-          <div className="w-12 h-12 bg-orange-100 group-hover:bg-orange-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
-            <Target className="w-6 h-6 text-orange-600" />
+          <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4">
+            <Target className="w-6 h-6 text-white" />
           </div>
           
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Memory Training</h3>
-          <p className="text-gray-600 text-sm mb-4">
+          <h3 className="text-xl font-bold text-white mb-2">Memory Training</h3>
+          <p className="text-orange-100 text-sm mb-4">
             Strengthen recall through spaced practice
+          </p>
+          
+          <div className="space-y-2 text-xs text-orange-200">
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full" />
+              <span>Spaced retrieval • 50% stronger memories</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full" />
+              <span>Clinical metrics</span>
+            </div>
+          </div>
+        </button>
+
+        {/* ADHD Support Card - moved to 4th position */}
+        <button
+          onClick={() => onNavigate('adhd')}
+          className="group bg-white border-2 border-gray-200 hover:border-blue-300 p-6 rounded-2xl hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label="Access ADHD support tools and training"
+        >
+          <div className="w-12 h-12 bg-blue-100 group-hover:bg-blue-200 rounded-xl flex items-center justify-center mb-4 transition-colors">
+            <Shield className="w-6 h-6 text-blue-600" />
+          </div>
+          
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Focus Support</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Attention training for better concentration
           </p>
           
           <div className="space-y-2 text-xs text-gray-500">
             <div className="flex items-center space-x-2">
-              <Zap className="w-3 h-3 text-blue-500" />
-              <span>Spaced retrieval • 50% stronger memories</span>
+              <Brain className="w-3 h-3 text-blue-500" />
+              <span>Evidence-based • 5-25 min sessions</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Zap className="w-3 h-3 text-blue-500" />
-              <span>Clinical metrics</span>
+              <Brain className="w-3 h-3 text-blue-500" />
+              <span>Builds sustained attention</span>
             </div>
           </div>
         </button>
