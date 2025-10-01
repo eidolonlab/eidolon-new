@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Zap, Users, Settings, TrendingUp, Eye, Edit, 
-  Plus, X, CheckCircle, XCircle, Clock, Target,
-  AlertTriangle, Award, Shield, Brain
-} from 'lucide-react';
+import { Zap, Users, Settings, TrendingUp, Eye, CreditCard as Edit, Plus, X, CheckCircle, XCircle, Clock, Target, AlertTriangle, Award, Shield, Brain } from 'lucide-react';
 import { useUserManagement } from '../contexts/UserManagementContext';
 
 const FeatureFlagManager: React.FC = () => {

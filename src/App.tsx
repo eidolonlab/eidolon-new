@@ -17,6 +17,7 @@ import MemoryInsights from './components/MemoryInsights';
 import AdminDashboard from './components/AdminDashboard';
 import AdminAuth from './components/AdminAuth';
 import ADHDDashboard from './components/ADHDDashboard';
+import { UserManagementProvider } from './contexts/UserManagementContext';
 import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { WeaveProvider } from './contexts/WeaveContext';
 import { ChallengeProvider } from './contexts/ChallengeContext';
@@ -318,13 +319,15 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <CognitiveStateProvider>
-        <WeaveProvider>
-          <ChallengeProvider>
-            <AppContent />
-          </ChallengeProvider>
-        </WeaveProvider>
-      </CognitiveStateProvider>
+      <UserManagementProvider>
+        <CognitiveStateProvider>
+          <WeaveProvider>
+            <ChallengeProvider>
+              <AppContent />
+            </ChallengeProvider>
+          </WeaveProvider>
+        </CognitiveStateProvider>
+      </UserManagementProvider>
     </ErrorBoundary>
   );
 }

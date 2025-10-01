@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, UserPlus, Settings, Shield, Mail, Calendar, 
-  TrendingUp, Award, AlertCircle, CheckCircle, X, 
-  Search, Filter, Download, Upload, Eye, Edit,
-  MessageSquare, Star, Clock, Target, Zap
-} from 'lucide-react';
+import { Users, UserPlus, Settings, Shield, Mail, Calendar, TrendingUp, Award, AlertCircle, CheckCircle, X, Search, Filter, Download, Upload, Eye, CreditCard as Edit, MessageSquare, Star, Clock, Target, Zap } from 'lucide-react';
 import { useUserManagement } from '../contexts/UserManagementContext';
 
 const UserManagementDashboard: React.FC = () => {
