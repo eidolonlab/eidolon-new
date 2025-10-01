@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { 
   BarChart3, Users, Brain, Clock, Target, TrendingUp, 
   Calendar, Award, AlertCircle, RefreshCw, Download,
-  Eye, Activity, Zap, Shield, ArrowLeft, LogOut
+  Eye, Activity, Zap, Shield, ArrowLeft, LogOut, Code, TestTube
 } from 'lucide-react';
 import { adminAPI, AdminStats, CohortData } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import DeveloperDashboard from './DeveloperDashboard';
+import { UserManagementProvider } from '../contexts/UserManagementContext';
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const [activeView, setActiveView] = useState<'admin' | 'developer'>('admin');
   const [stats, setStats] = useState<AdminStats>({
     total_users: 1247,
     total_weaves: 3891,
@@ -70,6 +73,14 @@ const AdminDashboard: React.FC = () => {
     navigate('/');
   };
 
+  // If in developer view, render the developer dashboard
+  if (activeView === 'developer') {
+    return (
+      <UserManagementProvider>
+        <DeveloperDashboard />
+      </UserManagementProvider>
+    );
+  }
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
       {/* Header */}
@@ -120,6 +131,29 @@ const AdminDashboard: React.FC = () => {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button
+              onClick={() => setActiveView('developer')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: '#6366f1',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4f46e5'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6366f1'}
+            >
+              <Code style={{ width: '16px', height: '16px' }} />
+              <span>Developer Tools</span>
+            </button>
+            
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(Number(e.target.value))}
