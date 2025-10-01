@@ -35,7 +35,13 @@ if (!isSupabaseConfigured) {
     from: () => ({ 
       select: () => ({ 
         single: () => Promise.resolve({ data: null, error: null }),
-        eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) })
+        eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
+        order: () => ({ 
+          single: () => Promise.resolve({ data: null, error: null }),
+          eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
+          limit: () => Promise.resolve({ data: [], error: null })
+        }),
+        limit: () => Promise.resolve({ data: [], error: null })
       }),
       insert: () => Promise.resolve({ data: null, error: null }),
       upsert: () => Promise.resolve({ data: null, error: null })
