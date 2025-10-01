@@ -34,6 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
       }
     } catch (e) {
       // Ignore consent check errors
+      console.warn('Consent check failed:', e);
     }
   }
 

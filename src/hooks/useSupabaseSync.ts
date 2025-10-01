@@ -39,6 +39,7 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
   const initializeUser = async () => {
     // Don't attempt API calls if Supabase is not configured
     if (!isSupabaseConfigured()) {
+      console.log('Supabase not configured - skipping user initialization');
       setSyncStatus({
         isConnected: false,
         userHash: null,
@@ -53,6 +54,7 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
       const consent = localStorage.getItem('eidolon-consent');
       if (!consent) {
         // No consent given yet, don't make any API calls
+        console.log('No consent given - skipping API calls');
         setSyncStatus({
           isConnected: false,
           userHash: null,
@@ -83,6 +85,7 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
         localStorage.setItem('eidolon-user-hash', userData.user_hash);
       } else {
         // User has not given consent for data sharing
+        console.log('User has not given consent for data sharing');
         setSyncStatus({
           isConnected: false,
           userHash: null,
@@ -91,7 +94,7 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
         });
       }
     } catch (error) {
-      console.warn('Failed to initialize user (this is normal if no consent given):', error);
+      console.warn('Failed to initialize user:', error);
       setSyncStatus(prev => ({ ...prev, isConnected: false }));
     }
   };

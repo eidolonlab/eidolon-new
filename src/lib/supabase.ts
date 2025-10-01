@@ -4,10 +4,14 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if Supabase is properly configured
-const isSupabaseConfigured = supabaseUrl && 
+const isSupabaseConfigured = Boolean(
+  supabaseUrl && 
   supabaseAnonKey && 
+  supabaseUrl !== 'your-project-url' &&
+  supabaseAnonKey !== 'your-anon-key' &&
   !supabaseUrl.includes('your-project-id') && 
-  !supabaseAnonKey.includes('your-anon-key');
+  !supabaseAnonKey.includes('your-anon-key')
+);
 
 let supabase: any;
 export { supabase };
@@ -33,6 +37,7 @@ if (!isSupabaseConfigured) {
     rpc: () => Promise.resolve({ data: null, error: null })
   };
 } else {
+  console.log('Supabase configured successfully');
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
