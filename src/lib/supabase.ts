@@ -1,15 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Handle both Vite and Next.js environment variable patterns
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 
-                   import.meta.env.NEXT_PUBLIC_SUPABASE_URL || 
-                   process.env.VITE_SUPABASE_URL || 
-                   process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 
-                       import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
-                       process.env.VITE_SUPABASE_ANON_KEY || 
-                       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Use Vite environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = Boolean(
