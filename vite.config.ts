@@ -4,7 +4,10 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/',
   build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -15,9 +18,14 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    sourcemap: false
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  preview: {
+    port: 4173,
+    host: true
+  }
 });
