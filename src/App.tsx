@@ -17,6 +17,9 @@ import MemoryInsights from './components/MemoryInsights';
 import AdminDashboard from './components/AdminDashboard';
 import AdminAuth from './components/AdminAuth';
 import ADHDDashboard from './components/ADHDDashboard';
+import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
+import { WeaveProvider } from './contexts/WeaveContext';
+import { ChallengeProvider } from './contexts/ChallengeContext';
 import { supabase } from './lib/supabase';
 
 // Main App component - providers are now in main.tsx
