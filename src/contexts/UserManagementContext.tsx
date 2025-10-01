@@ -287,7 +287,7 @@ export const UserManagementProvider: React.FC<{ children: React.ReactNode }> = (
         return;
       }
 
-      const formattedFeatures = data.map(feature => ({
+      const formattedFeatures = (data || []).map(feature => ({
         ...feature,
         created_at: new Date(feature.created_at)
       }));
