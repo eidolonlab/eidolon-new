@@ -1,7 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Handle both Vite and Next.js environment variable patterns
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 
+                   import.meta.env.NEXT_PUBLIC_SUPABASE_URL || 
+                   process.env.VITE_SUPABASE_URL || 
+                   process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 
+                       import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
+                       process.env.VITE_SUPABASE_ANON_KEY || 
+                       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = Boolean(
@@ -17,7 +25,12 @@ let supabase: any;
 export { supabase };
 
 if (!isSupabaseConfigured) {
-  console.warn('Supabase not configured - running in local-only mode');
+  console.warn('Supabase not configured - running in local-only mode', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+    url: supabaseUrl ? 'present' : 'missing',
+    key: supabaseAnonKey ? 'present' : 'missing'
+  });
   // Create a dummy client that doesn't make network requests
   supabase = {
     auth: { 
