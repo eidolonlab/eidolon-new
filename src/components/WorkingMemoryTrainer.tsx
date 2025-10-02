@@ -740,4 +740,19 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
                     setScore(0);
                     setAttempts(0);
                     setReactionTimes([]);
+                  }}
+                  className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                >
+                  Try Level {Math.max(3, currentLevel - 1)}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WorkingMemoryTrainer;
                     
