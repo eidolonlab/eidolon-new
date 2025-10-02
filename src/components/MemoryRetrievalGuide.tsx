@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Search, Lightbulb, Clock, Target, Eye, Ear, Heart, Zap, CheckCircle, ArrowRight, Sparkles, Award } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import { EnhancedTextInput } from './EnhancedTextInput';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface MemoryRetrievalGuideProps {
