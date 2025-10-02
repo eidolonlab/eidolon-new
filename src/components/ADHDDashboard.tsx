@@ -7,6 +7,9 @@ import ExecutiveFunctionTrainer from './ExecutiveFunctionTrainer';
 import AdaptiveADHDCoach from './AdaptiveADHDCoach';
 import NeurofeedbackTrainer from './NeurofeedbackTrainer';
 import CognitiveLoadManager from './CognitiveLoadManager';
+import MicroAttentionTrainer from './MicroAttentionTrainer';
+import AttentionRescueSystem from './AttentionRescueSystem';
+import ParentCoachingDashboard from './ParentCoachingDashboard';
 
 interface ADHDSession {
   id: string;
@@ -28,6 +31,29 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
   const [lastResults, setLastResults] = useState<any>(null);
   const [currentFocusLevel, setCurrentFocusLevel] = useState(3);
   const [currentEnergyLevel, setCurrentEnergyLevel] = useState(3);
+  const [showMicroAttention, setShowMicroAttention] = useState(false);
+  const [showAttentionRescue, setShowAttentionRescue] = useState(false);
+  const [showParentDashboard, setShowParentDashboard] = useState(false);
+  const [childProgress, setChildProgress] = useState({
+    childName: 'Child',
+    age: 8,
+    baselineAttentionSpan: 45,
+    currentAttentionSpan: 65,
+    totalSessions: 12,
+    weeklyGoal: 5,
+    weeklyProgress: 3,
+    improvementRate: 15,
+    challengeAreas: ['morning_focus', 'after_school'],
+    strengths: ['visual_tracking', 'movement_integration'],
+    realWorldTransfer: [
+      {
+        activity: 'Homework time',
+        beforeRating: 2,
+        afterRating: 4,
+        notes: 'Can now focus for 10 minutes instead of 3'
+      }
+    ]
+  });
   const [adhdProfile, setAdhdProfile] = useState({
     dominantSymptoms: ['inattention', 'hyperactivity', 'impulsivity'],
     severityLevel: 'moderate',
@@ -245,6 +271,78 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
     );
   }
 
+  if (showMicroAttention) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setShowMicroAttention(false)}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to ADHD Center</span>
+          </button>
+          <h1 className="text-2xl font-bold text-gray-900">Micro-Attention Training</h1>
+        </div>
+        <MicroAttentionTrainer 
+          onComplete={(results) => {
+            console.log('Micro-attention training completed:', results);
+            setShowMicroAttention(false);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (showAttentionRescue) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setShowAttentionRescue(false)}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to ADHD Center</span>
+          </button>
+          <h1 className="text-2xl font-bold text-gray-900">Attention Rescue System</h1>
+        </div>
+        <AttentionRescueSystem 
+          userType="adult"
+          currentAttentionLevel={currentFocusLevel}
+          onRescueComplete={(technique, effectiveness) => {
+            console.log('Attention rescue completed:', technique, effectiveness);
+            setShowAttentionRescue(false);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (showParentDashboard) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setShowParentDashboard(false)}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to ADHD Center</span>
+          </button>
+          <h1 className="text-2xl font-bold text-gray-900">Parent Coaching Dashboard</h1>
+        </div>
+        <ParentCoachingDashboard 
+          childProgress={childProgress}
+          onUpdateProgress={(updates) => setChildProgress(prev => ({ ...prev, ...updates }))}
+          onCoachingRequest={(area) => {
+            console.log('Coaching requested for:', area);
+            alert(`Coaching guidance for ${area} would be provided here!`);
+          }}
+        />
+      </div>
+    );
+  }
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -463,17 +561,59 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
           </div>
         </button>
 
-        {/* Placeholder for future expansion */}
-        <div className="group bg-gray-50 border-2 border-dashed border-gray-300 p-6 rounded-2xl text-left">
+        {/* Micro-Attention Training */}
+        <button
+          onClick={() => setShowMicroAttention(true)}
+          className="group bg-white border-2 border-gray-200 hover:border-pink-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+        >
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center">
-              <Brain className="w-6 h-6 text-gray-500" />
+            <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center group-hover:bg-pink-200 transition-colors">
+              <Star className="w-6 h-6 text-pink-600" />
             </div>
-            <div className="text-xs text-gray-500">Coming Soon</div>
+            <Play className="w-5 h-5 text-gray-400 group-hover:text-pink-600 transition-colors" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-500 mb-2">Impulse Control</h3>
-          <p className="text-gray-500 mb-4">Training for better decision-making and self-regulation</p>
-        </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Micro-Attention</h3>
+          <p className="text-gray-600 mb-4">Ultra-short focus training for children & adults with quick distractibility</p>
+          <div className="text-xs text-pink-600 font-medium">
+            30-120 second sessions • Child & adult modes
+          </div>
+        </button>
+
+        {/* Attention Rescue System */}
+        <button
+          onClick={() => setShowAttentionRescue(true)}
+          className="group bg-white border-2 border-gray-200 hover:border-orange-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+              <Shield className="w-6 h-6 text-orange-600" />
+            </div>
+            <Play className="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Attention Rescue</h3>
+          <p className="text-gray-600 mb-4">Quick techniques when focus starts to drift or disappear</p>
+          <div className="text-xs text-orange-600 font-medium">
+            30-90 second rescue techniques
+          </div>
+        </button>
+
+        {/* Parent Coaching Dashboard */}
+        <button
+          onClick={() => setShowParentDashboard(true)}
+          className="group bg-white border-2 border-gray-200 hover:border-emerald-300 p-6 rounded-2xl transition-all duration-200 hover:shadow-lg text-left"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+              <Users className="w-6 h-6 text-emerald-600" />
+            </div>
+            <Play className="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Parent Coaching</h3>
+          <p className="text-gray-600 mb-4">Tools and insights for supporting children with attention challenges</p>
+          <div className="text-xs text-emerald-600 font-medium">
+            Progress tracking • Real-world transfer • Daily strategies
+          </div>
+        </button>
       </div>
 
       {/* Recent Sessions with Improvement Tracking */}
@@ -527,7 +667,7 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
       )}
 
       {/* Clinical Evidence */}
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6">
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6 mb-6">
         <div className="flex items-center space-x-2 mb-4">
           <Brain className="w-5 h-5 text-indigo-600" />
           <h3 className="font-semibold text-indigo-900">Evidence-Based ADHD Support</h3>
@@ -552,13 +692,43 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
             </ul>
           </div>
         </div>
-        <EnhancedTextInput
-          showVoiceButton={true}
-          showAIEnhancement={true}
-          aiContext="adhd"
-          value=""
-          onChange={() => {}}
-        />
+      </div>
+
+      {/* New Features Highlight */}
+      <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl border border-pink-200 p-6">
+        <div className="flex items-center space-x-2 mb-4">
+          <Star className="w-5 h-5 text-pink-600" />
+          <h3 className="font-semibold text-pink-900">New: Ultra-Short Attention Training</h3>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4 text-sm text-pink-800">
+          <div>
+            <p className="font-medium mb-1">🎯 Micro-Attention Training:</p>
+            <ul className="space-y-1 text-xs">
+              <li>• 30-120 second focus bursts</li>
+              <li>• Child & adult modes</li>
+              <li>• Progressive span building</li>
+              <li>• Real-world transfer tracking</li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium mb-1">🛡️ Attention Rescue System:</p>
+            <ul className="space-y-1 text-xs">
+              <li>• Quick focus recovery techniques</li>
+              <li>• Age-appropriate interventions</li>
+              <li>• Immediate attention restoration</li>
+              <li>• No failure, just redirection</li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium mb-1">👨‍👩‍👧‍👦 Parent Support:</p>
+            <ul className="space-y-1 text-xs">
+              <li>• Child progress tracking</li>
+              <li>• Daily strategy coaching</li>
+              <li>• School support guidance</li>
+              <li>• Real-world application tips</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       {/* Results Modal */}
