@@ -29,6 +29,14 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
   const [personalBest, setPersonalBest] = useState(3);
   const [streakCount, setStreakCount] = useState(0);
   const [encouragementMessage, setEncouragementMessage] = useState('');
+  const [sessionHistory, setSessionHistory] = useState<Array<{
+    date: Date;
+    maxLevel: number;
+    accuracy: number;
+    avgReactionTime: number;
+    profileName?: string;
+  }>>([]);
+  const [showProgressHistory, setShowProgressHistory] = useState(false);
   const [defaultProgress, setDefaultProgress] = useState({
     level: 3,
     sessions: 0,
@@ -49,6 +57,16 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
 
   // Load personal best from localStorage
   useEffect(() => {
+    // Load session history
+    const savedHistory = localStorage.getItem('eidolon-working-memory-history');
+    if (savedHistory) {
+      const history = JSON.parse(savedHistory).map((session: any) => ({
+        ...session,
+        date: new Date(session.date)
+      }));
+      setSessionHistory(history);
+    }
+    
     // Load default progress (your main progress)
     const defaultSaved = localStorage.getItem('eidolon-working-memory-default');
     if (defaultSaved) {
@@ -169,6 +187,20 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
       : 0;
     
     const finalAccuracy = attempts > 0 ? (score / attempts) * 100 : 0;
+    
+    // Save to session history
+    const newHistoryEntry = {
+      date: new Date(),
+      maxLevel,
+      accuracy: finalAccuracy,
+      avgReactionTime,
+      profileName: useCustomProfile ? profileName : undefined
+    };
+    
+    const newHistory = [newHistoryEntry, ...sessionHistory].slice(0, 50); // Keep last 50 sessions
+    setSessionHistory(newHistory);
+    localStorage.setItem('eidolon-working-memory-history', JSON.stringify(newHistory));
+    
     updateProfileData(maxLevel, finalAccuracy);
     
     onComplete({
@@ -338,6 +370,112 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
               </div>
             )}
           </div>
+
+          {/* Progress History Modal */}
+          {showProgressHistory && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Training Progress History</h3>
+                  <button
+                    onClick={() => setShowProgressHistory(false)}
+                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+                
+                {sessionHistory.length > 0 ? (
+                  <div className="space-y-4">
+                    {/* Progress Chart */}
+                    <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                      <h4 className="font-medium text-purple-900 mb-3">Level Progress Over Time</h4>
+                      <div className="flex items-end space-x-1 h-32">
+                        {sessionHistory.slice(0, 20).reverse().map((session, index) => {
+                          const maxLevel = Math.max(...sessionHistory.map(s => s.maxLevel));
+                          const height = (session.maxLevel / maxLevel) * 100;
+                          
+                          return (
+                            <div key={index} className="flex-1 flex flex-col items-center">
+                              <div className="w-full bg-gray-200 rounded-t-lg relative" style={{ height: '100px' }}>
+                                <div
+                                  className="bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-500"
+                                  style={{ height: `${height}%`, position: 'absolute', bottom: 0, width: '100%' }}
+                                  title={`Level ${session.maxLevel} - ${session.accuracy.toFixed(0)}% accuracy`}
+                                />
+                              </div>
+                              <div className="mt-1 text-xs text-center text-gray-500">
+                                {session.maxLevel}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="text-xs text-gray-500 text-center mt-2">
+                        Last 20 sessions • Hover for details
+                      </div>
+                    </div>
+                    
+                    {/* Recent Sessions */}
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-3">Recent Sessions</h4>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {sessionHistory.slice(0, 10).map((session, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                Level {session.maxLevel} • {session.accuracy.toFixed(0)}% accuracy
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                {session.date.toLocaleDateString()} • {(session.avgReactionTime / 1000).toFixed(1)}s avg
+                                {session.profileName && ` • ${session.profileName}`}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className={`text-lg font-bold ${
+                                session.maxLevel >= personalBest ? 'text-emerald-600' : 'text-gray-600'
+                              }`}>
+                                {session.maxLevel >= personalBest ? '🏆' : session.maxLevel}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Statistics */}
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center p-3 bg-blue-50 rounded-lg">
+                        <div className="text-lg font-bold text-blue-600">
+                          {sessionHistory.length}
+                        </div>
+                        <div className="text-xs text-gray-600">Total Sessions</div>
+                      </div>
+                      <div className="text-center p-3 bg-emerald-50 rounded-lg">
+                        <div className="text-lg font-bold text-emerald-600">
+                          {sessionHistory.length > 0 ? 
+                            (sessionHistory.reduce((sum, s) => sum + s.accuracy, 0) / sessionHistory.length).toFixed(0) : 0}%
+                        </div>
+                        <div className="text-xs text-gray-600">Avg Accuracy</div>
+                      </div>
+                      <div className="text-center p-3 bg-purple-50 rounded-lg">
+                        <div className="text-lg font-bold text-purple-600">
+                          {Math.max(...sessionHistory.map(s => s.maxLevel), 0)}
+                        </div>
+                        <div className="text-xs text-gray-600">Best Level</div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Brain className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                    <p className="text-gray-600">No training history yet. Complete a session to see your progress!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900 mb-2">Starting Level: {currentLevel}</div>
             <div className="text-sm text-gray-600 mb-6">
@@ -350,6 +488,14 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             </div>
             
             <div className="mb-6 flex items-center justify-center space-x-4">
+              <button
+                onClick={() => setShowProgressHistory(true)}
+                className="flex items-center space-x-2 px-4 py-2 border border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 transition-colors"
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span>View Progress History</span>
+              </button>
+              
               <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -422,9 +568,23 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
           </div>
         )}
 
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 mb-6">
           <button
             onClick={() => {
+              // Restart from current level
+              setGameState('setup');
+              setScore(0);
+              setAttempts(0);
+              setReactionTimes([]);
+              // Keep current level and personal best
+            }}
+            className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            Try This Level Again
+          </button>
+          <button
+            onClick={() => {
+              // Start fresh from beginning
               setGameState('setup');
               setCurrentLevel(3);
               setScore(0);
@@ -436,8 +596,18 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
             }}
             className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            Train Again
+            Start Fresh (Level 3)
           </button>
+        </div>
+        
+        <button
+          onClick={() => setShowProgressHistory(true)}
+          className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors mb-4"
+        >
+          View Detailed Progress
+        </button>
+        
+        <div className="flex space-x-3">
           <button
             onClick={() => window.location.reload()}
             className="w-full py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium"
@@ -546,28 +716,23 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
               <div className="text-sm text-red-700">
                 Correct sequence: {sequence.join(' → ')}
               </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Progress Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-lg font-bold text-gray-900">{currentLevel}</div>
-          <div className="text-xs text-gray-600">Current Level</div>
-        </div>
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-lg font-bold text-gray-900">{score}</div>
-          <div className="text-xs text-gray-600">Correct</div>
-        </div>
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-lg font-bold text-gray-900">{maxLevel}</div>
-          <div className="text-xs text-gray-600">Best Span</div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default WorkingMemoryTrainer;
+              <div className="mt-4 flex space-x-2">
+                <button
+                  onClick={() => {
+                    // Retry the same level
+                    setGameState('setup');
+                    setScore(0);
+                    setAttempts(0);
+                    setReactionTimes([]);
+                    // Keep current level
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  Try Level {currentLevel} Again
+                </button>
+                <button
+                  onClick={() => {
+                    // Drop down one level if above 3
+                    const newLevel = Math.max(3, currentLevel - 1);
+                    setCurrentLevel(newLevel);
+                    
