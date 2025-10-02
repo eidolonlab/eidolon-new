@@ -376,21 +376,31 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
         <ErrorBoundary fallback={
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-red-800">AI companion temporarily unavailable</p>
+            <button
+              onClick={() => setShowConversationalAI(false)}
+              className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors"
+            >
+              Close
+            </button>
           </div>
         }>
-        <ConversationalInterface
-          cognitiveState={cognitiveState}
-          upcomingEvents={upcomingScenarios}
-          onActionSelect={(action) => {
-            if (['weave', 'scenario', 'training', 'adhd'].includes(action)) {
-              onNavigate(action as any);
-            } else {
-              setFocusedActivity(action);
-            }
-            setShowConversationalAI(false);
-          }}
-          onDismiss={() => setShowConversationalAI(false)}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <ConversationalInterface
+              cognitiveState={cognitiveState}
+              upcomingEvents={upcomingScenarios}
+              onActionSelect={(action) => {
+                if (['weave', 'scenario', 'training', 'adhd'].includes(action)) {
+                  onNavigate(action as any);
+                } else {
+                  setFocusedActivity(action);
+                }
+                setShowConversationalAI(false);
+              }}
+              onDismiss={() => setShowConversationalAI(false)}
+            />
+          </div>
+        </div>
         </ErrorBoundary>
       )}
 
