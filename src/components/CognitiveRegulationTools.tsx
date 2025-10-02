@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Brain, Clock, Play, Pause, CheckCircle, Zap, Target, Activity, Lightbulb } from 'lucide-react';
+import { Heart, Brain, Clock, Play, Pause, CheckCircle, Zap, Target, Activity, Lightbulb, Mic } from 'lucide-react';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
+import EnhancedTextInput from './EnhancedTextInput';
 
 interface CognitiveRegulationToolsProps {
   cognitiveState?: CognitiveState;
@@ -16,6 +17,7 @@ const CognitiveRegulationTools: React.FC<CognitiveRegulationToolsProps> = ({ cog
   const [afterRating, setAfterRating] = useState(5);
   const [sessionPhase, setSessionPhase] = useState<'setup' | 'active' | 'complete'>('setup');
   const [intelligentRecommendation, setIntelligentRecommendation] = useState<string>('');
+  const [voiceCoaching, setVoiceCoaching] = useState<string>('');
 
   const techniques = {
     breathing: {
@@ -163,6 +165,37 @@ const CognitiveRegulationTools: React.FC<CognitiveRegulationToolsProps> = ({ cog
                 <span className="text-white text-xs font-bold">{level}</span>
               </button>
             ))}
+          </div>
+          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Mic className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-900">Voice Stress Check</span>
+            </div>
+            <p className="text-sm text-blue-800 mb-2">
+              Describe how you're feeling right now - voice analysis can detect stress levels
+            </p>
+            <EnhancedTextInput
+              type="input"
+              value=""
+              onChange={() => {}}
+              placeholder="e.g., I feel overwhelmed by my workload today..."
+              showVoiceButton={true}
+              showAIEnhancement={true}
+              aiContext="emotional"
+              onVoiceComplete={(transcript, confidence) => {
+                // Analyze stress from voice
+                const stressWords = ['overwhelmed', 'stressed', 'anxious', 'worried', 'tired'];
+                const words = transcript.toLowerCase().split(/\s+/);
+                const stressLevel = stressWords.filter(word => 
+                  words.some(w => w.includes(word))
+                ).length;
+                
+                if (stressLevel > 0) {
+                  setBeforeRating(Math.min(10, 5 + stressLevel * 2));
+                  setVoiceCoaching(`🧠 Voice analysis detected stress indicators. Recommended level: ${Math.min(10, 5 + stressLevel * 2)}/10`);
+                }
+              }}
+            />
           </div>
           <div className="text-xs text-gray-500 mt-1">
             {beforeRating <= 3 ? 'Mild stress - any technique will help' :
