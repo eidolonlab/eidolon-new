@@ -942,3 +942,5 @@ const MicroAttentionTrainer: React.FC<MicroAttentionTrainerProps> = ({ onComplet
 };
 
 export default MicroAttentionTrainer;
+
+export default MicroAttentionTrainer
