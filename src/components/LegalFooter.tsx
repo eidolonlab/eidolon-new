@@ -12,7 +12,15 @@ const LegalFooter: React.FC = () => {
           <div className="md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">E</span>
+                <svg className="w-5 h-5 text-white" viewBox="0 0 100 100" fill="currentColor">
+                  {/* E shape */}
+                  <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
+                        stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
+                  
+                  {/* Alpha symbol */}
+                  <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
+                        stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8"/>
+                </svg>
               </div>
               <span className="font-bold text-gray-900">Eidolon</span>
             </div>

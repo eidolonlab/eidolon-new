@@ -654,7 +654,21 @@ const AdminDashboard: React.FC = () => {
             padding: '24px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-              <Brain style={{ width: '20px', height: '20px', color: '#4f46e5' }} />
+              <svg style={{ width: '20px', height: '20px', color: '#4f46e5' }} viewBox="0 0 100 100" fill="currentColor">
+                {/* E shape */}
+                <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
+                      stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round"/>
+                
+                {/* Alpha symbol */}
+                <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
+                      stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.8"/>
+                
+                {/* Neural pathways */}
+                <path d="M25 25 Q35 15 45 25" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+                <path d="M25 55 Q40 45 55 55" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+                <circle cx="30" cy="30" r="1.5" fill="currentColor" opacity="0.8"/>
+                <circle cx="55" cy="55" r="1.5" fill="currentColor" opacity="0.8"/>
+              </svg>
               <h3 style={{ fontWeight: '600', color: '#3730a3', margin: 0 }}>Clinical Research Notes</h3>
             </div>
             <div style={{ fontSize: '14px', color: '#4338ca', lineHeight: '1.6' }}>
