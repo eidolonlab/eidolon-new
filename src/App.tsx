@@ -199,7 +199,20 @@ function AppContent() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-                    <Brain className="w-6 h-6 text-white" />
+                    <svg className="w-6 h-6 text-white" viewBox="0 0 100 100" fill="currentColor">
+                      {/* E shape */}
+                      <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
+                            stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
+                      
+                      {/* Alpha symbol */}
+                      <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
+                            stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8"/>
+                      
+                      {/* Simplified neural connections */}
+                      <circle cx="30" cy="30" r="2" fill="currentColor" opacity="0.6"/>
+                      <circle cx="60" cy="35" r="2" fill="currentColor" opacity="0.6"/>
+                      <circle cx="35" cy="65" r="2" fill="currentColor" opacity="0.6"/>
+                    </svg>
                   </div>
                   <div>
                     <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>

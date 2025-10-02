@@ -174,7 +174,30 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       {/* ADHD Focus Hero Section */}
       <div className="text-center py-16">
         <div className="w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
-          <Brain className="w-10 h-10 text-white" />
+          <svg className="w-12 h-12 text-white" viewBox="0 0 100 100" fill="currentColor">
+            {/* E shape */}
+            <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
+                  stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round"/>
+            
+            {/* Alpha symbol integrated */}
+            <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
+                  stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.8"/>
+            
+            {/* Neural pathways */}
+            <path d="M25 25 Q35 15 45 25 Q55 35 65 25" 
+                  stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+            <path d="M25 55 Q40 45 55 55 Q70 65 85 55" 
+                  stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+            <path d="M25 75 Q35 65 45 75 Q60 85 75 75" 
+                  stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+            
+            {/* Connection nodes */}
+            <circle cx="25" cy="25" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="45" cy="25" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="65" cy="25" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="55" cy="55" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="75" cy="75" r="1.5" fill="currentColor" opacity="0.8"/>
+          </svg>
         </div>
         
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
