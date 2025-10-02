@@ -203,7 +203,9 @@ function AppContent() {
                       {/* E shape */}
                       <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
                             stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
-                      
+                    </svg>
+                  </div>
+                  
                   <svg className="w-6 h-6 text-white" viewBox="0 0 100 100" fill="currentColor">
                     {/* Brain outline - prominent and visible */}
                     <path d="M30 25 Q20 15 25 35 Q15 45 25 55 Q20 65 30 70 Q40 75 50 70 Q60 75 70 70 Q80 65 75 55 Q85 45 75 35 Q80 15 70 25 Q60 20 50 25 Q40 20 30 25 Z" 
