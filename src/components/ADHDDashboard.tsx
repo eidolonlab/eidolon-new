@@ -556,6 +556,8 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
           showVoiceButton={true}
           showAIEnhancement={true}
           aiContext="adhd"
+          value=""
+          onChange={() => {}}
         />
       </div>
 
