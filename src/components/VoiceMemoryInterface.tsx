@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Brain, Wand2, Play, Pause, RotateCcw, Zap, Target, TrendingUp } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Brain, Wand2, Play, Pause, RotateCcw, Zap, Target, TrendingUp, Heart } from 'lucide-react';
 import { useSpeechToText } from '../hooks/useSpeechToText';
 
 interface VoiceMemoryInterfaceProps {
@@ -25,6 +25,7 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
   const [speechPacing, setSpeechPacing] = useState<'too_fast' | 'optimal' | 'too_slow'>('optimal');
   const [emotionalDepth, setEmotionalDepth] = useState(0);
   const [narrativeFlow, setNarrativeFlow] = useState(0);
+  const [recordingDuration, setRecordingDuration] = useState(0);
 
   const {
     isListening: isRecording,
@@ -56,6 +57,7 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
       setVoiceCoaching(`❌ Speech recognition error: ${error}. Please try again.`);
     }
   });
+
   const analyzeEmotionalContent = (text: string) => {
     // Analyze emotional content from transcription
     const emotionalWords = ['love', 'joy', 'fear', 'anger', 'surprise', 'sadness', 'excitement', 'peace'];
@@ -93,7 +95,6 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
       setVoiceCoaching("✨ Perfect pacing! Your speech rhythm enhances memory formation");
     }
   };
-
 
   const startRecording = () => {
     resetTranscript();
@@ -184,10 +185,16 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
               {Array.from({ length: 20 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`w-1 rounded-full transition-all duration-100 ${
-              {isRecording ? '🔴 REC' : '⏸️ Ready'}
-                  }`}
+                  className={`w-1 rounded-full transition-all duration-100 bg-red-500`}
+                  style={{ height: `${Math.random() * 20 + 10}px` }}
                 />
+              ))}
+            </div>
+            
+            <div className="text-sm text-gray-600 mb-3">
+              {isRecording ? '🔴 REC' : '⏸️ Ready'}
+            </div>
+            <div className="text-xs text-gray-500">
               {isRecording ? 'Recording in progress...' : 'Click microphone to start'}
             </div>
             
@@ -311,17 +318,27 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
                     <span>Voice Confidence</span>
                     <span>{emotionalAnalysis.confidence.toFixed(0)}%</span>
                   </div>
-            {transcription && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-sm text-blue-800 mb-2">Live Transcription:</div>
-                <p className="text-blue-900">{transcription}</p>
-                {confidence > 0 && (
-                  <div className="text-xs text-blue-600 mt-2">
-                    Confidence: {Math.round(confidence * 100)}%
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="h-2 bg-blue-500 rounded-full transition-all duration-500"
+                      style={{ width: `${emotionalAnalysis.confidence}%` }}
+                    />
                   </div>
-                )}
+                </div>
               </div>
-            )}
+            </div>
+          )}
+
+          {transcription && (
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="text-sm text-blue-800 mb-2">Live Transcription:</div>
+              <p className="text-blue-900">{transcription}</p>
+              {confidence > 0 && (
+                <div className="text-xs text-blue-600 mt-2">
+                  Confidence: {Math.round(confidence * 100)}%
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
