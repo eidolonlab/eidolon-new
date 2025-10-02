@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Target, Clock, TrendingUp, Award, Play, ArrowLeft, Zap, CheckCircle, BarChart3, Activity, Lightbulb, Shield } from 'lucide-react';
+import { Brain, Target, Clock, TrendingUp, Award, Play, ArrowLeft, Zap, CheckCircle, BarChart3, Activity, Lightbulb, Shield, Star, Users } from 'lucide-react';
 import EnhancedTextInput from './EnhancedTextInput';
 import ADHDFocusTrainer from './ADHDFocusTrainer';
 import WorkingMemoryTrainer from './WorkingMemoryTrainer';
