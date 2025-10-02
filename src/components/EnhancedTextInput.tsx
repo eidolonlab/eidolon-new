@@ -88,7 +88,6 @@ const EnhancedTextInput: React.FC<EnhancedTextInputProps> = ({
     setShowSuggestions(false);
   };
 
-  const wordCount = value.split(/\s+/).filter(w => w.length > 0).length;
   const wordCount = (value || '').split(/\s+/).filter(w => w.length > 0).length;
 
   return (
