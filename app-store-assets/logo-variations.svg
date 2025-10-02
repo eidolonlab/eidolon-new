@@ -1,0 +1,217 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="neuralGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0.6"/>
+    </linearGradient>
+    <linearGradient id="neuralGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.7"/>
+      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:0.5"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">
+    Eidolon Logo Variations - E + α + Neural Pathways
+  </text>
+  
+  <!-- Variation 1: Full logo with neural pathways -->
+  <g transform="translate(50, 80)">
+    <text x="75" y="-10" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      Version 1: Full Neural Network
+    </text>
+    
+    <!-- Neural pathways -->
+    <path d="M 10 20 Q 40 10, 70 25 Q 100 35, 130 20" stroke="url(#neuralGrad1)" stroke-width="2" fill="none"/>
+    <path d="M 15 50 Q 45 35, 75 55 Q 105 75, 135 60" stroke="url(#neuralGrad2)" stroke-width="2" fill="none"/>
+    <path d="M 20 90 Q 60 75, 100 90 Q 125 100, 140 85" stroke="url(#neuralGrad1)" stroke-width="2" fill="none"/>
+    
+    <!-- E letter -->
+    <g transform="translate(30, 30)">
+      <rect x="0" y="0" width="8" height="50" fill="url(#primaryGrad)" rx="4"/>
+      <rect x="0" y="0" width="30" height="6" fill="url(#primaryGrad)" rx="3"/>
+      <rect x="0" y="22" width="25" height="6" fill="url(#primaryGrad)" rx="3"/>
+      <rect x="0" y="44" width="30" height="6" fill="url(#primaryGrad)" rx="3"/>
+    </g>
+    
+    <!-- Alpha symbol -->
+    <g transform="translate(55, 55)">
+      <path d="M 0 0 Q 10 -6, 16 0 Q 20 6, 16 12 Q 10 18, 0 12 Q -3 6, 0 0" fill="url(#primaryGrad)"/>
+      <path d="M 12 9 Q 18 12, 22 18 Q 20 22, 16 18" fill="url(#primaryGrad)"/>
+    </g>
+    
+    <!-- Neural nodes -->
+    <circle cx="40" cy="40" r="2" fill="#4f46e5"/>
+    <circle cx="90" cy="50" r="1.5" fill="#7c3aed"/>
+    <circle cx="65" cy="80" r="1.5" fill="#06b6d4"/>
+  </g>
+  
+  <!-- Variation 2: Simplified for small sizes -->
+  <g transform="translate(250, 80)">
+    <text x="75" y="-10" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      Version 2: Simplified (Small Sizes)
+    </text>
+    
+    <!-- Minimal neural pathways -->
+    <path d="M 25 35 Q 55 25, 85 40" stroke="url(#neuralGrad1)" stroke-width="2" fill="none" opacity="0.7"/>
+    <path d="M 30 65 Q 60 50, 90 70" stroke="url(#neuralGrad2)" stroke-width="2" fill="none" opacity="0.6"/>
+    
+    <!-- E letter (slightly larger) -->
+    <g transform="translate(30, 30)">
+      <rect x="0" y="0" width="10" height="50" fill="url(#primaryGrad)" rx="5"/>
+      <rect x="0" y="0" width="32" height="8" fill="url(#primaryGrad)" rx="4"/>
+      <rect x="0" y="21" width="26" height="8" fill="url(#primaryGrad)" rx="4"/>
+      <rect x="0" y="42" width="32" height="8" fill="url(#primaryGrad)" rx="4"/>
+    </g>
+    
+    <!-- Alpha (integrated into E) -->
+    <g transform="translate(52, 52)">
+      <path d="M 0 0 Q 8 -4, 12 0 Q 15 4, 12 8 Q 8 12, 0 8 Q -2 4, 0 0" fill="url(#primaryGrad)"/>
+      <path d="M 9 6 Q 13 8, 16 12 Q 14 15, 11 12" fill="url(#primaryGrad)"/>
+    </g>
+  </g>
+  
+  <!-- Variation 3: Monogram style -->
+  <g transform="translate(450, 80)">
+    <text x="75" y="-10" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      Version 3: Monogram Style
+    </text>
+    
+    <!-- Circular background -->
+    <circle cx="75" cy="75" r="70" fill="url(#primaryGrad)" opacity="0.1"/>
+    <circle cx="75" cy="75" r="65" fill="none" stroke="url(#primaryGrad)" stroke-width="2" opacity="0.3"/>
+    
+    <!-- E letter (centered) -->
+    <g transform="translate(45, 45)">
+      <rect x="0" y="0" width="12" height="60" fill="url(#primaryGrad)" rx="6"/>
+      <rect x="0" y="0" width="40" height="10" fill="url(#primaryGrad)" rx="5"/>
+      <rect x="0" y="25" width="32" height="10" fill="url(#primaryGrad)" rx="5"/>
+      <rect x="0" y="50" width="40" height="10" fill="url(#primaryGrad)" rx="5"/>
+    </g>
+    
+    <!-- Alpha overlaid on E -->
+    <g transform="translate(65, 70)">
+      <path d="M 0 0 Q 12 -8, 20 0 Q 25 8, 20 16 Q 12 24, 0 16 Q -4 8, 0 0" fill="white" opacity="0.9"/>
+      <path d="M 15 12 Q 22 16, 28 24 Q 25 28, 20 24" fill="white" opacity="0.9"/>
+    </g>
+    
+    <!-- Subtle neural connections around the circle -->
+    <path d="M 30 75 Q 50 60, 75 75 Q 100 90, 120 75" stroke="url(#neuralGrad1)" stroke-width="1.5" fill="none" opacity="0.4"/>
+  </g>
+  
+  <!-- Variation 4: Horizontal layout -->
+  <g transform="translate(50, 280)">
+    <text x="100" y="-10" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      Version 4: Horizontal Layout
+    </text>
+    
+    <!-- E letter -->
+    <g transform="translate(20, 30)">
+      <rect x="0" y="0" width="10" height="50" fill="url(#primaryGrad)" rx="5"/>
+      <rect x="0" y="0" width="35" height="8" fill="url(#primaryGrad)" rx="4"/>
+      <rect x="0" y="21" width="28" height="8" fill="url(#primaryGrad)" rx="4"/>
+      <rect x="0" y="42" width="35" height="8" fill="url(#primaryGrad)" rx="4"/>
+    </g>
+    
+    <!-- Neural connection line -->
+    <path d="M 65 55 Q 85 45, 105 55" stroke="url(#neuralGrad1)" stroke-width="3" fill="none"/>
+    
+    <!-- Alpha -->
+    <g transform="translate(110, 52)">
+      <path d="M 0 0 Q 10 -6, 16 0 Q 20 6, 16 12 Q 10 18, 0 12 Q -3 6, 0 0" fill="url(#primaryGrad)"/>
+      <path d="M 12 9 Q 18 12, 22 18 Q 20 22, 16 18" fill="url(#primaryGrad)"/>
+    </g>
+    
+    <!-- Flowing neural pathways -->
+    <path d="M 140 40 Q 170 30, 200 45" stroke="url(#neuralGrad2)" stroke-width="2" fill="none" opacity="0.6"/>
+    <path d="M 140 70 Q 170 80, 200 65" stroke="url(#neuralGrad1)" stroke-width="2" fill="none" opacity="0.6"/>
+  </g>
+  
+  <!-- Variation 5: Stacked vertical -->
+  <g transform="translate(350, 280)">
+    <text x="75" y="-10" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      Version 5: Stacked Vertical
+    </text>
+    
+    <!-- E letter (top) -->
+    <g transform="translate(45, 20)">
+      <rect x="0" y="0" width="8" height="40" fill="url(#primaryGrad)" rx="4"/>
+      <rect x="0" y="0" width="28" height="6" fill="url(#primaryGrad)" rx="3"/>
+      <rect x="0" y="17" width="22" height="6" fill="url(#primaryGrad)" rx="3"/>
+      <rect x="0" y="34" width="28" height="6" fill="url(#primaryGrad)" rx="3"/>
+    </g>
+    
+    <!-- Neural bridge -->
+    <path d="M 60 70 Q 75 80, 90 70" stroke="url(#neuralGrad1)" stroke-width="2" fill="none"/>
+    <circle cx="75" cy="75" r="2" fill="#4f46e5"/>
+    
+    <!-- Alpha (bottom) -->
+    <g transform="translate(60, 85)">
+      <path d="M 0 0 Q 12 -8, 20 0 Q 25 8, 20 16 Q 12 24, 0 16 Q -4 8, 0 0" fill="url(#primaryGrad)"/>
+      <path d="M 15 12 Q 22 16, 28 24 Q 25 28, 20 24" fill="url(#primaryGrad)"/>
+    </g>
+    
+    <!-- Side neural pathways -->
+    <path d="M 20 50 Q 10 60, 20 70" stroke="url(#neuralGrad2)" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M 130 50 Q 140 60, 130 70" stroke="url(#neuralGrad1)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  </g>
+  
+  <!-- Variation 6: App icon optimized -->
+  <g transform="translate(550, 280)">
+    <text x="75" y="-10" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      Version 6: App Icon Optimized
+    </text>
+    
+    <!-- Rounded square background -->
+    <rect x="10" y="10" width="130" height="130" fill="url(#primaryGrad)" rx="25"/>
+    
+    <!-- E letter (bold for visibility) -->
+    <g transform="translate(35, 35)">
+      <rect x="0" y="0" width="15" height="80" fill="white" rx="7"/>
+      <rect x="0" y="0" width="50" height="12" fill="white" rx="6"/>
+      <rect x="0" y="34" width="40" height="12" fill="white" rx="6"/>
+      <rect x="0" y="68" width="50" height="12" fill="white" rx="6"/>
+    </g>
+    
+    <!-- Alpha (white, integrated) -->
+    <g transform="translate(75, 75)">
+      <path d="M 0 0 Q 15 -10, 25 0 Q 30 10, 25 20 Q 15 30, 0 20 Q -5 10, 0 0" fill="white"/>
+      <path d="M 18 15 Q 25 18, 30 25 Q 28 30, 23 25" fill="white"/>
+    </g>
+    
+    <!-- Minimal neural accents -->
+    <circle cx="110" cy="50" r="3" fill="white" opacity="0.7"/>
+    <circle cx="120" cy="80" r="2" fill="white" opacity="0.6"/>
+    <circle cx="110" cy="110" r="2.5" fill="white" opacity="0.7"/>
+    
+    <!-- Connecting lines -->
+    <path d="M 105 50 Q 115 65, 110 80" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M 115 80 Q 120 95, 110 110" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+  </g>
+  
+  <!-- Design notes -->
+  <g transform="translate(50, 480)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#374151">
+      Design Concept: E + α (alpha) + Neural Memory Pathways
+    </text>
+    <text x="0" y="25" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      • E represents "Eidolon" - the brand name
+    </text>
+    <text x="0" y="45" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      • α (alpha) represents "beginning" - the start of memory formation
+    </text>
+    <text x="0" y="65" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      • Neural pathways represent memory connections and cognitive networks
+    </text>
+    <text x="0" y="85" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      • Flowing curves inspired by your drawing - organic, brain-like connections
+    </text>
+    <text x="0" y="105" font-family="Arial, sans-serif" font-size="14" fill="#6b7280">
+      • Trademark potential: Unique combination of letter + Greek symbol + neural design
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,134 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient definitions for neural pathways -->
+    <linearGradient id="neuralGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.6" />
+    </linearGradient>
+    
+    <linearGradient id="neuralGradient2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.7" />
+      <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:0.6" />
+    </linearGradient>
+    
+    <linearGradient id="neuralGradient3" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.5" />
+    </linearGradient>
+    
+    <!-- Main letter gradient -->
+    <linearGradient id="letterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle for app icon -->
+  <circle cx="100" cy="100" r="95" fill="url(#letterGradient)" opacity="0.1"/>
+  
+  <!-- Neural pathway curves inspired by your drawing -->
+  <!-- Top flowing curve -->
+  <path d="M 30 40 Q 80 20, 130 35 Q 160 45, 180 30" 
+        stroke="url(#neuralGradient1)" 
+        stroke-width="3" 
+        fill="none" 
+        opacity="0.8"/>
+  
+  <!-- Middle intersecting curves -->
+  <path d="M 25 80 Q 60 60, 100 85 Q 140 110, 175 95" 
+        stroke="url(#neuralGradient2)" 
+        stroke-width="3" 
+        fill="none" 
+        opacity="0.7"/>
+  
+  <!-- Bottom curve -->
+  <path d="M 35 160 Q 90 140, 140 155 Q 165 165, 180 150" 
+        stroke="url(#neuralGradient3)" 
+        stroke-width="3" 
+        fill="none" 
+        opacity="0.6"/>
+  
+  <!-- Additional neural connections -->
+  <path d="M 45 70 Q 75 90, 105 75" 
+        stroke="url(#neuralGradient1)" 
+        stroke-width="2" 
+        fill="none" 
+        opacity="0.5"/>
+  
+  <path d="M 120 120 Q 145 100, 165 125" 
+        stroke="url(#neuralGradient2)" 
+        stroke-width="2" 
+        fill="none" 
+        opacity="0.5"/>
+  
+  <!-- Main "E" letter structure -->
+  <g transform="translate(50, 60)">
+    <!-- E main vertical stroke -->
+    <rect x="0" y="0" width="12" height="80" fill="url(#letterGradient)" rx="6"/>
+    
+    <!-- E top horizontal stroke -->
+    <rect x="0" y="0" width="45" height="10" fill="url(#letterGradient)" rx="5"/>
+    
+    <!-- E middle horizontal stroke -->
+    <rect x="0" y="35" width="35" height="10" fill="url(#letterGradient)" rx="5"/>
+    
+    <!-- E bottom horizontal stroke -->
+    <rect x="0" y="70" width="45" height="10" fill="url(#letterGradient)" rx="5"/>
+  </g>
+  
+  <!-- Greek lowercase alpha (α) integrated into the E -->
+  <g transform="translate(85, 85)">
+    <!-- Alpha main curve -->
+    <path d="M 0 0 Q 15 -10, 25 0 Q 30 10, 25 20 Q 15 30, 0 20 Q -5 10, 0 0" 
+          fill="url(#letterGradient)" 
+          opacity="0.9"/>
+    
+    <!-- Alpha tail -->
+    <path d="M 20 15 Q 30 20, 35 30 Q 32 35, 25 30" 
+          fill="url(#letterGradient)" 
+          opacity="0.9"/>
+    
+    <!-- Neural connection from alpha to E -->
+    <path d="M -10 10 Q -20 5, -30 10" 
+          stroke="url(#neuralGradient1)" 
+          stroke-width="2" 
+          fill="none" 
+          opacity="0.6"/>
+  </g>
+  
+  <!-- Neural nodes/synapses -->
+  <circle cx="60" cy="50" r="3" fill="#4f46e5" opacity="0.8"/>
+  <circle cx="140" cy="70" r="2.5" fill="#7c3aed" opacity="0.7"/>
+  <circle cx="80" cy="120" r="2" fill="#06b6d4" opacity="0.6"/>
+  <circle cx="150" cy="130" r="2.5" fill="#10b981" opacity="0.7"/>
+  <circle cx="45" cy="140" r="2" fill="#f59e0b" opacity="0.6"/>
+  
+  <!-- Subtle connection lines between nodes -->
+  <line x1="60" y1="50" x2="80" y2="120" stroke="#4f46e5" stroke-width="1" opacity="0.3"/>
+  <line x1="140" y1="70" x2="150" y2="130" stroke="#7c3aed" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Glow effect on main letters -->
+  <g filter="url(#glow)" opacity="0.3">
+    <g transform="translate(50, 60)">
+      <rect x="0" y="0" width="12" height="80" fill="#4f46e5" rx="6"/>
+      <rect x="0" y="0" width="45" height="10" fill="#4f46e5" rx="5"/>
+      <rect x="0" y="35" width="35" height="10" fill="#4f46e5" rx="5"/>
+      <rect x="0" y="70" width="45" height="10" fill="#4f46e5" rx="5"/>
+    </g>
+    <g transform="translate(85, 85)">
+      <path d="M 0 0 Q 15 -10, 25 0 Q 30 10, 25 20 Q 15 30, 0 20 Q -5 10, 0 0" fill="#7c3aed"/>
+      <path d="M 20 15 Q 30 20, 35 30 Q 32 35, 25 30" fill="#7c3aed"/>
+    </g>
+  </g>
+</svg>
