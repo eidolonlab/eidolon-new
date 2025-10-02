@@ -87,8 +87,7 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
       type,
       date: new Date(),
       results,
-      improvement,
-        profileName: results.profileName || undefined
+      improvement
     };
 
     saveSessions([newSession, ...sessions]);
@@ -552,14 +551,17 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
               <li>• <strong>Lasting changes</strong> persist 6+ months post-training</li>
             </ul>
           </div>
-                <EnhancedTextInput
+        </div>
+        <EnhancedTextInput
+          showVoiceButton={true}
+          showAIEnhancement={true}
+          aiContext="adhd"
+        />
       </div>
 
       {/* Results Modal */}
       {showResults && lastResults && (
-                  showVoiceButton={true}
-                  showAIEnhancement={true}
-                  aiContext="adhd"
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl max-w-md w-full p-6">
             <div className="text-center mb-6">
               <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
