@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Sunrise, Coffee, Heart, Star, Moon, Plus, CheckCircle, Calendar, Zap, Target, Award } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import EnhancedTextInput from './EnhancedTextInput';
+import VisualMemoryCapture from './VisualMemoryCapture';
 
 const DailyMemoryMoments: React.FC = () => {
   const { addWeave, weaves } = useWeave();
   const [todaysMoments, setTodaysMoments] = useState<string[]>([]);
   const [currentMoment, setCurrentMoment] = useState('');
+  const [currentImage, setCurrentImage] = useState<string>('');
+  const [currentImageType, setCurrentImageType] = useState<'photo' | 'video'>('photo');
   const [streak, setStreak] = useState(0);
   const [showQuickCapture, setShowQuickCapture] = useState(false);
   const [dailyPrompt, setDailyPrompt] = useState('');
@@ -78,20 +81,25 @@ const DailyMemoryMoments: React.FC = () => {
       type: 'past',
       seed: currentMoment.trim(),
       title: `Daily Moment - ${today.toLocaleDateString()}`,
-      narrative: `Today, ${currentMoment.trim()}. This moment stood out because it captured something meaningful about my day.`,
+      narrative: `Today, ${currentMoment.trim()}. This moment stood out because it captured something meaningful about my day.${currentImage ? ' I captured a visual memory to preserve this moment even more vividly.' : ''}`,
       sensoryDetails: {
-        visual: '',
+        visual: currentImage ? `Visual memory captured: ${currentImageType === 'video' ? 'video recording' : 'photograph'} of this moment` : '',
         auditory: '',
         olfactory: '',
         tactile: '',
         emotional: 'present and aware'
       },
       tags: ['daily-moment', today.toISOString().split('T')[0]],
+      cues: currentImage ? {
+        photos: [currentImage],
+        visualType: currentImageType
+      } : undefined,
       errorlessMode: false,
       difficultyLevel: 'easy'
     });
 
     setCurrentMoment('');
+    setCurrentImage('');
     setShowQuickCapture(false);
     calculateStreak();
   };
@@ -198,6 +206,18 @@ const DailyMemoryMoments: React.FC = () => {
               onKeyPress={(e) => e.key === 'Enter' && captureQuickMoment()}
             />
           </div>
+          
+          {/* Visual Memory Capture */}
+          <VisualMemoryCapture
+            onImageCapture={(imageData, type) => {
+              setCurrentImage(imageData);
+              setCurrentImageType(type);
+            }}
+            onImageRemove={() => setCurrentImage('')}
+            currentImage={currentImage}
+            currentImageType={currentImageType}
+          />
+          
           <div className="flex space-x-3">
             <button
               onClick={captureQuickMoment}
