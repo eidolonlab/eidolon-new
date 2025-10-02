@@ -1,0 +1,61 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="180" fill="url(#bgGradient)"/>
+  
+  <!-- Brain icon -->
+  <g transform="translate(512,512)">
+    <!-- Main brain shape -->
+    <path d="M-120,-80 C-140,-120 -100,-140 -60,-130 C-20,-140 20,-140 60,-130 C100,-140 140,-120 120,-80 C130,-40 120,0 100,40 C80,80 40,100 0,100 C-40,100 -80,80 -100,40 C-120,0 -130,-40 -120,-80 Z" 
+          fill="url(#brainGradient)" 
+          stroke="rgba(255,255,255,0.3)" 
+          stroke-width="4"/>
+    
+    <!-- Brain folds/details -->
+    <path d="M-80,-60 Q-40,-80 0,-60 Q40,-80 80,-60" 
+          fill="none" 
+          stroke="rgba(79,70,229,0.4)" 
+          stroke-width="6" 
+          stroke-linecap="round"/>
+    <path d="M-60,-20 Q-20,-40 20,-20 Q60,-40 100,-20" 
+          fill="none" 
+          stroke="rgba(79,70,229,0.4)" 
+          stroke-width="6" 
+          stroke-linecap="round"/>
+    <path d="M-80,20 Q-40,0 0,20 Q40,0 80,20" 
+          fill="none" 
+          stroke="rgba(79,70,229,0.4)" 
+          stroke-width="6" 
+          stroke-linecap="round"/>
+    
+    <!-- Memory connection nodes -->
+    <circle cx="-60" cy="-40" r="8" fill="#fbbf24" opacity="0.8"/>
+    <circle cx="0" cy="-50" r="8" fill="#34d399" opacity="0.8"/>
+    <circle cx="60" cy="-40" r="8" fill="#f472b6" opacity="0.8"/>
+    <circle cx="-40" cy="10" r="8" fill="#60a5fa" opacity="0.8"/>
+    <circle cx="40" cy="10" r="8" fill="#a78bfa" opacity="0.8"/>
+    
+    <!-- Connection lines -->
+    <line x1="-60" y1="-40" x2="0" y2="-50" stroke="rgba(255,255,255,0.6)" stroke-width="3" opacity="0.7"/>
+    <line x1="0" y1="-50" x2="60" y2="-40" stroke="rgba(255,255,255,0.6)" stroke-width="3" opacity="0.7"/>
+    <line x1="-60" y1="-40" x2="-40" y2="10" stroke="rgba(255,255,255,0.6)" stroke-width="3" opacity="0.7"/>
+    <line x1="60" y1="-40" x2="40" y2="10" stroke="rgba(255,255,255,0.6)" stroke-width="3" opacity="0.7"/>
+  </g>
+  
+  <!-- Subtle sparkle effects -->
+  <circle cx="200" cy="200" r="4" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="824" cy="300" r="3" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="150" cy="800" r="5" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="850" cy="750" r="4" fill="rgba(255,255,255,0.6)"/>
+</svg>
