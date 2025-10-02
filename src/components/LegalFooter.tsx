@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Shield, FileText, Mail } from 'lucide-react';
+import { ExternalLink, Shield, FileText, Mail, Brain } from 'lucide-react';
 
 const LegalFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -7,6 +7,11 @@ const LegalFooter: React.FC = () => {
   return (
     <footer className="bg-gray-50 border-t border-gray-200 mt-16">
       <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-gray-900">Eidolon</span>
