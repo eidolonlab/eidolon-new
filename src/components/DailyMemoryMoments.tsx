@@ -233,17 +233,23 @@ const DailyMemoryMoments: React.FC = () => {
             ))}
           </div>
         </div>
-              <EnhancedTextInput
-                type="input"
+      )}
+
+      <EnhancedTextInput
+        type="input"
+        showVoiceButton={true}
+        showAIEnhancement={true}
+        aiContext="memory"
+        onVoiceComplete={(transcript, confidence) => {
+          console.log('Daily moment voice capture:', { transcript, confidence });
+        }}
+      />
+
       {/* Streak Motivation */}
       <div className="mt-6 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
         <div className="flex items-center justify-between">
-                showVoiceButton={true}
-                showAIEnhancement={true}
-                aiContext="memory"
-                onVoiceComplete={(transcript, confidence) => {
-                  console.log('Daily moment voice capture:', { transcript, confidence });
-                }}
+          <div>
+            <div className="flex items-center space-x-2 mb-1">
               <span className="font-medium text-emerald-900">Memory Habit Streak</span>
             </div>
             <p className="text-sm text-emerald-700">
