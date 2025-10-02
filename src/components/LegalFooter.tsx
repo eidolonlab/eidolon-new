@@ -13,13 +13,17 @@ const LegalFooter: React.FC = () => {
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" viewBox="0 0 100 100" fill="currentColor">
-                  {/* E shape */}
-                  <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
-                        stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
+                  {/* Brain outline - prominent and visible */}
+                  <path d="M30 25 Q20 15 25 35 Q15 45 25 55 Q20 65 30 70 Q40 75 50 70 Q60 75 70 70 Q80 65 75 55 Q85 45 75 35 Q80 15 70 25 Q60 20 50 25 Q40 20 30 25 Z" 
+                        fill="currentColor" opacity="0.4"/>
                   
-                  {/* Alpha symbol */}
-                  <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
-                        stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8"/>
+                  {/* E letter structure overlaid on brain */}
+                  <path d="M25 30 L25 70 L65 70 M25 50 L55 50 M25 30 L65 30" 
+                        stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                  
+                  {/* Alpha symbol (α) clearly positioned in middle line of E */}
+                  <path d="M42 45 Q47 40 52 45 Q47 55 42 45 M45 50 L49 50" 
+                        stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
                 </svg>
               </div>
               <span className="font-bold text-gray-900">Eidolon</span>

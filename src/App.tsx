@@ -204,20 +204,24 @@ function AppContent() {
                       <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
                             stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
                       
-                      {/* Alpha symbol */}
-                      <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
-                            stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8"/>
-                      
-                      {/* Simplified neural connections */}
-                      <circle cx="30" cy="30" r="2" fill="currentColor" opacity="0.6"/>
-                      <circle cx="60" cy="35" r="2" fill="currentColor" opacity="0.6"/>
-                      <circle cx="35" cy="65" r="2" fill="currentColor" opacity="0.6"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
-                    <p className="text-sm text-gray-600">Memory Training & Recall</p>
-                  </div>
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 100 100" fill="currentColor">
+                    {/* Brain outline - prominent and visible */}
+                    <path d="M30 25 Q20 15 25 35 Q15 45 25 55 Q20 65 30 70 Q40 75 50 70 Q60 75 70 70 Q80 65 75 55 Q85 45 75 35 Q80 15 70 25 Q60 20 50 25 Q40 20 30 25 Z" 
+                          fill="currentColor" opacity="0.4"/>
+                    
+                    {/* E letter structure overlaid on brain */}
+                    <path d="M25 30 L25 70 L65 70 M25 50 L55 50 M25 30 L65 30" 
+                          stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                    
+                    {/* Alpha symbol (α) clearly positioned in middle line of E */}
+                    <path d="M42 45 Q47 40 52 45 Q47 55 42 45 M45 50 L49 50" 
+                          stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                    
+                    {/* Neural connection points */}
+                    <circle cx="30" cy="35" r="1" fill="currentColor" opacity="0.7"/>
+                    <circle cx="60" cy="40" r="1" fill="currentColor" opacity="0.7"/>
+                    <circle cx="35" cy="60" r="1" fill="currentColor" opacity="0.7"/>
+                  </svg>
                 </div>
                 
                 {/* Simplified Navigation */}

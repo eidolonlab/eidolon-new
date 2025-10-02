@@ -175,28 +175,27 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       <div className="text-center py-16">
         <div className="w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
           <svg className="w-12 h-12 text-white" viewBox="0 0 100 100" fill="currentColor">
-            {/* E shape */}
-            <path d="M20 20 L20 80 L70 80 M20 50 L60 50 M20 20 L70 20" 
-                  stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round"/>
+            {/* Brain outline - prominent base */}
+            <path d="M30 25 Q20 15 25 35 Q15 45 25 55 Q20 65 30 70 Q40 75 50 70 Q60 75 70 70 Q80 65 75 55 Q85 45 75 35 Q80 15 70 25 Q60 20 50 25 Q40 20 30 25 Z" 
+                  fill="currentColor" opacity="0.3"/>
             
-            {/* Alpha symbol integrated */}
-            <path d="M45 35 Q55 25 65 35 Q55 45 45 35 M50 40 L50 50" 
-                  stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.8"/>
+            {/* Brain surface details */}
+            <path d="M35 30 Q45 25 55 30 M40 40 Q50 35 60 40 M35 50 Q45 45 55 50 M40 60 Q50 55 60 60" 
+                  stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.4"/>
             
-            {/* Neural pathways */}
-            <path d="M25 25 Q35 15 45 25 Q55 35 65 25" 
-                  stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
-            <path d="M25 55 Q40 45 55 55 Q70 65 85 55" 
-                  stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
-            <path d="M25 75 Q35 65 45 75 Q60 85 75 75" 
-                  stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+            {/* E letter structure overlaid on brain */}
+            <path d="M25 30 L25 70 L65 70 M25 50 L55 50 M25 30 L65 30" 
+                  stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.9"/>
             
-            {/* Connection nodes */}
-            <circle cx="25" cy="25" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="45" cy="25" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="65" cy="25" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="55" cy="55" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="75" cy="75" r="1.5" fill="currentColor" opacity="0.8"/>
+            {/* Alpha symbol (α) positioned in middle horizontal line of E */}
+            <path d="M45 45 Q50 40 55 45 Q50 55 45 45 M48 50 L52 50" 
+                  stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="1"/>
+            
+            {/* Neural connection nodes */}
+            <circle cx="30" cy="35" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="60" cy="40" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="35" cy="60" r="1.5" fill="currentColor" opacity="0.8"/>
+            <circle cx="65" cy="65" r="1.5" fill="currentColor" opacity="0.8"/>
           </svg>
         </div>
         
