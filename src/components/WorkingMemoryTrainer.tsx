@@ -736,3 +736,8 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
                     const newLevel = Math.max(3, currentLevel - 1);
                     setCurrentLevel(newLevel);
                     
+                    setGameState('setup');
+                    setScore(0);
+                    setAttempts(0);
+                    setReactionTimes([]);
+                    
