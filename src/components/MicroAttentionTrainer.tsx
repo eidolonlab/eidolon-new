@@ -530,13 +530,13 @@ const MicroAttentionTrainer: React.FC<MicroAttentionTrainerProps> = ({ onComplet
           <button
             onClick={startTraining}
             disabled={useCustomProfile && !profileName.trim()}
-            className={`px-8 py-4 rounded-xl text-lg font-medium transition-colors ${
+            className={`px-8 py-4 rounded-xl text-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
               userType === 'child'
-                ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:from-pink-600 hover:to-purple-600'
-                : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600'
-            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                ? 'bg-pink-600 text-white hover:bg-pink-700'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
           >
-            {userType === 'child' ? '🚀 Start Focus Adventure!' : '🎯 Begin Attention Training'}
+            {userType === 'child' ? 'Start Focus Adventure!' : 'Begin Attention Training'}
           </button>
         </div>
       </div>
