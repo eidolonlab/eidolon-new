@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Clock, MapPin, Plus, Trash2, Save, Zap, Target, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import EnhancedTextInput from './EnhancedTextInput';
+import VoiceInputButton from './VoiceInputButton';
 import InteractiveCueEngine from './InteractiveCueEngine';
 import ContextualHintEngine from './ContextualHintEngine';
 import IntelligentScenarioPlanner from './IntelligentScenarioPlanner';
@@ -228,12 +230,13 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Scenario Title
               </label>
-              <input
-                type="text"
+              <EnhancedTextInput
+                type="input"
                 value={formData.title}
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g., Job Interview at TechCorp"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                showVoiceButton={true}
+                aiContext="scenario"
               />
             </div>
 
@@ -241,12 +244,14 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Scenario Seed
               </label>
-              <input
-                type="text"
+              <EnhancedTextInput
+                type="input"
                 value={formData.seed}
                 onChange={(e) => setFormData(prev => ({ ...prev, seed: e.target.value }))}
                 placeholder="e.g., walking into the interview room"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                showVoiceButton={true}
+                showAIEnhancement={true}
+                aiContext="scenario"
               />
             </div>
 
@@ -299,13 +304,17 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
               <div className="space-y-3">
                 {formData.ifThenPlans.map((plan, index) => (
                   <div key={index} className="flex items-center space-x-3">
-                    <input
-                      type="text"
+                    <div className="flex-1">
+                      <EnhancedTextInput
+                        type="input"
                       value={plan}
                       onChange={(e) => handleIfThenPlanChange(index, e.target.value)}
                       placeholder="If I feel nervous, then I will take three deep breaths"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        showVoiceButton={true}
+                        showAIEnhancement={true}
+                        aiContext="planning"
                     />
+                    </div>
                     {formData.ifThenPlans.length > 1 && (
                       <button
                         onClick={() => handleRemoveIfThenPlan(index)}
@@ -473,12 +482,14 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Rehearsal Narrative (Optional)
               </label>
-              <textarea
+              <EnhancedTextInput
                 value={formData.narrative}
                 onChange={(e) => setFormData(prev => ({ ...prev, narrative: e.target.value }))}
                 placeholder="Describe how you want this scenario to unfold..."
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                showVoiceButton={true}
+                showAIEnhancement={true}
+                aiContext="scenario"
               />
             </div>
 

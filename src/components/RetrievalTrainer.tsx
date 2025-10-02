@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Clock, CheckCircle, XCircle, RotateCcw, Target, HelpCircle } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import EnhancedTextInput from './EnhancedTextInput';
 import ErrorlessMode from './ErrorlessMode';
 import InteractiveRetrievalCoach from './InteractiveRetrievalCoach';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
@@ -273,13 +274,21 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
                     </div>
                   )}
                   
-                  <textarea
+                  <EnhancedTextInput
                     value={userResponse}
                     onChange={(e) => setUserResponse(e.target.value)}
                     placeholder="Describe what you remember about this memory. Include sensory details, emotions, people, places, and the sequence of events..."
                     rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-                    autoFocus
+                    showVoiceButton={true}
+                    showWordCount={true}
+                    showAIEnhancement={true}
+                    aiContext="memory"
+                    onVoiceComplete={(transcript, confidence) => {
+                      console.log('Voice recall completed:', { transcript, confidence });
+                      if (confidence > 0.8) {
+                        setEncouragementMessage(`🎯 Excellent voice clarity! ${Math.round(confidence * 100)}% confidence detected.`);
+                      }
+                    }}
                   />
                   
                   {/* Interactive Coaching */}

@@ -4,6 +4,7 @@ import ErrorBoundary from './ErrorBoundary';
 import LoadingSpinner from './LoadingSpinner';
 import ConfirmDialog from './ConfirmDialog';
 import AccessibleButton from './AccessibleButton';
+import EnhancedTextInput from './EnhancedTextInput';
 import { useWeave } from '../contexts/WeaveContext';
 import CueLibrary from './CueLibrary';
 import BridgeBack from './BridgeBack';
@@ -453,12 +454,15 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Memory Seed
                 </label>
-                <input
-                  type="text"
+                <EnhancedTextInput
+                  type="input"
                   value={seed}
                   onChange={(e) => setSeed(e.target.value)}
                   placeholder={weaveType === 'past' ? 'e.g., "grandmother\'s kitchen", "first day at work"' : 'e.g., "job interview", "family dinner"'}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="text-lg"
+                  showVoiceButton={true}
+                  showAIEnhancement={true}
+                  aiContext="memory"
                 />
               </div>
               
@@ -466,12 +470,12 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Title
                 </label>
-                <input
-                  type="text"
+                <EnhancedTextInput
+                  type="input"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give your weave a memorable title"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  showVoiceButton={true}
                 />
               </div>
               
@@ -640,6 +644,19 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                       rows={4}
                       className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-${color}-500 focus:border-transparent resize-none transition-all`}
                     />
+                    <div className="mt-2">
+                      <VoiceInputButton
+                        onTranscript={(text) => {
+                          const currentValue = sensoryDetails[sense as keyof typeof sensoryDetails];
+                          const newValue = currentValue ? `${currentValue} ${text}` : text;
+                          handleSensoryChange(sense as keyof typeof sensoryDetails, newValue);
+                        }}
+                        size="sm"
+                        variant="secondary"
+                        className="mr-2"
+                      />
+                      <span className="text-xs text-gray-500">Click to add voice details</span>
+                    </div>
                   </div>
                 );
               })}
@@ -765,12 +782,17 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                 </button>
               </div>
               
-              <textarea
+              <EnhancedTextInput
                 value={narrative}
                 onChange={(e) => setNarrative(e.target.value)}
                 placeholder="Write your narrative here, or use the Generate Draft button to create one from your sensory details..."
                 rows={8}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                showVoiceButton={true}
+                showAIEnhancement={true}
+                aiContext="narrative"
+                onVoiceComplete={(transcript, confidence) => {
+                  console.log('Voice narrative completed:', { transcript, confidence });
+                }}
               />
               
               <div className="mt-4 text-sm text-gray-600">
@@ -1170,6 +1192,11 @@ const TempBridgeBack: React.FC<{
                   placeholder="e.g., It was a Tuesday, Restaurant was on Main Street"
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   onKeyPress={(e) => e.key === 'Enter' && addFactualAnchor()}
+                />
+                <VoiceInputButton
+                  onTranscript={(text) => setNewFactualAnchor(text)}
+                  size="sm"
+                  variant="secondary"
                 />
                 <button
                   onClick={addFactualAnchor}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sunrise, Coffee, Heart, Star, Moon, Plus, CheckCircle, Calendar, Zap, Target, Award } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import EnhancedTextInput from './EnhancedTextInput';
 
 const DailyMemoryMoments: React.FC = () => {
   const { addWeave, weaves } = useWeave();
@@ -232,14 +233,17 @@ const DailyMemoryMoments: React.FC = () => {
             ))}
           </div>
         </div>
-      )}
-
+              <EnhancedTextInput
+                type="input"
       {/* Streak Motivation */}
       <div className="mt-6 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
         <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center space-x-2 mb-1">
-              <Calendar className="w-4 h-4 text-emerald-600" />
+                showVoiceButton={true}
+                showAIEnhancement={true}
+                aiContext="memory"
+                onVoiceComplete={(transcript, confidence) => {
+                  console.log('Daily moment voice capture:', { transcript, confidence });
+                }}
               <span className="font-medium text-emerald-900">Memory Habit Streak</span>
             </div>
             <p className="text-sm text-emerald-700">

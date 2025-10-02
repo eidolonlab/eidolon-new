@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, Ear, Heart, Save, Wand2, Clock, Target } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import EnhancedTextInput from './EnhancedTextInput';
 import AudioCueLibrary from './AudioCueLibrary';
 import RecallLatencyTimer from './RecallLatencyTimer';
 
@@ -196,22 +197,23 @@ const SimplifiedWeaveFlow: React.FC<SimplifiedWeaveFlowProps> = ({ onComplete, o
           </div>
           
           <div className="space-y-4">
-            <input
-              type="text"
+            <EnhancedTextInput
+              type="input"
               value={weaveData.seed}
               onChange={(e) => setWeaveData(prev => ({ ...prev, seed: e.target.value }))}
               placeholder="e.g., grandmother's kitchen, first day at work, sunset walk"
-              className="w-full px-6 py-4 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              autoFocus
-              onKeyPress={(e) => e.key === 'Enter' && handleSeedSubmit()}
+              className="text-lg"
+              showVoiceButton={true}
+              showAIEnhancement={true}
+              aiContext="memory"
             />
             
-            <input
-              type="text"
+            <EnhancedTextInput
+              type="input"
               value={weaveData.title}
               onChange={(e) => setWeaveData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="Give your memory a title (optional)"
-              className="w-full px-6 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              showVoiceButton={true}
             />
           </div>
 
@@ -257,13 +259,19 @@ const SimplifiedWeaveFlow: React.FC<SimplifiedWeaveFlowProps> = ({ onComplete, o
           />
 
           <div className="space-y-4">
-            <textarea
+            <EnhancedTextInput
               value={weaveData[currentPrompt.key as keyof typeof weaveData] as string}
               onChange={(e) => setWeaveData(prev => ({ ...prev, [currentPrompt.key]: e.target.value }))}
               placeholder={currentPrompt.placeholder}
               rows={4}
-              className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-lg"
-              autoFocus
+              className="text-lg"
+              showVoiceButton={true}
+              showWordCount={true}
+              showAIEnhancement={true}
+              aiContext="sensory"
+              onVoiceComplete={(transcript, confidence) => {
+                console.log(`Voice ${currentPrompt.key} completed:`, { transcript, confidence });
+              }}
             />
 
             {/* Examples */}

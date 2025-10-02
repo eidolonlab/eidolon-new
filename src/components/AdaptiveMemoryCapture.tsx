@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Brain, Heart, Eye, Ear, Save, Sparkles, Clock, Target, CheckCircle, Zap, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
+import EnhancedTextInput from './EnhancedTextInput';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface AdaptiveMemoryCaptureProps {
@@ -172,8 +173,8 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
                 }
               })()}
             </label>
-            <input
-              type="text"
+            <EnhancedTextInput
+              type="input"
               value={memoryData.seed}
               onChange={(e) => setMemoryData(prev => ({ ...prev, seed: e.target.value }))}
               placeholder={(() => {
@@ -186,8 +187,10 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
                   return "e.g., unexpected compliment, beautiful sunset, good conversation";
                 }
               })()}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-              autoFocus
+              className="text-lg"
+              showVoiceButton={true}
+              showAIEnhancement={true}
+              aiContext="memory"
             />
           </div>
 
@@ -195,12 +198,20 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Describe this memory (include what you saw, heard, or felt)
             </label>
-            <textarea
+            <EnhancedTextInput
               value={memoryData.quickDetails}
               onChange={(e) => setMemoryData(prev => ({ ...prev, quickDetails: e.target.value }))}
               placeholder="What made this moment special? Include sensory details and emotions..."
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              showVoiceButton={true}
+              showWordCount={true}
+              showAIEnhancement={true}
+              aiContext="memory"
+              onVoiceComplete={(transcript, confidence) => {
+                if (confidence > 0.8) {
+                  setEncouragement(`🎯 Excellent voice clarity! Your spoken memory has ${Math.round(confidence * 100)}% confidence.`);
+                }
+              }}
             />
             
             {encouragement && (
@@ -247,13 +258,15 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Memory Seed (Core moment to expand)
               </label>
-              <input
-                type="text"
+              <EnhancedTextInput
+                type="input"
                 value={memoryData.seed}
                 onChange={(e) => setMemoryData(prev => ({ ...prev, seed: e.target.value }))}
                 placeholder="e.g., grandmother's kitchen, first day at work, sunset walk"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
-                autoFocus
+                className="text-lg"
+                showVoiceButton={true}
+                showAIEnhancement={true}
+                aiContext="memory"
               />
             </div>
 
@@ -261,12 +274,12 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Memory Title (How you'll remember this)
               </label>
-              <input
-                type="text"
+              <EnhancedTextInput
+                type="input"
                 value={memoryData.title}
                 onChange={(e) => setMemoryData(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g., Sunday Morning at Grandma's, My First Day as Manager"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                showVoiceButton={true}
               />
             </div>
 
