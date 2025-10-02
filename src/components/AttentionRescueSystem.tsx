@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Heart, Zap, Target, Clock, Play, CheckCircle, ArrowRight, Brain, Star, Activity, Lightbulb } from 'lucide-react';
+import { Shield, Heart, Zap, Target, Clock, Play, Pause, CheckCircle, ArrowRight, Brain, Star, Activity, Lightbulb } from 'lucide-react';
 
 interface AttentionRescueSystemProps {
   userType: 'child' | 'adult';
