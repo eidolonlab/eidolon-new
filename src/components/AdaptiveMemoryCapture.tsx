@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Star, Brain, Heart, Eye, Ear, Save, Sparkles, Clock, Target, CheckCircle, Zap, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import EnhancedTextInput from './EnhancedTextInput';
+import VisualMemoryCapture from './VisualMemoryCapture';
 import type { CognitiveState } from '../contexts/CognitiveStateContext';
 
 interface AdaptiveMemoryCaptureProps {
@@ -16,6 +17,8 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
     seed: '',
     title: '',
     quickDetails: '',
+    visualMemory: '',
+    visualType: 'photo' as 'photo' | 'video',
     expandedDetails: {
       visual: '',
       auditory: '',
@@ -115,6 +118,10 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
       if (detail) narrative += `${detail}. `;
     });
     
+    if (memoryData.visualMemory) {
+      narrative += `I captured a ${memoryData.visualType} to preserve the visual essence of this moment. `;
+    }
+    
     narrative += "This moment stands out in my memory for its significance.";
 
     const newWeave = {
@@ -123,13 +130,17 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
       title: memoryData.title || `Memory: ${memoryData.seed}`,
       narrative,
       sensoryDetails: {
-        visual: memoryData.expandedDetails.visual,
+        visual: memoryData.expandedDetails.visual + (memoryData.visualMemory ? ` Visual memory captured: ${memoryData.visualType}` : ''),
         auditory: memoryData.expandedDetails.auditory,
         olfactory: '',
         tactile: '',
         emotional: memoryData.expandedDetails.emotional,
       },
       tags: ['adaptive-capture', adaptiveFlow],
+      cues: memoryData.visualMemory ? {
+        photos: [memoryData.visualMemory],
+        visualType: memoryData.visualType
+      } : undefined,
       errorlessMode: adaptiveFlow === 'gentle',
       difficultyLevel: adaptiveFlow === 'gentle' ? 'easy' as const : 'medium' as const
     };
@@ -217,6 +228,25 @@ const AdaptiveMemoryCapture: React.FC<AdaptiveMemoryCaptureProps> = ({ cognitive
             {encouragement && (
               <p className="text-sm text-blue-600 mt-2">{encouragement}</p>
             )}
+          </div>
+          
+          {/* Visual Memory Capture */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Visual Memory (Optional)
+            </label>
+            <VisualMemoryCapture
+              onImageCapture={(imageData, type) => {
+                setMemoryData(prev => ({ 
+                  ...prev, 
+                  visualMemory: imageData, 
+                  visualType: type 
+                }));
+              }}
+              onImageRemove={() => setMemoryData(prev => ({ ...prev, visualMemory: '' }))}
+              currentImage={memoryData.visualMemory}
+              currentImageType={memoryData.visualType}
+            />
           </div>
 
           <div className="flex space-x-3">

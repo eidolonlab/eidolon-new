@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Clock, MapPin, Plus, Trash2, Save, Zap, Target, Lightbulb } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import EnhancedTextInput from './EnhancedTextInput';
+import VisualMemoryCapture from './VisualMemoryCapture';
 import VoiceInputButton from './VoiceInputButton';
 import InteractiveCueEngine from './InteractiveCueEngine';
 import ContextualHintEngine from './ContextualHintEngine';
@@ -25,6 +26,8 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
     location: '',
     ifThenPlans: [''],
     narrative: '',
+    visualMemory: '',
+    visualType: 'photo' as 'photo' | 'video',
     profileName: '',
     useCustomProfile: false,
   });
@@ -93,7 +96,7 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
       seed: formData.seed,
       narrative: formData.narrative || `I'm preparing for ${formData.seed}. This scenario will help me feel confident and ready when the moment arrives.`,
       sensoryDetails: {
-        visual: '',
+        visual: formData.visualMemory ? `Visual preparation: ${formData.visualType} reference for this scenario` : '',
         auditory: '',
         olfactory: '',
         tactile: '',
@@ -103,6 +106,10 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
       ifThenPlans: formData.ifThenPlans.filter(plan => plan.trim().length > 0),
       scheduledFor: scheduledDateTime,
       completed: false,
+      cues: formData.visualMemory ? {
+        photos: [formData.visualMemory],
+        visualType: formData.visualType
+      } : undefined,
       profileName: formData.useCustomProfile ? formData.profileName : undefined,
     });
 
@@ -118,6 +125,8 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
       location: '',
       ifThenPlans: [''],
       narrative: '',
+      visualMemory: '',
+      visualType: 'photo',
       profileName: '',
       useCustomProfile: false,
     });
@@ -372,6 +381,28 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Visual Memory for Scenario */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Visual Reference (Optional)
+              </label>
+              <p className="text-sm text-gray-600 mb-3">
+                Add a photo or video to help visualize this scenario (location, materials, etc.)
+              </p>
+              <VisualMemoryCapture
+                onImageCapture={(imageData, type) => {
+                  setFormData(prev => ({ 
+                    ...prev, 
+                    visualMemory: imageData, 
+                    visualType: type 
+                  }));
+                }}
+                onImageRemove={() => setFormData(prev => ({ ...prev, visualMemory: '' }))}
+                currentImage={formData.visualMemory}
+                currentImageType={formData.visualType}
+              />
             </div>
 
             {/* Scenario Profile Selection */}

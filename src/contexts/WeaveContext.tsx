@@ -25,6 +25,7 @@ export interface Weave {
   completed?: boolean;
   cues?: {
     photos?: string[];
+    visualType?: 'photo' | 'video';
     music?: string;
     colors?: string[];
     location?: {

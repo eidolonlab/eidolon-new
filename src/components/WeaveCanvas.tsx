@@ -8,6 +8,7 @@ import EnhancedTextInput from './EnhancedTextInput';
 import { useWeave } from '../contexts/WeaveContext';
 import CueLibrary from './CueLibrary';
 import BridgeBack from './BridgeBack';
+import VisualMemoryCapture from './VisualMemoryCapture';
 import InteractiveCueEngine from './InteractiveCueEngine';
 import SmartNarrativeBuilder from './SmartNarrativeBuilder';
 import LiveMemoryAnalyzer from './LiveMemoryAnalyzer';
@@ -44,6 +45,8 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [showCueLibrary, setShowCueLibrary] = useState(false);
   const [showBridgeBack, setShowBridgeBack] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string>('');
+  const [currentImageType, setCurrentImageType] = useState<'photo' | 'video'>('photo');
   const [tempWeaveId, setTempWeaveId] = useState<string | null>(null);
   const [activeField, setActiveField] = useState<string | null>(null);
   const [showAIAssistant, setShowAIAssistant] = useState(true);
@@ -171,12 +174,15 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
       narrative,
       sensoryDetails,
       tags,
+      cues: currentImage ? {
+        photos: [currentImage],
+        visualType: currentImageType
+      } : undefined,
       errorlessMode,
       difficultyLevel,
       ifThenPlans: weaveType === 'future' ? [] : undefined,
       scheduledFor: weaveType === 'future' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : undefined, // Default to 1 week from now
       completed: false,
-      cues: tempCues,
       bridgeData: tempBridgeData,
       profileName: useCustomProfile ? profileName : undefined,
     };
@@ -476,6 +482,22 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give your weave a memorable title"
                   showVoiceButton={true}
+                />
+              </div>
+
+              {/* Visual Memory Capture */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Visual Memory (Optional)
+                </label>
+                <VisualMemoryCapture
+                  onImageCapture={(imageData, type) => {
+                    setCurrentImage(imageData);
+                    setCurrentImageType(type);
+                  }}
+                  onImageRemove={() => setCurrentImage('')}
+                  currentImage={currentImage}
+                  currentImageType={currentImageType}
                 />
               </div>
               
