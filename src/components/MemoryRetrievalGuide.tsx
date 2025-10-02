@@ -257,14 +257,15 @@ const MemoryRetrievalGuide: React.FC<MemoryRetrievalGuideProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-3">
               What memory would you like to retrieve and strengthen?
             </label>
-            <input
-              type="text"
+            <EnhancedTextInput
+              type="input"
               value={memoryPrompt}
               onChange={(e) => setMemoryPrompt(e.target.value)}
               placeholder="e.g., my grandmother's kitchen, first day at work, that conversation with..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg"
-              autoFocus
-              onKeyPress={(e) => e.key === 'Enter' && handleMemoryPromptSubmit()}
+              className="text-lg"
+              showVoiceButton={true}
+              showAIEnhancement={true}
+              aiContext="memory"
             />
             <p className="text-xs text-gray-500 mt-2">
               Start with a simple phrase - I'll guide you to recover rich details through evidence-based cues
@@ -332,12 +333,18 @@ const MemoryRetrievalGuide: React.FC<MemoryRetrievalGuideProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               What are you remembering? (Let details emerge naturally)
             </label>
-            <textarea
+            <EnhancedTextInput
               value={retrievedContent}
               onChange={(e) => setRetrievedContent(e.target.value)}
               placeholder="Start writing what comes to mind about this memory. Don't worry about perfection - just let the details flow..."
               rows={8}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+              showVoiceButton={true}
+              showWordCount={true}
+              showAIEnhancement={true}
+              aiContext="memory"
+              onVoiceComplete={(transcript, confidence) => {
+                console.log('Memory retrieval voice input:', { transcript, confidence });
+              }}
             />
           </div>
 

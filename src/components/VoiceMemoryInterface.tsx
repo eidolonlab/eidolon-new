@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Mic, MicOff, Volume2, VolumeX, Brain, Wand2, Play, Pause, RotateCcw, Zap, Target, TrendingUp } from 'lucide-react';
+import { useSpeechToText } from '../hooks/useSpeechToText';
 
 interface VoiceMemoryInterfaceProps {
   onTranscription: (text: string, confidence: number) => void;
@@ -17,39 +18,66 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
   onEmotionalAnalysis,
   isActive
 }) => {
-  const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [transcription, setTranscription] = useState('');
-  const [confidence, setConfidence] = useState(0);
   const [emotionalAnalysis, setEmotionalAnalysis] = useState<any>(null);
   const [voiceCoaching, setVoiceCoaching] = useState<string | null>(null);
-  const [recordingDuration, setRecordingDuration] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
   const [speechPacing, setSpeechPacing] = useState<'too_fast' | 'optimal' | 'too_slow'>('optimal');
   const [emotionalDepth, setEmotionalDepth] = useState(0);
   const [narrativeFlow, setNarrativeFlow] = useState(0);
 
-  // Advanced voice analysis simulation
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (isRecording) {
-      interval = setInterval(() => {
-        setRecordingDuration(prev => prev + 1);
-        setAudioLevel(Math.random() * 100);
-        
-        // Analyze speech patterns
-        analyzeSpeechPatterns();
-        
-        // Real-time transcription
-        if (recordingDuration > 3 && recordingDuration % 2 === 0) {
-          simulateAdvancedTranscription();
-        }
-      }, 1000);
+  const {
+    isListening: isRecording,
+    transcript: transcription,
+    confidence,
+    isSupported,
+    startListening,
+    stopListening,
+    resetTranscript
+  } = useSpeechToText({
+    continuous: true,
+    interimResults: true,
+    onResult: (text, isFinal) => {
+      if (isFinal) {
+        onTranscription(text, confidence);
+        analyzeEmotionalContent(text);
+      }
+    },
+    onStart: () => {
+      setVoiceCoaching("🎤 Speak naturally about your memory. Include sensory details and emotions for richer encoding.");
+    },
+    onEnd: () => {
+      setVoiceCoaching("🧠 Analyzing your voice patterns, emotional tone, and memory structure...");
+      setTimeout(() => {
+        setVoiceCoaching("✨ Voice analysis complete! Your memory has been enhanced with vocal emotional data and speech patterns.");
+      }, 2000);
+    },
+    onError: (error) => {
+      setVoiceCoaching(`❌ Speech recognition error: ${error}. Please try again.`);
     }
+  });
+  const analyzeEmotionalContent = (text: string) => {
+    // Analyze emotional content from transcription
+    const emotionalWords = ['love', 'joy', 'fear', 'anger', 'surprise', 'sadness', 'excitement', 'peace'];
+    const words = text.toLowerCase().split(/\s+/);
     
-    return () => clearInterval(interval);
-  }, [isRecording, recordingDuration]);
+    const emotionalCount = emotionalWords.filter(word => 
+      words.some(w => w.includes(word))
+    ).length;
+    
+    setEmotionalDepth((emotionalCount / emotionalWords.length) * 100);
+    
+    // Simulate emotional analysis
+    const emotions = {
+      valence: 3 + Math.random() * 2,
+      arousal: 2 + Math.random() * 2,
+      confidence: confidence * 100,
+      dominantEmotion: emotionalWords[Math.floor(Math.random() * emotionalWords.length)]
+    };
+    
+    setEmotionalAnalysis(emotions);
+    onEmotionalAnalysis(emotions);
+  };
 
   const analyzeSpeechPatterns = () => {
     // Simulate speech pattern analysis
@@ -66,60 +94,15 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
     }
   };
 
-  const simulateAdvancedTranscription = () => {
-    const memoryPhrases = [
-      "I remember the warmth of grandmother's kitchen on Sunday mornings",
-      "The golden sunlight streamed through lace curtains, creating dancing patterns",
-      "I could hear her gentle humming as she moved gracefully around the stove",
-      "The rich aroma of coffee and cinnamon filled every corner of the room",
-      "I felt completely safe and loved, surrounded by family traditions",
-      "Her soft apron smelled like vanilla and home-baked bread",
-      "The cast iron pan sizzled with bacon, creating the soundtrack of comfort",
-      "Every detail of that moment is etched in my heart forever"
-    ];
-    
-    const emotionalWords = ['warmth', 'gentle', 'safe', 'loved', 'comfort', 'heart'];
-    const sensoryWords = ['golden', 'streamed', 'humming', 'aroma', 'sizzled', 'soft'];
-    
-    const randomPhrase = memoryPhrases[Math.floor(Math.random() * memoryPhrases.length)];
-    const newTranscription = transcription + (transcription ? ' ' : '') + randomPhrase;
-    const confidenceScore = 88 + Math.random() * 12;
-    
-    setTranscription(newTranscription);
-    setConfidence(confidenceScore);
-    onTranscription(newTranscription, confidenceScore);
-    
-    // Advanced emotional analysis
-    const emotionalWordCount = emotionalWords.filter(word => 
-      newTranscription.toLowerCase().includes(word)
-    ).length;
-    const sensoryWordCount = sensoryWords.filter(word => 
-      newTranscription.toLowerCase().includes(word)
-    ).length;
-    
-    setEmotionalDepth((emotionalWordCount / emotionalWords.length) * 100);
-    setNarrativeFlow((sensoryWordCount / sensoryWords.length) * 100);
-    
-    const emotions = {
-      valence: 3 + Math.random() * 2, // Positive bias for memory content
-      arousal: 2 + Math.random() * 2,
-      confidence: 85 + Math.random() * 15,
-      dominantEmotion: ['nostalgia', 'love', 'contentment', 'warmth', 'peace'][Math.floor(Math.random() * 5)]
-    };
-    
-    setEmotionalAnalysis(emotions);
-    onEmotionalAnalysis(emotions);
-  };
 
   const startRecording = () => {
-    setIsRecording(true);
-    setRecordingDuration(0);
-    setTranscription('');
+    resetTranscript();
+    startListening();
     setVoiceCoaching("🎤 Speak naturally about your memory. Include sensory details and emotions for richer encoding.");
   };
 
   const stopRecording = () => {
-    setIsRecording(false);
+    stopListening();
     setVoiceCoaching("🧠 Analyzing your voice patterns, emotional tone, and memory structure...");
     
     setTimeout(() => {
@@ -138,12 +121,10 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
   };
 
   const reset = () => {
-    setIsRecording(false);
+    stopListening();
     setIsPlaying(false);
-    setTranscription('');
-    setConfidence(0);
+    resetTranscript();
     setEmotionalAnalysis(null);
-    setRecordingDuration(0);
     setVoiceCoaching(null);
     setEmotionalDepth(0);
     setNarrativeFlow(0);
@@ -204,10 +185,10 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
                 <div
                   key={i}
                   className={`w-1 rounded-full transition-all duration-100 ${
-                    i < (audioLevel / 5) ? 'bg-red-500 h-8' : 'bg-gray-300 h-2'
+              {isRecording ? '🔴 REC' : '⏸️ Ready'}
                   }`}
                 />
-              ))}
+              {isRecording ? 'Recording in progress...' : 'Click microphone to start'}
             </div>
             
             {/* Speech Quality Indicators */}
@@ -330,34 +311,17 @@ const VoiceMemoryInterface: React.FC<VoiceMemoryInterfaceProps> = ({
                     <span>Voice Confidence</span>
                     <span>{emotionalAnalysis.confidence.toFixed(0)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${emotionalAnalysis.confidence}%` }}
-                    />
+            {transcription && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="text-sm text-blue-800 mb-2">Live Transcription:</div>
+                <p className="text-blue-900">{transcription}</p>
+                {confidence > 0 && (
+                  <div className="text-xs text-blue-600 mt-2">
+                    Confidence: {Math.round(confidence * 100)}%
                   </div>
-                </div>
+                )}
               </div>
-              
-              {/* Emotional Intelligence Insights */}
-              <div className="mt-4 p-3 bg-white rounded border border-pink-200">
-                <div className="text-xs font-medium text-pink-800 mb-2">🧠 AI Emotional Insights:</div>
-                <div className="text-xs text-pink-700 space-y-1">
-                  {emotionalAnalysis.valence > 2 && (
-                    <p>• Strong positive emotional content enhances memory consolidation</p>
-                  )}
-                  {emotionalAnalysis.arousal > 3 && (
-                    <p>• High emotional intensity creates powerful memory anchors</p>
-                  )}
-                  {emotionalDepth > 60 && (
-                    <p>• Rich emotional vocabulary strengthens autobiographical memory</p>
-                  )}
-                  {narrativeFlow > 70 && (
-                    <p>• Excellent narrative structure improves memory coherence</p>
-                  )}
-                </div>
-              </div>
-            </div>
+            )}
           )}
         </div>
       )}
