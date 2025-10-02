@@ -603,31 +603,15 @@ const AdminDashboard: React.FC = () => {
               <div style={{
                 width: '40px',
                 height: '40px',
-                backgroundColor: '#d1fae5',
+                backgroundColor: '#e0e7ff',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Shield style={{ width: '20px', height: '20px', color: '#059669' }} />
-              </div>
-              <div>
-                <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', margin: 0 }}>
-                  Privacy & Compliance Status
-                </h3>
-                <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>
-                  All systems operational - GDPR compliant
-                </p>
-              </div>
-            </div>
-            
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-              gap: '24px' 
-            }}>
-              <div style={{ textAlign: 'center', padding: '16px', backgroundColor: '#d1fae5', borderRadius: '8px' }}>
-                <Eye style={{ width: '32px', height: '32px', color: '#059669', margin: '0 auto 8px' }} />
+                <svg style={{ width: '24px', height: '24px', color: '#4f46e5' }} fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
                 <div style={{ fontWeight: '600', color: '#064e3b' }}>Data Anonymization</div>
                 <div style={{ fontSize: '14px', color: '#047857', marginTop: '4px' }}>All personal data is hashed</div>
               </div>

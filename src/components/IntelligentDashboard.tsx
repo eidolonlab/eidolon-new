@@ -174,29 +174,7 @@ const IntelligentDashboard: React.FC<IntelligentDashboardProps> = ({ onNavigate 
       {/* ADHD Focus Hero Section */}
       <div className="text-center py-16">
         <div className="w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
-          <svg className="w-12 h-12 text-white" viewBox="0 0 100 100" fill="currentColor">
-            {/* Brain outline - prominent base */}
-            <path d="M30 25 Q20 15 25 35 Q15 45 25 55 Q20 65 30 70 Q40 75 50 70 Q60 75 70 70 Q80 65 75 55 Q85 45 75 35 Q80 15 70 25 Q60 20 50 25 Q40 20 30 25 Z" 
-                  fill="currentColor" opacity="0.3"/>
-            
-            {/* Brain surface details */}
-            <path d="M35 30 Q45 25 55 30 M40 40 Q50 35 60 40 M35 50 Q45 45 55 50 M40 60 Q50 55 60 60" 
-                  stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.4"/>
-            
-            {/* E letter structure overlaid on brain */}
-            <path d="M25 30 L25 70 L65 70 M25 50 L55 50 M25 30 L65 30" 
-                  stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.9"/>
-            
-            {/* Alpha symbol (α) positioned in middle horizontal line of E */}
-            <path d="M45 45 Q50 40 55 45 Q50 55 45 45 M48 50 L52 50" 
-                  stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="1"/>
-            
-            {/* Neural connection nodes */}
-            <circle cx="30" cy="35" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="60" cy="40" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="35" cy="60" r="1.5" fill="currentColor" opacity="0.8"/>
-            <circle cx="65" cy="65" r="1.5" fill="currentColor" opacity="0.8"/>
-          </svg>
+          <Brain className="w-12 h-12 text-white" />
         </div>
         
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
