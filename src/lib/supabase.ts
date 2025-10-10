@@ -26,11 +26,15 @@ if (!isSupabaseConfigured) {
   });
   // Create a dummy client that doesn't make network requests
   supabase = {
-    auth: { 
+    auth: {
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-      signUp: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
-      signInWithPassword: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
-      signOut: () => Promise.resolve({ error: null })
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      signUp: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Supabase not configured' } }),
+      signInWithPassword: () => Promise.resolve({ data: { user: null, session: null }, error: { message: 'Supabase not configured' } }),
+      signOut: () => Promise.resolve({ error: null }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } }
+      })
     },
     from: () => ({ 
       select: () => ({ 
