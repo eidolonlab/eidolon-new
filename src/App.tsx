@@ -274,24 +274,22 @@ function AppContent() {
 
                 {/* Auth Buttons */}
                 <div className="flex items-center space-x-2">
-                  {isSupabaseConfigured && (
-                    user ? (
-                      <button
-                        onClick={() => setShowSettings(true)}
-                        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
-                      >
-                        <User className="w-4 h-4" />
-                        <span className="text-sm font-medium hidden sm:inline">{user.email?.split('@')[0]}</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setShowAuthModal(true)}
-                        className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                      >
-                        <LogIn className="w-4 h-4" />
-                        <span className="text-sm font-medium">Sign In</span>
-                      </button>
-                    )
+                  {user ? (
+                    <button
+                      onClick={() => setShowSettings(true)}
+                      className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                    >
+                      <User className="w-4 h-4" />
+                      <span className="text-sm font-medium hidden sm:inline">{user.email?.split('@')[0]}</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowAuthModal(true)}
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      <span className="text-sm font-medium">Sign In</span>
+                    </button>
                   )}
                 </div>
               </div>
