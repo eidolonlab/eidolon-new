@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Mail, Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { isSupabaseConfigured } from '../lib/supabase';
 import LoadingSpinner from './LoadingSpinner';
 
 const AuthForm: React.FC = () => {
@@ -16,6 +17,12 @@ const AuthForm: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Check if Supabase is configured
+    if (!isSupabaseConfigured) {
+      console.error('Supabase is not configured. Please check your environment variables.');
+      setError('Authentication service is not configured. Please contact support.');
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
