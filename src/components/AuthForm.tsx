@@ -4,7 +4,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import LoadingSpinner from './LoadingSpinner';
 
-const AuthForm: React.FC = () => {
+interface AuthFormProps {
+  onSuccess?: () => void;
+  isModal?: boolean;
+}
+
+const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -64,6 +69,10 @@ const AuthForm: React.FC = () => {
         const { error } = await signIn(email, password);
         if (error) {
           setError(error.message);
+        } else {
+          if (onSuccess) {
+            setTimeout(() => onSuccess(), 500);
+          }
         }
       }
     } catch (err) {
@@ -74,15 +83,15 @@ const AuthForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
+    <div className={isModal ? "" : "min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4"}>
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
+        {!isModal && <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Brain className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Eidolon</h1>
           <p className="text-gray-600">Evidence-Based Memory Training</p>
-        </div>
+        </div>}
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
           <div className="flex space-x-2 mb-6">

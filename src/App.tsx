@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
+import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft, LogIn, User } from 'lucide-react';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -33,7 +33,7 @@ import { WeaveProvider } from './contexts/WeaveContext';
 import { ChallengeProvider } from './contexts/ChallengeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthForm from './components/AuthForm';
-import { supabase } from './lib/supabase';
+import { supabase, isSupabaseConfigured } from './lib/supabase';
 
 // Main App component - providers are now in main.tsx
 function AppContent() {
@@ -42,6 +42,7 @@ function AppContent() {
   const location = useLocation();
   const [showSettings, setShowSettings] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -128,8 +129,8 @@ function AppContent() {
     checkAdminStatus();
   }, [checkAdminStatus]);
 
-  // Show loading screen while checking auth or initial load
-  if (authLoading || isLoading) {
+  // Show loading screen on initial load
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -142,11 +143,6 @@ function AppContent() {
         </div>
       </div>
     );
-  }
-
-  // Show auth form if not authenticated
-  if (!user) {
-    return <AuthForm />;
   }
 
   // Show onboarding flow
@@ -275,6 +271,29 @@ function AppContent() {
                     </button>
                   )}
                 </nav>
+
+                {/* Auth Buttons */}
+                <div className="flex items-center space-x-2">
+                  {isSupabaseConfigured && (
+                    user ? (
+                      <button
+                        onClick={() => setShowSettings(true)}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                      >
+                        <User className="w-4 h-4" />
+                        <span className="text-sm font-medium hidden sm:inline">{user.email?.split('@')[0]}</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowAuthModal(true)}
+                        className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                      >
+                        <LogIn className="w-4 h-4" />
+                        <span className="text-sm font-medium">Sign In</span>
+                      </button>
+                    )
+                  )}
+                </div>
               </div>
             </div>
           </header>
@@ -326,6 +345,21 @@ function AppContent() {
           {/* Settings Panel */}
           {showSettings && (
             <SettingsPanel onClose={() => setShowSettings(false)} />
+          )}
+
+          {/* Auth Modal */}
+          {showAuthModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="relative max-w-md w-full">
+                <button
+                  onClick={() => setShowAuthModal(false)}
+                  className="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 z-10"
+                >
+                  ×
+                </button>
+                <AuthForm isModal onSuccess={() => setShowAuthModal(false)} />
+              </div>
+            </div>
           )}
         </div>
       } />
