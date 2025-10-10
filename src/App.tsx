@@ -31,10 +31,13 @@ import { UserManagementProvider } from './contexts/UserManagementContext';
 import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { WeaveProvider } from './contexts/WeaveContext';
 import { ChallengeProvider } from './contexts/ChallengeContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import AuthForm from './components/AuthForm';
 import { supabase } from './lib/supabase';
 
 // Main App component - providers are now in main.tsx
 function AppContent() {
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showSettings, setShowSettings] = useState(false);
@@ -125,8 +128,8 @@ function AppContent() {
     checkAdminStatus();
   }, [checkAdminStatus]);
 
-  // Show loading screen on initial load
-  if (isLoading) {
+  // Show loading screen while checking auth or initial load
+  if (authLoading || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -139,6 +142,11 @@ function AppContent() {
         </div>
       </div>
     );
+  }
+
+  // Show auth form if not authenticated
+  if (!user) {
+    return <AuthForm />;
   }
 
   // Show onboarding flow
@@ -330,15 +338,17 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <UserManagementProvider>
-        <CognitiveStateProvider>
-          <WeaveProvider>
-            <ChallengeProvider>
-              <AppContent />
-            </ChallengeProvider>
-          </WeaveProvider>
-        </CognitiveStateProvider>
-      </UserManagementProvider>
+      <AuthProvider>
+        <UserManagementProvider>
+          <CognitiveStateProvider>
+            <WeaveProvider>
+              <ChallengeProvider>
+                <AppContent />
+              </ChallengeProvider>
+            </WeaveProvider>
+          </CognitiveStateProvider>
+        </UserManagementProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

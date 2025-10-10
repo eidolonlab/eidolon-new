@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Settings, Bell, Shield, Database, Palette, Volume2 } from 'lucide-react';
+import { Settings, Bell, Shield, Database, Palette, Volume2, LogOut, User } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import DataExport from './DataExport';
 
 interface SettingsPanelProps {
@@ -46,6 +47,15 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
         [key]: value
       }
     }));
+  };
+
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    if (window.confirm('Are you sure you want to sign out?')) {
+      await signOut();
+      onClose();
+    }
   };
 
   const tabs = [
@@ -299,6 +309,19 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
         <div className="flex">
           {/* Sidebar */}
           <div className="w-64 border-r border-gray-200 p-4">
+            {/* User Info */}
+            <div className="mb-4 pb-4 border-b border-gray-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{user?.email}</p>
+                  <p className="text-xs text-gray-500">Signed in</p>
+                </div>
+              </div>
+            </div>
+
             <nav className="space-y-2">
               {tabs.map(({ id, label, icon: Icon }) => (
                 <button
@@ -314,6 +337,15 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                   <span className="text-sm font-medium">{label}</span>
                 </button>
               ))}
+
+              {/* Sign Out Button */}
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 mt-4"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="text-sm font-medium">Sign Out</span>
+              </button>
             </nav>
           </div>
 
