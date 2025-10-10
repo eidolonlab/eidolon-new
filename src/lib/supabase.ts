@@ -1,16 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Use Vite environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-
-// Debug logging
-console.log('🔍 Environment Debug:', {
-  url: supabaseUrl,
-  urlType: typeof supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  keyLength: supabaseAnonKey?.length
-});
+// Fallback to hardcoded values if env vars are empty (dev environment issue)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://zunlfjxeuwgwtzydnwkr.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1bmxmanhldXdnd3R6eWRud2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwNzE5MDEsImV4cCI6MjA3MzY0NzkwMX0.YaZz6RiqxFiDbcCyt5z5lCFmpuatCA5irtOEcL03BdM';
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = Boolean(
@@ -22,6 +14,7 @@ const isSupabaseConfigured = Boolean(
 
 if (isSupabaseConfigured) {
   console.log('✅ Supabase configured successfully');
+  console.log('📡 Connected to:', supabaseUrl);
 } else {
   console.warn('⚠️ Supabase not configured - using local-only mode');
 }
