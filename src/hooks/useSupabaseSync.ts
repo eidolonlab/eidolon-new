@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase, userAPI } from '../lib/supabase';
+import { supabase, userAPI, isSupabaseConfigured } from '../lib/supabase';
 import type { Weave, RetrievalSession } from '../contexts/WeaveContext';
-
-// Check if Supabase is properly configured
-const isSupabaseConfigured = () => {
-  const url = import.meta.env.VITE_SUPABASE_URL;
-  const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  return url && key && !url.includes('your-project-id') && !key.includes('your-anon-key');
-};
 
 interface SyncStatus {
   isConnected: boolean;
@@ -38,7 +31,7 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
 
   const initializeUser = async () => {
     // Don't attempt API calls if Supabase is not configured
-    if (!isSupabaseConfigured()) {
+    if (!isSupabaseConfigured) {
       console.log('Supabase not configured - skipping user initialization');
       setSyncStatus({
         isConnected: false,
@@ -105,7 +98,7 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
     }
 
     // Don't attempt API calls if Supabase is not configured
-    if (!isSupabaseConfigured()) {
+    if (!isSupabaseConfigured) {
       return;
     }
 
@@ -162,10 +155,10 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
   };
 
   const trackEvent = async (eventType: string, eventData: any = {}) => {
-    if (!isSupabaseConfigured()) {
+    if (!isSupabaseConfigured) {
       return; // Don't track if Supabase is not configured
     }
-    
+
     if (syncStatus.consentGiven && syncStatus.userHash) {
       await userAPI.trackAnalyticsEvent(eventType, eventData, syncStatus.userHash);
     }
