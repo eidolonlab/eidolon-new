@@ -1,37 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Use Vite environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-console.log('Supabase Config Check:', {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlValue: supabaseUrl,
-  urlLength: supabaseUrl?.length,
-  keyLength: supabaseAnonKey?.length
-});
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = Boolean(
   supabaseUrl &&
   supabaseAnonKey &&
-  supabaseUrl !== 'your-project-url' &&
-  supabaseAnonKey !== 'your-anon-key' &&
-  !supabaseUrl.includes('your-project-id') &&
-  !supabaseAnonKey.includes('your-anon-key')
+  supabaseUrl.includes('supabase.co') &&
+  supabaseAnonKey.length > 100
 );
+
+if (isSupabaseConfigured) {
+  console.log('✅ Supabase configured successfully');
+} else {
+  console.warn('⚠️ Supabase not configured - using local-only mode');
+}
 
 let supabase: any;
 export { supabase, isSupabaseConfigured };
 
 if (!isSupabaseConfigured) {
-  console.warn('Supabase not configured - running in local-only mode', {
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseAnonKey,
-    url: supabaseUrl ? 'present' : 'missing',
-    key: supabaseAnonKey ? 'present' : 'missing'
-  });
   // Create a dummy client that doesn't make network requests
   supabase = {
     auth: {
