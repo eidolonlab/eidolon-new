@@ -4,6 +4,14 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
+// Debug logging
+console.log('🔍 Environment Debug:', {
+  url: supabaseUrl,
+  urlType: typeof supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  keyLength: supabaseAnonKey?.length
+});
+
 // Check if Supabase is properly configured
 const isSupabaseConfigured = Boolean(
   supabaseUrl &&
