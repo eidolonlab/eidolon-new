@@ -102,6 +102,12 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
       return;
     }
 
+    // Validate that weaves and retrievalSessions are arrays
+    if (!Array.isArray(weaves) || !Array.isArray(retrievalSessions)) {
+      console.warn('Data sync skipped: weaves or retrievalSessions is not an array');
+      return;
+    }
+
     try {
       // Sync all weaves
       for (const weave of weaves) {
