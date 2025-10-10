@@ -19,6 +19,11 @@ const AttentionRescueSystem: React.FC<AttentionRescueSystemProps> = ({
   const [beforeRating, setBeforeRating] = useState(currentAttentionLevel);
   const [afterRating, setAfterRating] = useState(currentAttentionLevel);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const rescueTechniques = {
     child: [
       {

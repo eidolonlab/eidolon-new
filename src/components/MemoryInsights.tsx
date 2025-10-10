@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TrendingUp, Brain, Target, Clock, Award, Eye, Ear, Heart, BarChart3, ArrowLeft } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 
 const MemoryInsights: React.FC = () => {
   const { weaves, retrievalSessions, getMetrics } = useWeave();
   const metrics = getMetrics();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const getInsights = () => {
     const insights = [];

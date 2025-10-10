@@ -38,6 +38,11 @@ const AdaptiveADHDCoach: React.FC<AdaptiveADHDCoachProps> = ({ onRecommendation 
   const [currentStressLevel, setCurrentStressLevel] = useState(3);
   const [showStrategyBuilder, setShowStrategyBuilder] = useState(false);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [profile, setProfile] = useState<ADHDProfile>({
     attentionSpan: 15, // minutes
     distractibilityLevel: 3, // 1-5 scale

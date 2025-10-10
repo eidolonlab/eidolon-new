@@ -48,6 +48,11 @@ const MicroAttentionTrainer: React.FC<MicroAttentionTrainerProps> = ({ onComplet
   const [isActive, setIsActive] = useState(false);
   const [encouragement, setEncouragement] = useState('');
   const [attentionLevel, setAttentionLevel] = useState(5);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [profileName, setProfileName] = useState('');
   const [useCustomProfile, setUseCustomProfile] = useState(false);
   const [sessionHistory, setSessionHistory] = useState<MicroAttentionSession[]>([]);

@@ -34,6 +34,11 @@ const ADHDFocusTrainer: React.FC<ADHDFocusTrainerProps> = ({ onComplete }) => {
   }>>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const focusTasks = [
     "Write down 3 specific things you want to accomplish today",
     "Organize one small area of your workspace or room",

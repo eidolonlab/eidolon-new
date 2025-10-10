@@ -34,6 +34,11 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
   const [memoryPredictions, setMemoryPredictions] = useState<any>(null);
   const [emotionalResonance, setEmotionalResonance] = useState<any>(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load session history for adaptive coaching
   useEffect(() => {
     const savedSessions = localStorage.getItem('eidolon-sessions');

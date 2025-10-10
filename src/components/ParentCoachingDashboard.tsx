@@ -41,6 +41,11 @@ const ParentCoachingDashboard: React.FC<ParentCoachingDashboardProps> = ({
   const [coachingInsights, setCoachingInsights] = useState<string[]>([]);
   const [weeklyRecommendations, setWeeklyRecommendations] = useState<string[]>([]);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     generateCoachingInsights();
     generateWeeklyRecommendations();

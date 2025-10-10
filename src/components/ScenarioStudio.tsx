@@ -42,6 +42,11 @@ const ScenarioStudio: React.FC<ScenarioStudioProps> = ({ onBack }) => {
     lastUsed: Date;
   }>>([]);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load saved profiles
   useEffect(() => {
     const saved = localStorage.getItem('eidolon-scenario-profiles');

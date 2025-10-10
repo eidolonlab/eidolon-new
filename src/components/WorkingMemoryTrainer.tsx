@@ -55,6 +55,11 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
     return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
   };
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load personal best from localStorage
   useEffect(() => {
     // Load session history

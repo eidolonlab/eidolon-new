@@ -61,6 +61,11 @@ const ADHDDashboard: React.FC<ADHDDashboardProps> = ({ onBack }) => {
     preferredTrainingTime: 15
   });
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     // Load saved sessions
     const savedSessions = localStorage.getItem('eidolon-adhd-sessions');

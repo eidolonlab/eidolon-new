@@ -31,6 +31,11 @@ const NeurofeedbackTrainer: React.FC<NeurofeedbackTrainerProps> = ({ onComplete 
     lastUsed: Date;
   }>>([]);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load saved profiles
   useEffect(() => {
     const saved = localStorage.getItem('eidolon-coherence-profiles');

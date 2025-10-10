@@ -31,6 +31,11 @@ const CognitiveLoadManager: React.FC<CognitiveLoadManagerProps> = ({
   const [loadHistory, setLoadHistory] = useState<number[]>([]);
   const [burnoutRisk, setBurnoutRisk] = useState(0);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Sample cognitive tasks with different load levels
   const availableTasks: CognitiveTask[] = [
     {

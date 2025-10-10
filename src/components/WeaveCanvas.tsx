@@ -29,6 +29,11 @@ interface WeaveCanvasProps {
 const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
   const { addWeave } = useWeave();
   const [step, setStep] = useState(1);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [weaveType, setWeaveType] = useState<'past' | 'future'>('past');
   const [seed, setSeed] = useState('');
   const [title, setTitle] = useState('');
