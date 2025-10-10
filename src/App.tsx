@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Brain, Plus, Calendar, BarChart3, Settings, Home, TrendingUp, ArrowLeft } from 'lucide-react';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
 import OfflineDetector from './components/OfflineDetector';
@@ -185,6 +195,7 @@ function AppContent() {
 
   return (
     <>
+      <ScrollToTop />
       <OfflineDetector />
       <Routes>
       {/* Admin route - completely separate */}
