@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  BarChart3, Users, Brain, Clock, Target, TrendingUp, 
+import {
+  BarChart3, Users, Brain, Clock, Target, TrendingUp,
   Calendar, Award, AlertCircle, RefreshCw, Download,
-  Eye, Activity, Zap, Shield, ArrowLeft, LogOut, Code, TestTube
+  Eye, Activity, Zap, Shield, ArrowLeft, LogOut, Code, TestTube, Server
 } from 'lucide-react';
 import { adminAPI, AdminStats, CohortData } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import DeveloperDashboard from './DeveloperDashboard';
 import { UserManagementProvider } from '../contexts/UserManagementContext';
+import UserActivityAnalytics from './UserActivityAnalytics';
+import EnvironmentManagerComponent from './EnvironmentManager';
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<'admin' | 'developer'>('admin');
+  const [activeView, setActiveView] = useState<'admin' | 'developer' | 'activity' | 'environment'>('admin');
   const [stats, setStats] = useState<AdminStats>({
     total_users: 1247,
     total_weaves: 3891,
@@ -78,12 +80,100 @@ const AdminDashboard: React.FC = () => {
     navigate('/');
   };
 
-  // If in developer view, render the developer dashboard
+  // Render different views based on activeView
   if (activeView === 'developer') {
     return (
       <UserManagementProvider>
         <DeveloperDashboard />
       </UserManagementProvider>
+    );
+  }
+
+  if (activeView === 'activity') {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+        <div style={{
+          backgroundColor: 'white',
+          borderBottom: '1px solid #e5e7eb',
+          position: 'sticky',
+          top: 0,
+          zIndex: 10
+        }}>
+          <div style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <button
+              onClick={() => setActiveView('admin')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: '#6b7280',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '8px'
+              }}
+            >
+              <ArrowLeft style={{ width: '20px', height: '20px' }} />
+              <span>Back to Dashboard</span>
+            </button>
+          </div>
+        </div>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px' }}>
+          <UserActivityAnalytics />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeView === 'environment') {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+        <div style={{
+          backgroundColor: 'white',
+          borderBottom: '1px solid #e5e7eb',
+          position: 'sticky',
+          top: 0,
+          zIndex: 10
+        }}>
+          <div style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <button
+              onClick={() => setActiveView('admin')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: '#6b7280',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '8px'
+              }}
+            >
+              <ArrowLeft style={{ width: '20px', height: '20px' }} />
+              <span>Back to Dashboard</span>
+            </button>
+          </div>
+        </div>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px' }}>
+          <EnvironmentManagerComponent />
+        </div>
+      </div>
     );
   }
   return (
@@ -135,7 +225,53 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button
+              onClick={() => setActiveView('activity')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: '#10b981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#059669'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#10b981'}
+            >
+              <Activity style={{ width: '16px', height: '16px' }} />
+              <span>Activity</span>
+            </button>
+
+            <button
+              onClick={() => setActiveView('environment')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: '#f59e0b',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#d97706'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f59e0b'}
+            >
+              <Server style={{ width: '16px', height: '16px' }} />
+              <span>Environments</span>
+            </button>
+
             <button
               onClick={() => setActiveView('developer')}
               style={{
@@ -156,9 +292,9 @@ const AdminDashboard: React.FC = () => {
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6366f1'}
             >
               <Code style={{ width: '16px', height: '16px' }} />
-              <span>Developer Tools</span>
+              <span>Dev Tools</span>
             </button>
-            
+
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(Number(e.target.value))}
