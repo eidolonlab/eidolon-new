@@ -6,6 +6,36 @@ If you're getting an "Authentication failed" error when trying to create an admi
 
 ---
 
+## ⚡ QUICK FIX: Disable Email Confirmation (Recommended)
+
+**This is the #1 reason admin signup fails!** Email confirmation is likely enabled in your Supabase project.
+
+### Steps to Disable Email Confirmation:
+
+1. **Go to Supabase Dashboard**
+   - Open: https://supabase.com/dashboard
+
+2. **Navigate to Authentication Settings**
+   - Click **"Authentication"** in the left sidebar
+   - Click **"Providers"** tab
+   - Click on **"Email"** provider
+
+3. **Disable Email Confirmation**
+   - Scroll down to find **"Confirm email"** setting
+   - **Toggle it OFF** (disable it)
+   - Click **"Save"** button at the bottom
+
+4. **Try Creating Admin Account Again**
+   - Go to: `https://tryeidolon.com/admin`
+   - Click **"Need to create an admin account?"**
+   - Enter your email and password (6+ characters)
+   - Click **"Create Admin Account"**
+   - You should be automatically signed in!
+
+**Why this works:** With email confirmation disabled, Supabase immediately activates new accounts without requiring email verification. This is perfect for development and testing.
+
+---
+
 ## ✅ Solution 1: Use an Existing Admin Account
 
 **Your database already has admin accounts!** Try logging in with one of these:

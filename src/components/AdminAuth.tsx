@@ -24,12 +24,22 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            emailRedirectTo: window.location.origin + '/admin'
+          }
         });
 
         if (signUpError) throw signUpError;
 
-        if (data.user) {
-          // Add to admin_users table
+        // Check if email confirmation is required
+        if (data.user && !data.session) {
+          setError('Please check your email to confirm your account before signing in. If you don\'t see the email, check your spam folder.');
+          setIsSignUp(false);
+          return;
+        }
+
+        if (data.user && data.session) {
+          // User is auto-confirmed, add to admin_users table
           const { error: adminError } = await supabase
             .from('admin_users')
             .insert({
@@ -39,30 +49,34 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
             });
 
           if (adminError) {
-            console.warn('Admin user creation failed:', adminError);
-            // Continue anyway - user might already exist
+            console.error('Admin user creation failed:', adminError);
+            throw new Error('Failed to create admin account. Please contact support.');
           }
-        }
 
-        alert('Admin account created successfully! You can now sign in.');
-        setIsSignUp(false);
+          alert('Admin account created successfully! Signing you in...');
+          onAuthSuccess();
+        }
       } else {
         // Sign in existing admin
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (signInError) throw signInError;
 
+        if (!signInData.session) {
+          throw new Error('Please confirm your email before signing in.');
+        }
+
         // Check if user is admin
         const { data: adminData, error: adminError } = await supabase
           .from('admin_users')
           .select('role')
           .eq('email', email)
-          .single();
+          .maybeSingle();
 
-        if (adminError) {
+        if (!adminData) {
           // If admin check fails, create admin user automatically
           const { error: createError } = await supabase
             .from('admin_users')
@@ -71,15 +85,17 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
               role: 'admin',
               permissions: { dashboard: true, analytics: true, users: true }
             });
-          
+
           if (createError) {
-            console.warn('Could not create admin user:', createError);
+            console.error('Could not create admin user:', createError);
+            throw new Error('Failed to create admin record. Please try again.');
           }
         }
 
         onAuthSuccess();
       }
     } catch (err) {
+      console.error('Auth error:', err);
       setError(err instanceof Error ? err.message : 'Authentication failed');
     } finally {
       setLoading(false);
@@ -166,12 +182,19 @@ const AdminAuth: React.FC<AdminAuthProps> = ({ onAuthSuccess }) => {
           </button>
         </div>
 
-        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-amber-800 text-xs mb-2">
-            <strong>Quick Setup:</strong> Use email: admin@tryeidolon.com and any password (6+ characters) to create your admin account.
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-blue-900 text-xs font-semibold mb-2">
+            Setup Instructions:
           </p>
-          <p className="text-amber-800 text-xs">
-            <strong>Note:</strong> Admin accounts have access to all analytics data. The system will automatically grant admin privileges to new accounts.
+          <ol className="text-blue-800 text-xs space-y-1 list-decimal list-inside">
+            <li>Click "Need to create an admin account?" below</li>
+            <li>Enter your email and password (6+ characters)</li>
+            <li>Click "Create Admin Account"</li>
+            <li>Check your email for confirmation link (if required)</li>
+            <li>Return here and sign in</li>
+          </ol>
+          <p className="text-blue-800 text-xs mt-2">
+            <strong>Note:</strong> If email confirmation is enabled in Supabase, you'll need to confirm your email before signing in.
           </p>
         </div>
       </div>
