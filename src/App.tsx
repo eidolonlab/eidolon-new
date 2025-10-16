@@ -27,6 +27,10 @@ import MemoryInsights from './components/MemoryInsights';
 import AdminDashboard from './components/AdminDashboard';
 import AdminAuth from './components/AdminAuth';
 import ADHDDashboard from './components/ADHDDashboard';
+import FocusPage from './pages/FocusPage';
+import TrainPage from './pages/TrainPage';
+import ADHDInsightsPage from './pages/InsightsPage';
+import MorePage from './pages/MorePage';
 import { UserManagementProvider } from './contexts/UserManagementContext';
 import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { WeaveProvider } from './contexts/WeaveContext';
@@ -205,160 +209,39 @@ function AppContent() {
       {/* Admin route - completely separate */}
       <Route path="/admin" element={<AdminRoute />} />
       
-      {/* Main app routes */}
+      {/* Main app routes - using new ADHD-first structure */}
       <Route path="/*" element={
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-          {/* Simplified Header */}
-          <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-            <div className="max-w-6xl mx-auto px-4 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-                    <Brain className="w-6 h-6 text-white" />
-                  </div>
-                  
-                  <div>
-                    <h1 className="text-xl font-bold text-gray-900">Eidolon</h1>
-                  </div>
-                </div>
-                
-                {/* Simplified Navigation */}
-                <nav className="hidden md:flex items-center space-x-1">
-                  <button
-                    onClick={() => navigate('/')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPath === '/'
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Home className="w-4 h-4 inline mr-2" />
-                    Home
-                  </button>
-                  <button
-                    onClick={() => navigate('/insights')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPath === '/insights'
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <TrendingUp className="w-4 h-4 inline mr-2" />
-                    Insights
-                  </button>
-                  <button
-                    onClick={() => setShowSettings(true)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      showSettings
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Settings className="w-4 h-4 inline mr-2" />
-                    Settings
-                  </button>
-                  {isAdmin && (
-                    <button
-                      onClick={() => navigate('/admin')}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        currentPath === '/admin'
-                          ? 'bg-red-100 text-red-700'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      <BarChart3 className="w-4 h-4 inline mr-2" />
-                      <span>Admin</span>
-                    </button>
-                  )}
-                </nav>
+        <div className="min-h-screen">
+          <Routes>
+            {/* Redirect root to /focus (ADHD-first) */}
+            <Route path="/" element={<Navigate to="/focus" replace />} />
 
-                {/* Auth Buttons */}
-                <div className="flex items-center space-x-2">
-                  {user ? (
-                    <button
-                      onClick={() => setShowSettings(true)}
-                      className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
-                    >
-                      <User className="w-4 h-4" />
-                      <span className="text-sm font-medium hidden sm:inline">{user.email?.split('@')[0]}</span>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setShowAuthModal(true)}
-                      className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
-                    >
-                      <LogIn className="w-4 h-4" />
-                      <span className="text-sm font-medium">Sign In</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </header>
+            {/* New ADHD-first routes with AppShell */}
+            <Route path="/focus" element={<FocusPage />} />
+            <Route path="/train" element={<TrainPage />} />
+            <Route path="/insights" element={<ADHDInsightsPage />} />
+            <Route path="/more" element={<MorePage />} />
 
-          {/* Main Content */}
-          <main className="max-w-6xl mx-auto px-4 py-8 min-h-screen" role="main">
-            <Routes>
-              <Route path="/" element={<IntelligentDashboard onNavigate={(view) => navigate(`/${view}`)} />} />
-              <Route path="/weave" element={<WeaveCanvas onBack={() => navigate('/')} />} />
-              <Route path="/scenario" element={<ScenarioStudio onBack={() => navigate('/')} />} />
-              <Route path="/training" element={<RetrievalTrainer onBack={() => navigate('/')} />} />
-              <Route path="/insights" element={<InsightsPage />} />
-              <Route path="/adhd" element={<ADHDDashboard onBack={() => navigate('/')} />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        
-          {/* Legal Footer */}
-          <LegalFooter />
+            {/* Existing features (accessible from More) - wrapped with minimal layout */}
+            <Route path="/weave" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><WeaveCanvas onBack={() => navigate('/more')} /></div>} />
+            <Route path="/scenarios" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ScenarioStudio onBack={() => navigate('/more')} /></div>} />
+            <Route path="/training" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><RetrievalTrainer onBack={() => navigate('/more')} /></div>} />
+            <Route path="/memory-training" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><RetrievalTrainer onBack={() => navigate('/more')} /></div>} />
+            <Route path="/adhd-focus-trainer" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ADHDDashboard onBack={() => navigate('/train')} /></div>} />
+            <Route path="/attention-rescue" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ADHDDashboard onBack={() => navigate('/train')} /></div>} />
+            <Route path="/cognitive-state" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ADHDDashboard onBack={() => navigate('/train')} /></div>} />
+            <Route path="/working-memory-trainer" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ADHDDashboard onBack={() => navigate('/train')} /></div>} />
+            <Route path="/micro-attention" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ADHDDashboard onBack={() => navigate('/train')} /></div>} />
+            <Route path="/cognitive-regulation" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><IntelligentDashboard onNavigate={(view) => navigate(`/${view}`)} /></div>} />
+            <Route path="/wins" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><MemoryInsights /></div>} />
+            <Route path="/developer" element={<div className="min-h-screen bg-gray-50 p-4"><AdminDashboard /></div>} />
+            <Route path="/settings" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><SettingsPanel onClose={() => navigate('/more')} /></div>} />
 
-          {/* Mobile Navigation */}
-          <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-            <div className="flex items-center justify-around py-2">
-              {[
-                { path: '/', icon: Home, label: 'Home' },
-                { path: '/insights', icon: TrendingUp, label: 'Insights' },
-              ].map(({ path, icon: Icon, label }) => (
-                <button
-                  key={path}
-                  onClick={() => navigate(path)}
-                  className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
-                    currentPath === path
-                      ? 'text-indigo-600'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-xs mt-1">{label}</span>
-                </button>
-              ))}
-            </div>
-          </nav>
-        
-          {/* PWA Install Prompt */}
+            <Route path="*" element={<Navigate to="/focus" replace />} />
+          </Routes>
+
           <InstallPrompt />
-          
           <ConsentBanner />
-          
-          {/* Settings Panel */}
-          {showSettings && (
-            <SettingsPanel onClose={() => setShowSettings(false)} />
-          )}
-
-          {/* Auth Modal */}
-          {showAuthModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="relative max-w-md w-full">
-                <button
-                  onClick={() => setShowAuthModal(false)}
-                  className="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 z-10"
-                >
-                  ×
-                </button>
-                <AuthForm isModal onSuccess={() => setShowAuthModal(false)} />
-              </div>
-            </div>
-          )}
         </div>
       } />
       </Routes>
