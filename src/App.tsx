@@ -201,6 +201,15 @@ function AppContent() {
     return <AdminDashboard />;
   };
 
+  // Show auth form if not authenticated (except for admin route)
+  if (!user && !authLoading && !currentPath.startsWith('/admin')) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <AuthForm />
+      </div>
+    );
+  }
+
   return (
     <>
       <ScrollToTop />
@@ -208,7 +217,7 @@ function AppContent() {
       <Routes>
       {/* Admin route - completely separate */}
       <Route path="/admin" element={<AdminRoute />} />
-      
+
       {/* Main app routes - using new ADHD-first structure */}
       <Route path="/*" element={
         <div className="min-h-screen">
