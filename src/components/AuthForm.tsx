@@ -35,12 +35,43 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
     setError(null);
     setSuccess(null);
 
+    if (mode === 'reset') {
+      if (!email) {
+        setError('Please enter your email');
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const { supabase } = await import('../lib/supabase');
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+
+        if (error) {
+          setError(error.message);
+        } else {
+          setSuccess('Password reset link sent! Check your email.');
+          setTimeout(() => setMode('signin'), 3000);
+        }
+      } catch (err) {
+        setError('Failed to send reset email');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
 
     if (mode === 'signup') {
+      if (!inviteCode.trim()) {
+        setError('Please enter an invite code');
+        return;
+      }
       if (password.length < 6) {
         setError('Password must be at least 6 characters');
         return;
@@ -49,23 +80,57 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
         setError('Passwords do not match');
         return;
       }
-    }
 
-    setLoading(true);
+      setLoading(true);
+      try {
+        const { supabase } = await import('../lib/supabase');
 
-    try {
-      if (mode === 'signup') {
-        const { error } = await signUp(email, password);
-        if (error) {
-          setError(error.message);
+        const { data: validationResult, error: validationError } = await supabase
+          .rpc('validate_and_consume_invite', {
+            p_code: inviteCode.trim(),
+            p_email: email
+          });
+
+        if (validationError) {
+          setError(`Invite validation failed: ${validationError.message}`);
+          setLoading(false);
+          return;
+        }
+
+        if (!validationResult || !validationResult.valid) {
+          setError(validationResult?.error || 'Invalid invite code');
+          setLoading(false);
+          return;
+        }
+
+        const { error: signUpError } = await signUp(email, password);
+        if (signUpError) {
+          setError(signUpError.message);
         } else {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user && validationResult.invite_id) {
+            await supabase.from('invite_redemptions').insert({
+              invite_code_id: validationResult.invite_id,
+              user_id: user.id,
+              email: email
+            });
+          }
+
           setSuccess('Account created successfully! You can now sign in.');
           setMode('signin');
           setEmail('');
           setPassword('');
           setConfirmPassword('');
+          setInviteCode('');
         }
-      } else {
+      } catch (err: any) {
+        setError(err?.message || 'An unexpected error occurred');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(true);
+      try {
         const { error } = await signIn(email, password);
         if (error) {
           setError(error.message);
@@ -74,11 +139,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
             setTimeout(() => onSuccess(), 500);
           }
         }
+      } catch (err) {
+        setError('An unexpected error occurred');
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError('An unexpected error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 
