@@ -43,11 +43,9 @@ class EnvironmentManager {
   private currentEnvironment: Environment = 'production';
 
   constructor() {
-    // Load environment from localStorage or default to production
-    const stored = localStorage.getItem('app_environment');
-    if (stored && ['dev', 'staging', 'production'].includes(stored)) {
-      this.currentEnvironment = stored as Environment;
-    }
+    // FORCE PRODUCTION MODE - Always use production
+    this.currentEnvironment = 'production';
+    localStorage.setItem('app_environment', 'production');
   }
 
   getCurrentEnvironment(): Environment {
