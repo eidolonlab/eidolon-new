@@ -290,7 +290,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
                     disabled={loading}
                   />
                   <p className="mt-1 text-xs text-gray-500">
-                    Try: DEMO2024, BETA2024, or FOUNDER2024
+                    You must have an invite code to create an account
                   </p>
                 </div>
               </>
