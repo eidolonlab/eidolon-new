@@ -43,6 +43,19 @@ export const useSupabaseSync = (weaves: Weave[], retrievalSessions: RetrievalSes
     }
 
     try {
+      // Check if user is authenticated first
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('User not authenticated - skipping initialization');
+        setSyncStatus({
+          isConnected: false,
+          userHash: null,
+          consentGiven: false,
+          lastSync: null
+        });
+        return;
+      }
+
       // Check if user has given consent
       const consent = localStorage.getItem('eidolon-consent');
       if (!consent) {
