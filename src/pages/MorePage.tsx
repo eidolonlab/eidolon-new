@@ -8,8 +8,7 @@ import {
   FileText,
   Shield,
   LogOut,
-  Settings,
-  Laptop
+  Settings
 } from 'lucide-react';
 import AppShell from '../components/AppShell';
 import SimpleDisclaimer from '../components/SimpleDisclaimer';
@@ -34,7 +33,6 @@ const sections = [
   {
     title: 'Advanced',
     items: [
-      { label: 'Developer Dashboard', href: '/developer', icon: Laptop, description: 'Feature flags & testing' },
       { label: 'Settings', href: '/settings', icon: Settings, description: 'App preferences' }
     ]
   },

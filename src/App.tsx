@@ -264,7 +264,6 @@ function AppContent() {
             <Route path="/micro-attention" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><ADHDDashboard onBack={() => navigate('/train')} /></div>} />
             <Route path="/cognitive-regulation" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><IntelligentDashboard onNavigate={(view) => navigate(`/${view}`)} /></div>} />
             <Route path="/wins" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><MemoryInsights /></div>} />
-            <Route path="/developer" element={<div className="min-h-screen bg-gray-50 p-4"><AdminDashboard /></div>} />
             <Route path="/settings" element={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4"><SettingsPanel onClose={() => navigate('/more')} /></div>} />
 
             <Route path="*" element={<Navigate to="/focus" replace />} />
