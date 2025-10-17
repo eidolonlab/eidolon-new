@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TrendingUp, Brain, Target, Clock, Award, Eye, Ear, Heart, BarChart3, ArrowLeft } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 
 const MemoryInsights: React.FC = () => {
+  const navigate = useNavigate();
   const { weaves, retrievalSessions, getMetrics } = useWeave();
   const metrics = getMetrics();
 
@@ -57,6 +59,14 @@ const MemoryInsights: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      <button
+        onClick={() => navigate('/more')}
+        className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors mb-4"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="text-lg font-medium">More</span>
+      </button>
+
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Memory Insights</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
