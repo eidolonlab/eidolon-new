@@ -3,6 +3,7 @@ import { TrendingUp, Award } from 'lucide-react';
 import AppShell from '../components/AppShell';
 import QuickTrainingStart from '../components/training/QuickTrainingStart';
 import TrainingExercise from '../components/training/TrainingExercise';
+import SimpleDisclaimer from '../components/SimpleDisclaimer';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import AuthForm from '../components/AuthForm';
@@ -86,6 +87,8 @@ export default function TrainPage() {
 
         <QuickTrainingStart onStart={(moduleId) => setActiveModule(moduleId)} />
       </div>
+
+      <SimpleDisclaimer />
 
       {activeModule && (
         <TrainingExercise

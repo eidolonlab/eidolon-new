@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, Target, Clock, Flame } from 'lucide-react';
 import AppShell from '../components/AppShell';
+import SimpleDisclaimer from '../components/SimpleDisclaimer';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -194,6 +195,8 @@ export default function InsightsPage() {
             )}
           </p>
         </div>
+
+        <SimpleDisclaimer />
       </div>
     </AppShell>
   );

@@ -12,6 +12,7 @@ import {
   Laptop
 } from 'lucide-react';
 import AppShell from '../components/AppShell';
+import SimpleDisclaimer from '../components/SimpleDisclaimer';
 import { useAuth } from '../contexts/AuthContext';
 
 const sections = [
@@ -120,6 +121,8 @@ export default function MorePage() {
             Made with care for neurodivergent minds
           </div>
         </div>
+
+        <SimpleDisclaimer />
       </div>
     </AppShell>
   );

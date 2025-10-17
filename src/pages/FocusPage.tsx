@@ -1,6 +1,7 @@
 import React from 'react';
 import AppShell from '../components/AppShell';
 import FocusCenterHome from '../components/adhd/FocusCenterHome';
+import SimpleDisclaimer from '../components/SimpleDisclaimer';
 import { useAuth } from '../contexts/AuthContext';
 import AuthForm from '../components/AuthForm';
 
@@ -24,6 +25,7 @@ export default function FocusPage() {
   return (
     <AppShell>
       <FocusCenterHome />
+      <SimpleDisclaimer />
     </AppShell>
   );
 }
