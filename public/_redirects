@@ -1,1 +1,5 @@
 /*    /index.html   200
+
+# This redirect rule tells the server to serve index.html for all routes
+# This is required for Single Page Applications (SPAs) that use client-side routing
+# The 200 status code means serve the file without changing the URL
