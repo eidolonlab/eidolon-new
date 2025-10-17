@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import { useNavigate } from 'react-router-dom';
+import {
   Code, GitBranch, Rocket, Users, TestTube, Settings,
   TrendingUp, AlertTriangle, CheckCircle, Clock, Eye,
-  Download, Upload, RefreshCw, Shield, Zap, Target
+  Download, Upload, RefreshCw, Shield, Zap, Target, ArrowLeft
 } from 'lucide-react';
 import UserManagementDashboard from './UserManagementDashboard';
 import DeploymentManager from './DeploymentManager';
@@ -12,6 +13,7 @@ import EnvironmentIndicator from './EnvironmentIndicator';
 import { useUserManagement } from '../contexts/UserManagementContext';
 
 const DeveloperDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { getCurrentEnvironment } = useUserManagement();
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'features' | 'deployments' | 'beta'>('overview');
   const [systemHealth, setSystemHealth] = useState({
@@ -207,6 +209,13 @@ const DeveloperDashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
+              <button
+                onClick={() => navigate('/focus')}
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors mr-4"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>Back</span>
+              </button>
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
                 <Code className="w-5 h-5 text-white" />
               </div>
@@ -215,7 +224,7 @@ const DeveloperDashboard: React.FC = () => {
                 <p className="text-sm text-gray-600">Eidolon Development & Deployment Management</p>
               </div>
             </div>
-            
+
             <EnvironmentIndicator environment={environment} />
           </div>
         </div>
