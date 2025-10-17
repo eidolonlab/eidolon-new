@@ -222,7 +222,7 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
                   onClick={() => setReflectionEmoji(emoji)}
                   className={`text-2xl p-2 rounded-lg border-2 transition-all ${
                     reflectionEmoji === emoji
-                      ? 'border-blue-600 bg-blue-50'
+                      ? 'border-primary-600 bg-primary-50'
                       : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
@@ -241,14 +241,14 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
               value={reflectionText}
               onChange={(e) => setReflectionText(e.target.value)}
               placeholder="e.g., Timer helped, phone was distracting"
-              className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           <div className="flex gap-3">
             <button
               onClick={saveReflection}
-              className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="flex-1 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-medium transition-colors"
             >
               Save & Close
             </button>
@@ -288,7 +288,7 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
                 value={task}
                 onChange={(e) => setTask(e.target.value)}
                 placeholder="e.g., Draft slide 3 of presentation"
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 autoFocus
               />
             </div>
@@ -305,7 +305,7 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
                     }}
                     className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all ${
                       duration === mins
-                        ? 'bg-blue-600 text-white shadow-sm'
+                        ? 'bg-primary-600 text-white shadow-sm'
                         : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                     }`}
                   >
@@ -321,7 +321,7 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
                   type="checkbox"
                   checked={bodyDouble}
                   onChange={(e) => setBodyDouble(e.target.checked)}
-                  className="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="h-5 w-5 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
                 />
                 <div>
                   <div className="font-medium text-slate-900">Body-Double Mode</div>
@@ -334,7 +334,7 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
                   type="checkbox"
                   checked={brownNoise}
                   onChange={(e) => setBrownNoise(e.target.checked)}
-                  className="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="h-5 w-5 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
                 />
                 <div>
                   <div className="font-medium text-slate-900">Background Sound</div>
@@ -346,7 +346,7 @@ export default function StartFocusFlow({ settings, onClose, onSettingsUpdate, on
             <button
               onClick={startSession}
               disabled={!task.trim()}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-xl font-medium transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary-600 hover:bg-primary-700 disabled:bg-slate-300 text-white rounded-xl font-medium shadow-sm hover:shadow-md hover:scale-[1.01] transition-all"
             >
               <Play className="w-5 h-5" />
               Start Focus

@@ -88,9 +88,9 @@ export default function StreakCalendar({ streakDays, insuranceCount, compact = f
           </div>
         </div>
         {insuranceCount > 0 && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 rounded-full">
-            <Shield className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-700">{insuranceCount}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary-50 rounded-full">
+            <Shield className="w-4 h-4 text-primary-600" />
+            <span className="text-sm font-medium text-primary-700">{insuranceCount}</span>
           </div>
         )}
       </div>
@@ -105,10 +105,10 @@ export default function StreakCalendar({ streakDays, insuranceCount, compact = f
               if (day.isFuture) {
                 bgColor = 'bg-white';
               } else if (day.hasFocus) {
-                bgColor = 'bg-blue-500';
+                bgColor = 'bg-primary-500';
               } else if (day.isToday) {
                 bgColor = 'bg-slate-200';
-                borderColor = 'border-blue-500';
+                borderColor = 'border-primary-500';
               }
 
               return (
@@ -125,7 +125,7 @@ export default function StreakCalendar({ streakDays, insuranceCount, compact = f
 
       <div className="flex items-center justify-center gap-4 text-xs text-slate-500">
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded bg-blue-500"></div>
+          <div className="w-3 h-3 rounded bg-primary-500"></div>
           <span>Focused</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -133,7 +133,7 @@ export default function StreakCalendar({ streakDays, insuranceCount, compact = f
           <span>Missed</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded bg-slate-200 border-2 border-blue-500"></div>
+          <div className="w-3 h-3 rounded bg-slate-200 border-2 border-primary-500"></div>
           <span>Today</span>
         </div>
       </div>

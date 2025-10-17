@@ -38,18 +38,18 @@ export default function AchievementUnlockModal({ achievement, onClose }: Props) 
           </div>
 
           <div>
-            <div className="text-sm font-medium text-blue-600 mb-1">Achievement Unlocked!</div>
+            <div className="text-sm font-medium text-primary-600 mb-1">Achievement Unlocked!</div>
             <h2 className="text-2xl font-bold text-slate-900">{achievement.name}</h2>
             <p className="text-slate-600 mt-2">{achievement.description}</p>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
-            <span className="text-sm font-medium text-blue-700">+{achievement.xp_reward} XP</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 rounded-full">
+            <span className="text-sm font-medium text-primary-700">+{achievement.xp_reward} XP</span>
           </div>
 
           <button
             onClick={onClose}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+            className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-medium transition-colors shadow-sm hover:shadow-md hover:scale-[1.02] transition-all"
           >
             Awesome!
           </button>

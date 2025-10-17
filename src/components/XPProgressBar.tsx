@@ -49,7 +49,7 @@ export default function XPProgressBar({ currentXP, level, totalXP, showDetails =
           </div>
         </div>
         {showDetails && (
-          <div className="text-xs font-medium text-blue-600">
+          <div className="text-xs font-medium text-primary-600">
             {totalXP.toLocaleString()} total XP
           </div>
         )}
@@ -57,7 +57,7 @@ export default function XPProgressBar({ currentXP, level, totalXP, showDetails =
 
       <div className="relative h-3 bg-slate-200 rounded-full overflow-hidden">
         <div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-500 ease-out"
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary-500 to-cyan-400 rounded-full transition-all duration-500 ease-out shadow-sm"
           style={{ width: `${progress.percentage}%` }}
         >
           <div className="absolute inset-0 bg-white/20 animate-pulse-gentle"></div>

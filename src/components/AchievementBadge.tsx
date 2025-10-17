@@ -35,11 +35,11 @@ export default function AchievementBadge({ achievement, earned, size = 'medium' 
         className={`${sizeClasses.container} rounded-2xl flex items-center justify-center transition-all duration-300 ${
           earned
             ? 'bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/30 scale-100'
-            : 'bg-slate-200 opacity-40 scale-95'
+            : 'border-2 border-dashed border-slate-300 bg-white/50 opacity-50 scale-95 hover:opacity-70 hover:scale-100'
         }`}
       >
         <IconComponent
-          className={`${sizeClasses.icon} ${earned ? 'text-white' : 'text-slate-400'}`}
+          className={`${sizeClasses.icon} ${earned ? 'text-white' : 'text-slate-300'}`}
         />
       </div>
       <div className="text-center max-w-[100px]">

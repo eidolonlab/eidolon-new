@@ -19,7 +19,7 @@ export default function CelebrationEffect({ show, onComplete, intensity = 'mediu
   const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
   const [showEffect, setShowEffect] = useState(false);
 
-  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+  const colors = ['#14b8a6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
 
   const confettiCounts = {
     low: 15,
@@ -84,7 +84,7 @@ export default function CelebrationEffect({ show, onComplete, intensity = 'mediu
       ))}
 
       <div className="absolute inset-0 flex items-center justify-center animate-scale-in">
-        <div className="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg text-lg font-bold">
+        <div className="bg-gradient-to-r from-primary-600 to-cyan-500 text-white px-6 py-3 rounded-full shadow-lg text-lg font-bold">
           Nice! 🎉
         </div>
       </div>

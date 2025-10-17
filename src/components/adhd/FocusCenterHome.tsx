@@ -247,7 +247,7 @@ export default function FocusCenterHome() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button
           onClick={() => setShowFocusFlow(true)}
-          className="flex items-center justify-center gap-2 px-6 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-sm transition-colors"
+          className="flex items-center justify-center gap-2 px-6 py-5 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all"
         >
           <Brain className="w-5 h-5" />
           <span className="font-medium">Start {settings.default_duration}m</span>
@@ -279,7 +279,7 @@ export default function FocusCenterHome() {
                 type="checkbox"
                 checked={win.completed}
                 onChange={() => toggleWin(win.id, win.completed)}
-                className="mt-1 h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-5 w-5 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
               />
               <span className={`flex-1 ${win.completed ? 'line-through text-slate-400' : 'text-slate-700'}`}>
                 {win.win_text}
@@ -290,24 +290,24 @@ export default function FocusCenterHome() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border border-slate-200 p-4">
+        <div className="bg-gradient-to-br from-primary-50 to-white rounded-2xl border border-primary-100 p-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="text-xs text-slate-500 mb-1">Starts This Week</div>
-          <div className="text-2xl font-semibold text-slate-900">{stats.total_starts}</div>
+          <div className="text-2xl font-semibold text-primary-700">{stats.total_starts}</div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-4">
+        <div className="bg-gradient-to-br from-cyan-50 to-white rounded-2xl border border-cyan-100 p-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="text-xs text-slate-500 mb-1">Finishes</div>
-          <div className="text-2xl font-semibold text-slate-900">{stats.total_finishes}</div>
+          <div className="text-2xl font-semibold text-cyan-700">{stats.total_finishes}</div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-4">
+        <div className="bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100 p-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="text-xs text-slate-500 mb-1">Focus Minutes</div>
-          <div className="text-2xl font-semibold text-slate-900">{stats.total_focus_minutes}</div>
+          <div className="text-2xl font-semibold text-amber-700">{stats.total_focus_minutes}</div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-4">
+        <div className="bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100 p-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="text-xs text-slate-500 mb-1">Completion</div>
-          <div className="text-2xl font-semibold text-blue-600">{completionRate}%</div>
+          <div className="text-2xl font-semibold text-emerald-600">{completionRate}%</div>
         </div>
       </div>
 
@@ -339,7 +339,7 @@ export default function FocusCenterHome() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border border-blue-100 p-5">
+      <div className="bg-gradient-to-br from-primary-50 to-cyan-50 rounded-2xl border border-primary-100 p-5 shadow-sm">
         <h2 className="text-lg font-medium text-slate-900 mb-2">AI Memory Companion</h2>
         <p className="text-sm text-slate-600 mb-3">
           Based on your patterns, here's what might help today:
@@ -347,19 +347,19 @@ export default function FocusCenterHome() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setShowFocusFlow(true)}
-            className="px-3 py-1.5 bg-white rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200"
+            className="px-3 py-1.5 bg-white rounded-full text-sm text-primary-700 hover:bg-primary-100 transition-colors border border-primary-200"
           >
             Start 5m now
           </button>
           <button
             onClick={() => setShowQuickPlan(true)}
-            className="px-3 py-1.5 bg-white rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200"
+            className="px-3 py-1.5 bg-white rounded-full text-sm text-primary-700 hover:bg-primary-100 transition-colors border border-primary-200"
           >
             Break down next task
           </button>
           <button
             onClick={() => setShowRescue(true)}
-            className="px-3 py-1.5 bg-white rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200"
+            className="px-3 py-1.5 bg-white rounded-full text-sm text-primary-700 hover:bg-primary-100 transition-colors border border-primary-200"
           >
             Rescue: Reset
           </button>
