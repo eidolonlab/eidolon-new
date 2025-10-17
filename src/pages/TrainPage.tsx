@@ -1,98 +1,101 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Brain, Eye, Zap, Heart, Timer } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { TrendingUp, Award } from 'lucide-react';
 import AppShell from '../components/AppShell';
-
-const trainingModules = [
-  {
-    title: 'Working Memory',
-    description: 'Span builder starting at 3 digits',
-    icon: Brain,
-    href: '/adhd-focus-trainer',
-    color: 'violet'
-  },
-  {
-    title: 'Sustained Attention',
-    description: 'Increase focus duration gradually',
-    icon: Eye,
-    href: '/attention-rescue',
-    color: 'blue'
-  },
-  {
-    title: 'Executive Function',
-    description: 'Plan, prioritize, and execute',
-    icon: Zap,
-    href: '/cognitive-state',
-    color: 'emerald'
-  },
-  {
-    title: 'Coherence Training',
-    description: 'Heart-rate variability for regulation',
-    icon: Heart,
-    href: '/working-memory-trainer',
-    color: 'rose'
-  },
-  {
-    title: 'Micro-Attention',
-    description: '30-120 second focus drills',
-    icon: Timer,
-    href: '/micro-attention',
-    color: 'amber'
-  }
-];
+import QuickTrainingStart from '../components/training/QuickTrainingStart';
+import TrainingExercise from '../components/training/TrainingExercise';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+import AuthForm from '../components/AuthForm';
 
 export default function TrainPage() {
+  const { user } = useAuth();
+  const [activeModule, setActiveModule] = useState<string | null>(null);
+  const [weeklyStats, setWeeklyStats] = useState({ sessions: 0, totalScore: 0 });
+
+  useEffect(() => {
+    if (user) {
+      loadWeeklyStats();
+    }
+  }, [user]);
+
+  const loadWeeklyStats = async () => {
+    if (!user?.id) return;
+
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const { data } = await supabase
+      .from('training_completions')
+      .select('score')
+      .eq('user_id', user.id)
+      .gte('completed_at', oneWeekAgo.toISOString());
+
+    if (data) {
+      setWeeklyStats({
+        sessions: data.length,
+        totalScore: data.reduce((sum, item) => sum + (item.score || 0), 0),
+      });
+    }
+  };
+
+  if (!user) {
+    return (
+      <AppShell>
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Train Your Brain</h1>
+            <p className="text-slate-600">Sign in to access cognitive training</p>
+          </div>
+          <AuthForm />
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Training Modules</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Cognitive Training</h1>
           <p className="text-slate-600 text-sm mt-1">
-            Evidence-based exercises to build your cognitive fitness
+            5-minute exercises to build mental fitness
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          {trainingModules.map((module) => {
-            const Icon = module.icon;
-            return (
-              <Link
-                key={module.title}
-                to={module.href}
-                className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-slate-300 transition-all"
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`p-3 rounded-xl bg-${module.color}-100 group-hover:scale-110 transition-transform`}>
-                    <Icon className={`w-6 h-6 text-${module.color}-600`} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-slate-900 mb-1">{module.title}</h3>
-                    <p className="text-sm text-slate-600">{module.description}</p>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        {weeklyStats.sessions > 0 && (
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gradient-to-br from-violet-50 to-white rounded-xl border border-violet-100 p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingUp className="w-4 h-4 text-violet-600" />
+                <span className="text-xs text-slate-600">This Week</span>
+              </div>
+              <div className="text-2xl font-bold text-violet-600">{weeklyStats.sessions}</div>
+              <div className="text-xs text-slate-600">sessions</div>
+            </div>
 
-        <div className="bg-violet-50 rounded-2xl border border-violet-100 p-5">
-          <h2 className="font-medium text-slate-900 mb-2">How Training Works</h2>
-          <ul className="space-y-2 text-sm text-slate-700">
-            <li className="flex gap-2">
-              <span className="text-violet-600">•</span>
-              <span>Start at your baseline and progress gradually</span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-violet-600">•</span>
-              <span>Practice 5-10 minutes daily for best results</span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-violet-600">•</span>
-              <span>Combine with Focus sessions for maximum impact</span>
-            </li>
-          </ul>
-        </div>
+            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-100 p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <Award className="w-4 h-4 text-blue-600" />
+                <span className="text-xs text-slate-600">Total Score</span>
+              </div>
+              <div className="text-2xl font-bold text-blue-600">{weeklyStats.totalScore}</div>
+              <div className="text-xs text-slate-600">points</div>
+            </div>
+          </div>
+        )}
+
+        <QuickTrainingStart onStart={(moduleId) => setActiveModule(moduleId)} />
       </div>
+
+      {activeModule && (
+        <TrainingExercise
+          moduleId={activeModule}
+          onClose={() => {
+            setActiveModule(null);
+            loadWeeklyStats();
+          }}
+        />
+      )}
     </AppShell>
   );
 }
