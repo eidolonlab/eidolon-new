@@ -18,8 +18,8 @@ export default function AppShell({ children }: Props) {
             onClick={() => navigate('/focus')}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            <div className="h-9 w-9 rounded-xl bg-violet-100 flex items-center justify-center">
-              <Brain className="w-5 h-5 text-violet-600" />
+            <div className="h-9 w-9 rounded-xl bg-blue-100 flex items-center justify-center">
+              <Brain className="w-5 h-5 text-blue-600" />
             </div>
             <div>
               <div className="font-semibold text-slate-900">Eidolon</div>

@@ -201,14 +201,8 @@ function AppContent() {
     return <AdminDashboard />;
   };
 
-  // Show auth form if not authenticated (except for admin route)
-  if (!user && !authLoading && !currentPath.startsWith('/admin')) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        <AuthForm />
-      </div>
-    );
-  }
+  // Don't show global auth form - let individual pages handle auth
+  // This prevents duplicate auth forms
 
   return (
     <>

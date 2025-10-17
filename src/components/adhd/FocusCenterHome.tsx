@@ -48,17 +48,19 @@ export default function FocusCenterHome() {
   }, [user]);
 
   async function loadSettings() {
+    if (!user?.id) return;
+
     const { data } = await supabase
       .from('focus_user_settings')
       .select('*')
-      .eq('user_id', user?.id)
+      .eq('user_id', user.id)
       .maybeSingle();
 
     if (data) {
       setSettings(data);
     } else {
       const newSettings = {
-        user_id: user?.id,
+        user_id: user.id,
         default_duration: 25,
         body_double_enabled: false,
         brown_noise_enabled: false,
@@ -70,10 +72,12 @@ export default function FocusCenterHome() {
   }
 
   async function loadStats() {
+    if (!user?.id) return;
+
     const { data } = await supabase
       .from('adhd_user_stats')
       .select('total_starts, total_finishes, total_focus_minutes, current_streak_days')
-      .eq('user_id', user?.id)
+      .eq('user_id', user.id)
       .maybeSingle();
 
     if (data) {
@@ -82,10 +86,12 @@ export default function FocusCenterHome() {
   }
 
   async function loadTodayWins() {
+    if (!user?.id) return;
+
     const { data } = await supabase
       .from('meaningful_wins')
       .select('id, win_text, completed')
-      .eq('user_id', user?.id)
+      .eq('user_id', user.id)
       .eq('date', new Date().toISOString().split('T')[0])
       .order('created_at', { ascending: true })
       .limit(2);
@@ -101,7 +107,7 @@ export default function FocusCenterHome() {
       const { data: inserted } = await supabase
         .from('meaningful_wins')
         .insert(aiWins.map(w => ({
-          user_id: user?.id,
+          user_id: user.id,
           ...w,
           date: new Date().toISOString().split('T')[0]
         })))
@@ -136,7 +142,7 @@ export default function FocusCenterHome() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button
           onClick={() => setShowFocusFlow(true)}
-          className="flex items-center justify-center gap-2 px-6 py-5 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl shadow-sm transition-colors"
+          className="flex items-center justify-center gap-2 px-6 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-sm transition-colors"
         >
           <Brain className="w-5 h-5" />
           <span className="font-medium">Start {settings.default_duration}m</span>
@@ -168,7 +174,7 @@ export default function FocusCenterHome() {
                 type="checkbox"
                 checked={win.completed}
                 onChange={() => toggleWin(win.id, win.completed)}
-                className="mt-1 h-5 w-5 rounded border-slate-300 text-violet-600 focus:ring-violet-500"
+                className="mt-1 h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
               />
               <span className={`flex-1 ${win.completed ? 'line-through text-slate-400' : 'text-slate-700'}`}>
                 {win.win_text}
@@ -196,11 +202,11 @@ export default function FocusCenterHome() {
 
         <div className="bg-white rounded-2xl border border-slate-200 p-4">
           <div className="text-xs text-slate-500 mb-1">Completion</div>
-          <div className="text-2xl font-semibold text-violet-600">{completionRate}%</div>
+          <div className="text-2xl font-semibold text-blue-600">{completionRate}%</div>
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-violet-50 to-purple-50 rounded-2xl border border-violet-100 p-5">
+      <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border border-blue-100 p-5">
         <h2 className="text-lg font-medium text-slate-900 mb-2">AI Memory Companion</h2>
         <p className="text-sm text-slate-600 mb-3">
           Based on your patterns, here's what might help today:
@@ -208,19 +214,19 @@ export default function FocusCenterHome() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setShowFocusFlow(true)}
-            className="px-3 py-1.5 bg-white rounded-full text-sm text-violet-700 hover:bg-violet-100 transition-colors border border-violet-200"
+            className="px-3 py-1.5 bg-white rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200"
           >
             Start 5m now
           </button>
           <button
             onClick={() => setShowQuickPlan(true)}
-            className="px-3 py-1.5 bg-white rounded-full text-sm text-violet-700 hover:bg-violet-100 transition-colors border border-violet-200"
+            className="px-3 py-1.5 bg-white rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200"
           >
             Break down next task
           </button>
           <button
             onClick={() => setShowRescue(true)}
-            className="px-3 py-1.5 bg-white rounded-full text-sm text-violet-700 hover:bg-violet-100 transition-colors border border-violet-200"
+            className="px-3 py-1.5 bg-white rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200"
           >
             Rescue: Reset
           </button>
