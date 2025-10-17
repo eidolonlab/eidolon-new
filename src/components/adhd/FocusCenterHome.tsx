@@ -11,6 +11,7 @@ import AchievementBadge from '../AchievementBadge';
 import AchievementUnlockModal from '../AchievementUnlockModal';
 import StreakCalendar from '../StreakCalendar';
 import CelebrationEffect from '../CelebrationEffect';
+import OneTapFocusStart from '../OneTapFocusStart';
 
 interface FocusSettings {
   default_duration: number;
@@ -244,15 +245,12 @@ export default function FocusCenterHome() {
         showDetails={true}
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <button
-          onClick={() => setShowFocusFlow(true)}
-          className="flex items-center justify-center gap-2 px-6 py-5 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all"
-        >
-          <Brain className="w-5 h-5" />
-          <span className="font-medium">Start {settings.default_duration}m</span>
-        </button>
+      <OneTapFocusStart onStart={(duration) => {
+        setSettings(prev => ({ ...prev, default_duration: duration }));
+        setShowFocusFlow(true);
+      }} />
 
+      <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => setShowRescue(true)}
           className="flex items-center justify-center gap-2 px-6 py-5 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl shadow-sm transition-colors"

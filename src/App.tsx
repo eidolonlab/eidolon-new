@@ -38,6 +38,7 @@ import { ChallengeProvider } from './contexts/ChallengeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthForm from './components/AuthForm';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
+import { initializeAppIntegrations, setupQuickActionHandlers, setupShareHandler } from './lib/appIntegrations';
 
 // Main App component - providers are now in main.tsx
 function AppContent() {
@@ -132,6 +133,32 @@ function AppContent() {
   useEffect(() => {
     checkAdminStatus();
   }, [checkAdminStatus]);
+
+  // Initialize app integrations
+  useEffect(() => {
+    initializeAppIntegrations(user?.id);
+
+    setupQuickActionHandlers({
+      onStartFocus25: () => {
+        navigate('/focus');
+      },
+      onStartFocus45: () => {
+        navigate('/focus');
+      },
+      onQuickMemory: () => {
+        navigate('/weave');
+      },
+      onViewStreak: () => {
+        navigate('/insights');
+      },
+    });
+
+    setupShareHandler(async (data) => {
+      if (data.text || data.title) {
+        navigate('/weave', { state: { sharedContent: data } });
+      }
+    });
+  }, [user, navigate]);
 
   // Show loading screen on initial load
   if (isLoading) {

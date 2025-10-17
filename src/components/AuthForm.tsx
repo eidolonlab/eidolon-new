@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Mail, Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { Brain, Mail, Lock, AlertCircle, CheckCircle, Eye, EyeOff, Fingerprint } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import LoadingSpinner from './LoadingSpinner';
+import { biometricAuth, getBiometricCredential, saveBiometricCredential } from '../lib/biometricAuth';
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -19,6 +20,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
   const { signIn, signUp } = useAuth();
 
   useEffect(() => {
@@ -29,6 +31,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
       console.error('Supabase is not configured. Please check your environment variables.');
       setError('Authentication service is not configured. Please contact support.');
     }
+
+    // Check biometric availability
+    biometricAuth.isAvailable().then(setBiometricAvailable);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -136,6 +141,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
         if (error) {
           setError(error.message);
         } else {
+          const { supabase } = await import('../lib/supabase');
+          const { data: { user } } = await supabase.auth.getUser();
+
+          if (user && biometricAvailable) {
+            try {
+              await saveBiometricCredential(user.id);
+            } catch (err) {
+              console.warn('Failed to save biometric credential:', err);
+            }
+          }
+
           if (onSuccess) {
             setTimeout(() => onSuccess(), 500);
           }
@@ -145,6 +161,42 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const handleBiometricLogin = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const userId = await getBiometricCredential();
+
+      if (!userId) {
+        setError('No saved biometric credentials found');
+        setLoading(false);
+        return;
+      }
+
+      const authenticated = await biometricAuth.authenticate('Sign in to Eidolon');
+
+      if (authenticated) {
+        const { supabase } = await import('../lib/supabase');
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          if (onSuccess) {
+            setTimeout(() => onSuccess(), 500);
+          }
+        } else {
+          setError('Biometric authentication succeeded but session is invalid. Please sign in manually.');
+        }
+      } else {
+        setError('Biometric authentication failed');
+      }
+    } catch (err) {
+      setError('Biometric authentication error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -315,6 +367,29 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, isModal = false }) => {
               )}
             </button>
           </form>
+
+          {mode === 'signin' && biometricAvailable && (
+            <>
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleBiometricLogin}
+                disabled={loading}
+                className="w-full py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 hover:border-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                <Fingerprint className="w-5 h-5" />
+                <span>Use Face ID / Touch ID</span>
+              </button>
+            </>
+          )}
 
           <div className="mt-6 text-center text-sm text-gray-600">
             {mode === 'signin' ? (
