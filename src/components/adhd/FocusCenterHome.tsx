@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, Zap, Clock } from 'lucide-react';
+import { Brain, Zap, Clock, Award } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import StartFocusFlow from './StartFocusFlow';
 import RescueHub from './RescueHub';
 import QuickPlanGenerator from './QuickPlanGenerator';
+import XPProgressBar from '../XPProgressBar';
+import AchievementBadge from '../AchievementBadge';
+import AchievementUnlockModal from '../AchievementUnlockModal';
+import StreakCalendar from '../StreakCalendar';
+import CelebrationEffect from '../CelebrationEffect';
 
 interface FocusSettings {
   default_duration: number;
@@ -18,6 +24,24 @@ interface WeeklyStats {
   total_finishes: number;
   total_focus_minutes: number;
   current_streak_days: number;
+}
+
+interface Gamification {
+  current_xp: number;
+  level: number;
+  total_xp: number;
+  streak_insurance_count: number;
+}
+
+interface Achievement {
+  id: string;
+  key: string;
+  name: string;
+  description: string;
+  icon: string;
+  xp_reward: number;
+  category: string;
+  earned_at?: string;
 }
 
 export default function FocusCenterHome() {
@@ -38,12 +62,24 @@ export default function FocusCenterHome() {
     current_streak_days: 0
   });
   const [todayWins, setTodayWins] = useState<Array<{ id: string; win_text: string; completed: boolean }>>([]);
+  const [gamification, setGamification] = useState<Gamification>({
+    current_xp: 0,
+    level: 1,
+    total_xp: 0,
+    streak_insurance_count: 0
+  });
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [earnedAchievements, setEarnedAchievements] = useState<Set<string>>(new Set());
+  const [unlockedAchievement, setUnlockedAchievement] = useState<Achievement | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   useEffect(() => {
     if (user) {
       loadSettings();
       loadStats();
       loadTodayWins();
+      loadGamification();
+      loadAchievements();
     }
   }, [user]);
 
@@ -117,13 +153,75 @@ export default function FocusCenterHome() {
     }
   }
 
+  async function loadGamification() {
+    if (!user?.id) return;
+
+    const { data } = await supabase
+      .from('user_gamification')
+      .select('*')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (data) {
+      setGamification(data);
+    } else {
+      const newGamification = {
+        user_id: user.id,
+        current_xp: 0,
+        level: 1,
+        total_xp: 0,
+        streak_insurance_count: 0
+      };
+      await supabase.from('user_gamification').insert(newGamification);
+      setGamification(newGamification);
+    }
+  }
+
+  async function loadAchievements() {
+    if (!user?.id) return;
+
+    const { data: allAchievements } = await supabase
+      .from('achievements')
+      .select('*')
+      .order('category', { ascending: true });
+
+    const { data: userAchievements } = await supabase
+      .from('user_achievements')
+      .select('achievement_id, earned_at')
+      .eq('user_id', user.id);
+
+    if (allAchievements) {
+      const earnedMap = new Map(
+        (userAchievements || []).map(ua => [ua.achievement_id, ua.earned_at])
+      );
+
+      const enrichedAchievements = allAchievements.map(a => ({
+        ...a,
+        earned_at: earnedMap.get(a.id)
+      }));
+
+      setAchievements(enrichedAchievements);
+      setEarnedAchievements(new Set(earnedMap.keys()));
+    }
+  }
+
   async function toggleWin(id: string, completed: boolean) {
+    try {
+      await Haptics.impact({ style: ImpactStyle.Light });
+    } catch (e) {
+      console.log('Haptics not available');
+    }
+
     await supabase
       .from('meaningful_wins')
       .update({ completed: !completed, completed_at: !completed ? new Date().toISOString() : null })
       .eq('id', id);
 
     setTodayWins(prev => prev.map(w => w.id === id ? { ...w, completed: !completed } : w));
+
+    if (!completed) {
+      setShowCelebration(true);
+    }
   }
 
   const completionRate = stats.total_starts > 0
@@ -138,6 +236,13 @@ export default function FocusCenterHome() {
           ADHD-friendly one-tap start. Your data is private and secure.
         </p>
       </div>
+
+      <XPProgressBar
+        currentXP={gamification.current_xp}
+        level={gamification.level}
+        totalXP={gamification.total_xp}
+        showDetails={true}
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button
@@ -206,6 +311,34 @@ export default function FocusCenterHome() {
         </div>
       </div>
 
+      <StreakCalendar
+        streakDays={stats.current_streak_days}
+        insuranceCount={gamification.streak_insurance_count}
+        compact={false}
+      />
+
+      <div className="bg-white rounded-2xl border border-slate-200 p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Award className="w-5 h-5 text-amber-500" />
+            <h2 className="text-lg font-medium text-slate-900">Achievements</h2>
+          </div>
+          <span className="text-sm text-slate-500">
+            {earnedAchievements.size} / {achievements.length}
+          </span>
+        </div>
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
+          {achievements.slice(0, 12).map((achievement) => (
+            <AchievementBadge
+              key={achievement.id}
+              achievement={achievement}
+              earned={earnedAchievements.has(achievement.id)}
+              size="small"
+            />
+          ))}
+        </div>
+      </div>
+
       <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border border-blue-100 p-5">
         <h2 className="text-lg font-medium text-slate-900 mb-2">AI Memory Companion</h2>
         <p className="text-sm text-slate-600 mb-3">
@@ -239,6 +372,10 @@ export default function FocusCenterHome() {
           onClose={() => setShowFocusFlow(false)}
           onSettingsUpdate={setSettings}
           onStatsUpdate={loadStats}
+          onNewAchievement={(achievement) => {
+            setUnlockedAchievement(achievement);
+            setShowCelebration(true);
+          }}
         />
       )}
 
@@ -252,6 +389,23 @@ export default function FocusCenterHome() {
           onPlanCreated={(task) => {
             setSettings(prev => ({ ...prev, last_task: task }));
             setShowFocusFlow(true);
+          }}
+        />
+      )}
+
+      <CelebrationEffect
+        show={showCelebration}
+        onComplete={() => setShowCelebration(false)}
+        intensity="medium"
+      />
+
+      {unlockedAchievement && (
+        <AchievementUnlockModal
+          achievement={unlockedAchievement}
+          onClose={() => {
+            setUnlockedAchievement(null);
+            loadGamification();
+            loadAchievements();
           }}
         />
       )}
