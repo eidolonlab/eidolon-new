@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   BarChart3, Users, Brain, Clock, Target, TrendingUp,
   Calendar, Award, AlertCircle, RefreshCw, Download,
-  Eye, Activity, Zap, Shield, ArrowLeft, LogOut, Code, TestTube, Server
+  Eye, Activity, Zap, Shield, ArrowLeft, LogOut, Code, TestTube, Server, BookOpen
 } from 'lucide-react';
 import { adminAPI, AdminStats, CohortData } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
@@ -226,6 +226,32 @@ const AdminDashboard: React.FC = () => {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <a
+              href="/user-guide.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: '#8b5cf6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                textDecoration: 'none',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#7c3aed'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#8b5cf6'}
+            >
+              <BookOpen style={{ width: '16px', height: '16px' }} />
+              <span>User Guide</span>
+            </a>
+
             <button
               onClick={() => setActiveView('activity')}
               style={{

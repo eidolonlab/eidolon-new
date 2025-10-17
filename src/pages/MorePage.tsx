@@ -39,7 +39,6 @@ const sections = [
   {
     title: 'Legal & Support',
     items: [
-      { label: 'User Guide', href: '/user-guide.html', icon: FileText, description: 'How to use Eidolon', external: true },
       { label: 'Privacy Policy', href: '/privacy-policy.html', icon: Shield, description: 'Your data is private', external: true },
       { label: 'Terms of Service', href: '/terms-of-service.html', icon: FileText, description: 'Usage terms', external: true }
     ]
