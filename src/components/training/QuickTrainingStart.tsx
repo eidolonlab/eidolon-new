@@ -53,21 +53,12 @@ const trainingModules: TrainingModule[] = [
 
 interface QuickTrainingStartProps {
   onStart: (moduleId: string) => void;
-  isTrainingActive?: boolean;
+  activeModule: string | null;
 }
 
-const QuickTrainingStart: React.FC<QuickTrainingStartProps> = ({ onStart, isTrainingActive = false }) => {
-  const [selectedModule, setSelectedModule] = useState<string | null>(null);
-
-  React.useEffect(() => {
-    if (!isTrainingActive) {
-      setSelectedModule(null);
-    }
-  }, [isTrainingActive]);
-
+const QuickTrainingStart: React.FC<QuickTrainingStartProps> = ({ onStart, activeModule }) => {
   const handleStart = (moduleId: string) => {
     audioService.softPop();
-    setSelectedModule(moduleId);
     setTimeout(() => {
       onStart(moduleId);
     }, 300);
@@ -93,7 +84,7 @@ const QuickTrainingStart: React.FC<QuickTrainingStartProps> = ({ onStart, isTrai
 
       <button
         onClick={() => handleStart(recommendedModule.id)}
-        disabled={selectedModule !== null}
+        disabled={activeModule !== null}
         className="w-full bg-gradient-to-r from-violet-600 to-violet-500 text-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <div className="flex items-center justify-center space-x-4">
@@ -116,7 +107,7 @@ const QuickTrainingStart: React.FC<QuickTrainingStartProps> = ({ onStart, isTrai
               <button
                 key={module.id}
                 onClick={() => handleStart(module.id)}
-                disabled={selectedModule !== null}
+                disabled={activeModule !== null}
                 className="bg-white border-2 border-slate-200 rounded-xl p-4 hover:border-violet-300 hover:bg-violet-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-left"
               >
                 <div className="flex items-center space-x-3">
