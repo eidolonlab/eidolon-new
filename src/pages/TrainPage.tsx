@@ -85,7 +85,10 @@ export default function TrainPage() {
           </div>
         )}
 
-        <QuickTrainingStart onStart={(moduleId) => setActiveModule(moduleId)} />
+        <QuickTrainingStart
+          onStart={(moduleId) => setActiveModule(moduleId)}
+          isTrainingActive={activeModule !== null}
+        />
       </div>
 
       <SimpleDisclaimer />

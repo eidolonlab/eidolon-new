@@ -53,10 +53,17 @@ const trainingModules: TrainingModule[] = [
 
 interface QuickTrainingStartProps {
   onStart: (moduleId: string) => void;
+  isTrainingActive?: boolean;
 }
 
-const QuickTrainingStart: React.FC<QuickTrainingStartProps> = ({ onStart }) => {
+const QuickTrainingStart: React.FC<QuickTrainingStartProps> = ({ onStart, isTrainingActive = false }) => {
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!isTrainingActive) {
+      setSelectedModule(null);
+    }
+  }, [isTrainingActive]);
 
   const handleStart = (moduleId: string) => {
     audioService.softPop();
