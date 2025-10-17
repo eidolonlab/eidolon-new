@@ -82,7 +82,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                   <select
                     value={settings.training.defaultDifficulty}
                     onChange={(e) => updateSetting('training', 'defaultDifficulty', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   >
                     <option value="easy">Easy - More hints and guidance</option>
                     <option value="medium">Medium - Balanced challenge</option>
@@ -99,7 +99,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.training.errorlessMode}
                     onChange={(e) => updateSetting('training', 'errorlessMode', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
 
@@ -112,7 +112,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.training.soundEffects}
                     onChange={(e) => updateSetting('training', 'soundEffects', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -129,7 +129,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                   <select
                     value={settings.appearance.theme}
                     onChange={(e) => updateSetting('appearance', 'theme', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   >
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
@@ -146,7 +146,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.appearance.reducedMotion}
                     onChange={(e) => updateSetting('appearance', 'reducedMotion', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -170,7 +170,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.notifications.retrievalReminders}
                     onChange={(e) => updateSetting('notifications', 'retrievalReminders', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
 
@@ -183,7 +183,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.notifications.scenarioAlerts}
                     onChange={(e) => updateSetting('notifications', 'scenarioAlerts', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
 
@@ -196,15 +196,15 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.notifications.progressUpdates}
                     onChange={(e) => updateSetting('notifications', 'progressUpdates', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">About Notifications</h4>
-              <p className="text-sm text-blue-800">
+            <div className="p-4 bg-primary-50 rounded-lg">
+              <h4 className="font-medium text-primary-900 mb-2">About Notifications</h4>
+              <p className="text-sm text-primary-800">
                 Notifications are delivered through your browser and respect your device's Do Not Disturb settings. 
                 You can change these permissions in your browser settings at any time.
               </p>
@@ -228,7 +228,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.privacy.analytics}
                     onChange={(e) => updateSetting('privacy', 'analytics', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
 
@@ -241,7 +241,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     type="checkbox"
                     checked={settings.privacy.research}
                     onChange={(e) => updateSetting('privacy', 'research', e.target.checked)}
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -314,8 +314,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
             {isSupabaseConfigured && user && (
               <div className="mb-4 pb-4 border-b border-gray-200">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{user?.email}</p>
@@ -332,7 +332,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                   onClick={() => setActiveTab(id as any)}
                   className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                     activeTab === id
-                      ? 'bg-indigo-100 text-indigo-700'
+                      ? 'bg-primary-100 text-primary-700'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >

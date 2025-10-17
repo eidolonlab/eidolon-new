@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { audioService } from './audioService';
 
 interface Achievement {
   id: string;
@@ -57,6 +58,12 @@ export async function awardXP(userId: string, xp: number, reason: string): Promi
         level: newLevel,
         streak_insurance_count: 0
       });
+  }
+
+  audioService.xpGain();
+
+  if (levelUp) {
+    audioService.levelUp();
   }
 
   return { levelUp, newLevel };
@@ -161,6 +168,10 @@ export async function checkAndAwardAchievements(userId: string): Promise<Achieve
     }
   }
 
+  if (newAchievements.length > 0) {
+    audioService.achievementUnlock();
+  }
+
   return newAchievements;
 }
 
@@ -206,6 +217,8 @@ export async function awardStreakInsurance(userId: string): Promise<void> {
       updated_at: new Date().toISOString()
     })
     .eq('user_id', userId);
+
+  audioService.streakExtended();
 }
 
 export async function useStreakInsurance(userId: string): Promise<boolean> {
