@@ -26,6 +26,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   const [reactionStartTime, setReactionStartTime] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
+  const [shapeInterval, setShapeInterval] = useState<NodeJS.Timeout | null>(null);
   const [newTaskText, setNewTaskText] = useState('');
   const [userTasks, setUserTasks] = useState<Array<{text: string; priority: number}>>([]);
   const [lastReactionTime, setLastReactionTime] = useState<number | null>(null);
@@ -55,6 +56,11 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     if (phase === 'active') {
       startRound();
     }
+    return () => {
+      if (shapeInterval) {
+        clearInterval(shapeInterval);
+      }
+    };
   }, [phase, currentRound]);
 
   const startRound = () => {
@@ -75,10 +81,24 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   };
 
   const showRandomShapes = () => {
+    if (shapeInterval) {
+      clearInterval(shapeInterval);
+    }
+    setHits(0);
+    setMisses(0);
+
     const interval = setInterval(() => {
       setCurrentShape(shapes[Math.floor(Math.random() * shapes.length)]);
-    }, 1500);
-    setTimeout(() => clearInterval(interval), 15000);
+    }, 1200);
+    setShapeInterval(interval);
+  };
+
+  const stopShapes = () => {
+    if (shapeInterval) {
+      clearInterval(shapeInterval);
+      setShapeInterval(null);
+    }
+    setCurrentShape('');
   };
 
   const handleNumberClick = async (num: number) => {
@@ -138,16 +158,22 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       await Haptics.impact({ style: ImpactStyle.Light });
     } catch (e) {}
 
-    if (shape === targetShape) {
+    const isCorrect = shape === targetShape && shape === currentShape;
+    const newHits = isCorrect ? hits + 1 : hits;
+    const newMisses = isCorrect ? misses : misses + 1;
+
+    if (isCorrect) {
       audioService.success();
-      setHits(hits + 1);
+      setHits(newHits);
       setScore(score + 10);
     } else {
       audioService.error();
-      setMisses(misses + 1);
+      setMisses(newMisses);
+      setScore(Math.max(0, score - 2));
     }
 
-    if (hits + misses >= 10) {
+    if (newHits + newMisses >= 10) {
+      stopShapes();
       if (currentRound < totalRounds) {
         setTimeout(() => setCurrentRound(currentRound + 1), 1000);
       } else {
@@ -478,30 +504,82 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     }
 
     if (moduleId === 'sustained-attention') {
+      const renderShape = (shape: string, size: string = 'w-16 h-16') => {
+        if (shape === 'circle') {
+          return <div className={`${size} rounded-full bg-violet-600`}></div>;
+        } else if (shape === 'square') {
+          return <div className={`${size} rounded-lg bg-violet-600`}></div>;
+        } else if (shape === 'triangle') {
+          return (
+            <div className={`${size} relative`}>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-0 h-0 border-l-[32px] border-r-[32px] border-b-[56px] border-l-transparent border-r-transparent border-b-violet-600"></div>
+              </div>
+            </div>
+          );
+        } else if (shape === 'star') {
+          return (
+            <div className={`${size} relative`}>
+              <div className="absolute inset-0 flex items-center justify-center text-violet-600 text-5xl">★</div>
+            </div>
+          );
+        }
+        return null;
+      };
+
       return (
         <div className="max-w-md w-full space-y-6">
-          <div className="text-center mb-6">
-            <div className="text-sm text-violet-600 font-medium mb-2">Target Shape</div>
-            <div className="w-20 h-20 mx-auto bg-violet-600 rounded-xl flex items-center justify-center">
-              <div className={`w-12 h-12 ${targetShape === 'circle' ? 'rounded-full' : targetShape === 'square' ? 'rounded-lg' : ''} bg-white`}></div>
+          <div className="bg-violet-50 rounded-xl p-4 border border-violet-200">
+            <div className="text-sm text-violet-900 font-medium mb-3 text-center">Target Shape</div>
+            <div className="w-24 h-24 mx-auto bg-white rounded-xl flex items-center justify-center border-2 border-violet-300 shadow-sm">
+              {renderShape(targetShape, 'w-16 h-16')}
             </div>
-            <div className="text-xs text-slate-600 mt-2">Tap only when you see this shape</div>
+            <div className="text-xs text-violet-700 mt-3 text-center font-medium">
+              Tap ONLY when you see this shape appear
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          <div className="bg-white rounded-xl p-6 border-2 border-slate-200 min-h-[200px] flex items-center justify-center">
+            {currentShape ? (
+              <div className="animate-in fade-in zoom-in duration-200">
+                {renderShape(currentShape, 'w-24 h-24')}
+              </div>
+            ) : (
+              <div className="text-slate-400 text-sm">Watch carefully...</div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             {shapes.map((shape) => (
               <button
                 key={shape}
                 onClick={() => handleShapeClick(shape)}
-                className={`aspect-square bg-white border-2 rounded-xl flex items-center justify-center hover:border-violet-400 hover:bg-violet-50 active:scale-95 transition-all ${
-                  currentShape === shape ? 'border-violet-600 bg-violet-50' : 'border-slate-200'
+                disabled={!currentShape}
+                className={`aspect-square bg-white border-2 rounded-xl flex items-center justify-center transition-all ${
+                  !currentShape
+                    ? 'opacity-50 cursor-not-allowed'
+                    : currentShape === shape
+                    ? 'border-violet-600 bg-violet-50 hover:bg-violet-100 active:scale-95'
+                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 active:scale-95'
                 }`}
               >
-                <div className={`w-16 h-16 ${shape === 'circle' ? 'rounded-full' : shape === 'square' ? 'rounded-lg' : ''} bg-slate-300`}></div>
+                {renderShape(shape, 'w-12 h-12')}
               </button>
             ))}
           </div>
-          <div className="text-center text-sm text-slate-600">
-            Hits: {hits} • Misses: {misses}
+
+          <div className="flex justify-between text-sm bg-slate-50 rounded-lg p-3">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <span className="text-slate-700">Correct: <strong>{hits}</strong></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span className="text-slate-700">Wrong: <strong>{misses}</strong></span>
+            </div>
+            <div className="text-slate-600">
+              Progress: <strong>{hits + misses}/10</strong>
+            </div>
           </div>
         </div>
       );
