@@ -29,6 +29,7 @@ import AdminAuth from './components/AdminAuth';
 import ADHDDashboard from './components/ADHDDashboard';
 import FocusPage from './pages/FocusPage';
 import TrainPage from './pages/TrainPage';
+import BoostsPage from './pages/BoostsPage';
 import ADHDInsightsPage from './pages/InsightsPage';
 import MorePage from './pages/MorePage';
 import { UserManagementProvider } from './contexts/UserManagementContext';
@@ -249,6 +250,7 @@ function AppContent() {
             {/* New ADHD-first routes with AppShell */}
             <Route path="/focus" element={<FocusPage />} />
             <Route path="/train" element={<TrainPage />} />
+            <Route path="/boosts/*" element={<BoostsPage />} />
             <Route path="/insights" element={<ADHDInsightsPage />} />
             <Route path="/more" element={<MorePage />} />
 
