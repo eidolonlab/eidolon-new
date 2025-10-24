@@ -30,6 +30,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   const [newTaskText, setNewTaskText] = useState('');
   const [userTasks, setUserTasks] = useState<Array<{text: string; priority: number}>>([]);
   const [lastReactionTime, setLastReactionTime] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<{type: 'success' | 'error'; message: string} | null>(null);
 
   const moduleDetails: Record<string, { title: string; instruction: string }> = {
     'working-memory': {
@@ -117,9 +118,11 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       if (isCorrect) {
         audioService.success();
         setScore(score + 10);
+        setFeedback({ type: 'success', message: 'Perfect! +10 points' });
 
         if (currentRound < totalRounds) {
           setTimeout(() => {
+            setFeedback(null);
             setCurrentRound(currentRound + 1);
           }, 1000);
         } else {
@@ -129,7 +132,10 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
         }
       } else {
         audioService.error();
+        setFeedback({ type: 'error', message: 'Not quite! Try again' });
+        setScore(Math.max(0, score - 2));
         setTimeout(() => {
+          setFeedback(null);
           setUserInput([]);
         }, 500);
       }
@@ -195,12 +201,21 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       const updatedTasks = tasks.map(t => t.id === taskId ? { ...t, completed: true } : t);
       setTasks(updatedTasks);
       setScore(score + 10);
+      setFeedback({ type: 'success', message: 'Correct priority! +10 points' });
 
       if (updatedTasks.every(t => t.completed)) {
-        setTimeout(() => completeTraining(), 1000);
+        setTimeout(() => {
+          setFeedback(null);
+          completeTraining();
+        }, 1000);
+      } else {
+        setTimeout(() => setFeedback(null), 1500);
       }
     } else {
       audioService.error();
+      setScore(Math.max(0, score - 2));
+      setFeedback({ type: 'error', message: 'Wrong priority! Choose highest priority first' });
+      setTimeout(() => setFeedback(null), 2000);
     }
   };
 
@@ -474,16 +489,21 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
         <div className="max-w-md w-full space-y-6">
           {showSequence && (
             <div className="text-center mb-8">
-              <div className="text-sm text-violet-600 font-medium mb-4">Watch carefully...</div>
+              <div className="text-lg text-violet-600 font-medium mb-4">Watch carefully...</div>
               <div className="flex justify-center gap-3">
                 {sequenceToRemember.map((num, idx) => (
-                  <div key={idx} className="w-16 h-16 bg-violet-600 text-white rounded-xl flex items-center justify-center text-2xl font-bold animate-pulse">{num}</div>
+                  <div key={idx} className="w-16 h-16 bg-violet-600 text-white rounded-xl flex items-center justify-center text-2xl font-bold animate-in fade-in zoom-in duration-300">{num}</div>
                 ))}
               </div>
             </div>
           )}
           {!showSequence && (
             <>
+              {feedback && (
+                <div className={`text-center py-3 px-4 rounded-xl ${feedback.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                  {feedback.message}
+                </div>
+              )}
               <div className="text-center mb-6">
                 <div className="text-sm text-violet-600 font-medium">Tap the numbers in order</div>
                 <div className="flex justify-center gap-2 mt-3">
@@ -595,6 +615,11 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
 
       return (
         <div className="max-w-md w-full space-y-4">
+          {feedback && (
+            <div className={`text-center py-3 px-4 rounded-xl ${feedback.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+              {feedback.message}
+            </div>
+          )}
           <div className="text-center mb-4">
             <div className="text-sm text-violet-600 font-medium mb-2">Tap tasks in priority order</div>
             <div className="text-xs text-slate-600">P1 (urgent) → P2 (high) → P3 (medium) → P4 (low)</div>
