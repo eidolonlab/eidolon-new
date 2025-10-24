@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle, TrendingUp, Zap, Eye, Brain, ListOrdered, Target } from 'lucide-react';
+import { X, CheckCircle, TrendingUp, Zap, Eye, Brain, ListOrdered, Target, Plus, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
@@ -12,7 +12,7 @@ interface TrainingExerciseProps {
 
 const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }) => {
   const { user } = useAuth();
-  const [phase, setPhase] = useState<'intro' | 'active' | 'complete'>('intro');
+  const [phase, setPhase] = useState<'intro' | 'input' | 'active' | 'complete'>('intro');
   const [score, setScore] = useState(0);
   const [currentRound, setCurrentRound] = useState(1);
   const [totalRounds] = useState(5);
@@ -26,6 +26,8 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   const [reactionStartTime, setReactionStartTime] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
+  const [newTaskText, setNewTaskText] = useState('');
+  const [userTasks, setUserTasks] = useState<Array<{text: string; priority: number}>>([]);
 
   const moduleDetails: Record<string, { title: string; instruction: string }> = {
     'working-memory': {
@@ -38,7 +40,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     },
     'executive-function': {
       title: 'Executive Function',
-      instruction: 'Practice prioritizing tasks - tap them in order from highest to lowest priority',
+      instruction: 'Add your tasks, assign priorities (P1=urgent to P4=low), then complete them in priority order',
     },
     'micro-attention': {
       title: 'Micro-Attention Drill',
@@ -66,47 +68,6 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       const target = shapes[Math.floor(Math.random() * shapes.length)];
       setTargetShape(target);
       showRandomShapes();
-    } else if (moduleId === 'executive-function') {
-      const taskSets = [
-        [
-          { text: 'Urgent client call', priority: 1 },
-          { text: 'Review budget report', priority: 3 },
-          { text: 'Prepare presentation', priority: 2 },
-          { text: 'Reply to emails', priority: 4 }
-        ],
-        [
-          { text: 'Complete project deadline', priority: 1 },
-          { text: 'Schedule team meeting', priority: 4 },
-          { text: 'Review documents', priority: 2 },
-          { text: 'Update status report', priority: 3 }
-        ],
-        [
-          { text: 'Fix critical bug', priority: 1 },
-          { text: 'Plan next sprint', priority: 3 },
-          { text: 'Code review PR', priority: 2 },
-          { text: 'Update documentation', priority: 4 }
-        ],
-        [
-          { text: 'Submit expense report', priority: 1 },
-          { text: 'Organize files', priority: 4 },
-          { text: 'Follow up with client', priority: 2 },
-          { text: 'Book travel', priority: 3 }
-        ],
-        [
-          { text: 'Handle urgent request', priority: 1 },
-          { text: 'Prepare for meeting', priority: 2 },
-          { text: 'Update spreadsheet', priority: 3 },
-          { text: 'Clear inbox', priority: 4 }
-        ]
-      ];
-      const selectedSet = taskSets[currentRound - 1] || taskSets[0];
-      const newTasks = selectedSet.map((task, i) => ({
-        id: i,
-        text: task.text,
-        priority: task.priority,
-        completed: false
-      }));
-      setTasks(newTasks);
     } else if (moduleId === 'micro-attention') {
       setReactionStartTime(Date.now() + Math.random() * 2000 + 1000);
     }
@@ -199,20 +160,17 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       await Haptics.impact({ style: ImpactStyle.Light });
     } catch (e) {}
 
-    const sortedTasks = [...tasks].sort((a, b) => b.priority - a.priority);
+    const sortedTasks = [...tasks].sort((a, b) => a.priority - b.priority);
     const expectedNextTask = sortedTasks.find(t => !t.completed);
 
     if (expectedNextTask?.id === taskId) {
       audioService.success();
-      setTasks(tasks.map(t => t.id === taskId ? { ...t, completed: true } : t));
+      const updatedTasks = tasks.map(t => t.id === taskId ? { ...t, completed: true } : t);
+      setTasks(updatedTasks);
       setScore(score + 10);
 
-      if (tasks.filter(t => !t.completed).length === 1) {
-        if (currentRound < totalRounds) {
-          setTimeout(() => setCurrentRound(currentRound + 1), 1000);
-        } else {
-          setTimeout(() => completeTraining(), 1000);
-        }
+      if (updatedTasks.every(t => t.completed)) {
+        setTimeout(() => completeTraining(), 1000);
       }
     } else {
       audioService.error();
@@ -263,7 +221,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
             <p className="text-sm text-violet-800">{currentModule.instruction}</p>
             {moduleId === 'executive-function' && (
               <p className="text-xs text-violet-700 mt-2">
-                Example tasks shown - practice organizing by priority (P1 = highest)
+                Practice organizing your real tasks to improve executive function and reduce overwhelm
               </p>
             )}
           </div>
@@ -280,11 +238,154 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
           </div>
 
           <button
-            onClick={() => setPhase('active')}
+            onClick={() => setPhase(moduleId === 'executive-function' ? 'input' : 'active')}
             className="w-full py-3 bg-violet-600 text-white rounded-xl font-medium hover:bg-violet-700 transition-colors"
           >
-            Start Training
+            {moduleId === 'executive-function' ? 'Add My Tasks' : 'Start Training'}
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === 'input') {
+    const addTask = () => {
+      if (newTaskText.trim() && userTasks.length < 8) {
+        setUserTasks([...userTasks, { text: newTaskText.trim(), priority: 1 }]);
+        setNewTaskText('');
+      }
+    };
+
+    const removeTask = (index: number) => {
+      setUserTasks(userTasks.filter((_, i) => i !== index));
+    };
+
+    const updatePriority = (index: number, priority: number) => {
+      setUserTasks(userTasks.map((task, i) => i === index ? { ...task, priority } : task));
+    };
+
+    const startWithTasks = () => {
+      if (userTasks.length >= 3) {
+        const tasksForRound = userTasks.map((task, i) => ({
+          id: i,
+          text: task.text,
+          priority: task.priority,
+          completed: false
+        }));
+        setTasks(tasksForRound);
+        setPhase('active');
+      }
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6 my-8">
+          <div className="flex items-start justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">Add Your Tasks</h2>
+              <p className="text-sm text-slate-600 mt-1">Add 3-8 tasks you need to complete today</p>
+            </div>
+            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+              <X className="w-5 h-5 text-slate-600" />
+            </button>
+          </div>
+
+          <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <p className="text-sm text-blue-900 font-medium mb-2">Priority Guide</p>
+            <div className="space-y-1 text-xs text-blue-800">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full bg-red-500 text-white font-bold">P1</span>
+                <span>Urgent - must do now</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full bg-orange-500 text-white font-bold">P2</span>
+                <span>High - important today</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full bg-blue-500 text-white font-bold">P3</span>
+                <span>Medium - should do</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full bg-slate-400 text-white font-bold">P4</span>
+                <span>Low - nice to have</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newTaskText}
+              onChange={(e) => setNewTaskText(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && addTask()}
+              placeholder="e.g., Reply to client email"
+              className="flex-1 px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-400"
+              maxLength={50}
+            />
+            <button
+              onClick={addTask}
+              disabled={!newTaskText.trim() || userTasks.length >= 8}
+              className="px-4 py-3 bg-violet-600 text-white rounded-xl hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {userTasks.map((task, index) => (
+              <div key={index} className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                <div className="flex items-start gap-2 mb-2">
+                  <span className="text-sm flex-1 text-slate-900">{task.text}</span>
+                  <button
+                    onClick={() => removeTask(index)}
+                    className="p-1 hover:bg-slate-200 rounded transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4 text-slate-600" />
+                  </button>
+                </div>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4].map((priority) => (
+                    <button
+                      key={priority}
+                      onClick={() => updatePriority(index, priority)}
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                        task.priority === priority
+                          ? priority === 1 ? 'bg-red-500 text-white'
+                          : priority === 2 ? 'bg-orange-500 text-white'
+                          : priority === 3 ? 'bg-blue-500 text-white'
+                          : 'bg-slate-400 text-white'
+                          : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      P{priority}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {userTasks.length === 0 && (
+            <div className="text-center py-8 text-slate-500 text-sm">
+              Add at least 3 tasks to continue
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPhase('intro')}
+              className="px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+            >
+              Back
+            </button>
+            <button
+              onClick={startWithTasks}
+              disabled={userTasks.length < 3}
+              className="flex-1 py-3 bg-violet-600 text-white rounded-xl font-medium hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Start Training ({userTasks.length}/3 min)
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -320,6 +421,8 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
                 setPhase('intro');
                 setScore(0);
                 setCurrentRound(1);
+                setUserTasks([]);
+                setTasks([]);
               }}
               className="w-full py-3 bg-white border-2 border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
             >
@@ -432,7 +535,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
             ))}
           </div>
           <div className="text-xs text-center text-slate-500 mt-4">
-            Example tasks to practice prioritization skills
+            Tap tasks from highest priority (P1) to lowest (P4)
           </div>
         </div>
       );
