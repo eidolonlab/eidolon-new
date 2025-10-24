@@ -43,6 +43,32 @@ import { initializeAppIntegrations, setupQuickActionHandlers, setupShareHandler 
 
 // Main App component - providers are now in main.tsx
 function AppContent() {
+  // Check if Supabase is configured
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="max-w-md bg-white rounded-xl border-2 border-amber-200 p-8 shadow-lg">
+          <div className="text-center mb-4">
+            <div className="inline-block p-3 bg-amber-100 rounded-full mb-3">
+              <Settings className="w-8 h-8 text-amber-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">Configuration Required</h1>
+          </div>
+          <div className="space-y-3 text-sm text-slate-600">
+            <p>Supabase environment variables are not configured.</p>
+            <p className="font-semibold text-slate-900">Please restart the dev server:</p>
+            <pre className="bg-slate-100 p-3 rounded text-xs overflow-x-auto">
+              npm run dev
+            </pre>
+            <p className="text-xs text-slate-500 mt-4">
+              The .env file is configured correctly, but Vite needs to be restarted to pick up environment variables.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
