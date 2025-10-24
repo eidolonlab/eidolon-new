@@ -36,6 +36,18 @@ class AudioService {
     // Placeholder for success sound
     console.log('🎵 Success sound');
   }
+
+  softPop() {
+    if (!this.enabled) return;
+    // Placeholder for soft pop sound
+    console.log('🎵 Soft pop sound');
+  }
+
+  click() {
+    if (!this.enabled) return;
+    // Placeholder for click sound
+    console.log('🎵 Click sound');
+  }
 }
 
 export const audioService = new AudioService();
