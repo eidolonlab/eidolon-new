@@ -3,17 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Activity, Play, CheckCircle, Timer, Zap } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-
-interface BoostActivity {
-  id: string;
-  name: string;
-  description: string;
-  duration_seconds: number;
-  difficulty_level: number;
-  type: string;
-  instructions: string[];
-  encouragement_text: string[];
-}
+import { getActivitiesByPillar, type BoostActivity } from '../../data/boostActivities';
 
 interface ActivityCardProps {
   activity: BoostActivity;
@@ -84,27 +74,8 @@ export default function SwitchControlPage() {
 
   const loadActivities = async () => {
     try {
-      const { data, error } = await supabase
-        .from('boost_activities')
-        .select('*')
-        .eq('pillar', 'switch_control')
-        .eq('is_active', true)
-        .order('sort_order');
-
-      if (error) {
-        console.error('Error loading activities:', error);
-        throw error;
-      }
-
-      if (data) {
-        const formattedActivities = data.map(activity => ({
-          ...activity,
-          instructions: Array.isArray(activity.instructions) ? activity.instructions : [],
-          encouragement_text: Array.isArray(activity.encouragement_text) ? activity.encouragement_text : []
-        }));
-        console.log('Loaded activities:', formattedActivities.length);
-        setActivities(formattedActivities);
-      }
+      const switchControlActivities = getActivitiesByPillar('switch_control');
+      setActivities(switchControlActivities);
     } catch (error) {
       console.error('Error loading activities:', error);
     } finally {

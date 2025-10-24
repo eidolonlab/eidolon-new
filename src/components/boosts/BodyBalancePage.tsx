@@ -3,17 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, Play, CheckCircle, Timer, Shield } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
-
-interface BoostActivity {
-  id: string;
-  name: string;
-  description: string;
-  duration_seconds: number;
-  difficulty_level: number;
-  type: string;
-  instructions: string[];
-  encouragement_text: string[];
-}
+import { getActivitiesByPillar, type BoostActivity } from '../../data/boostActivities';
 
 interface ActivityCardProps {
   activity: BoostActivity;
@@ -95,27 +85,8 @@ export default function BodyBalancePage() {
 
   const loadActivities = async () => {
     try {
-      const { data, error } = await supabase
-        .from('boost_activities')
-        .select('*')
-        .eq('pillar', 'body_balance')
-        .eq('is_active', true)
-        .order('sort_order');
-
-      if (error) {
-        console.error('Error loading activities:', error);
-        throw error;
-      }
-
-      if (data) {
-        const formattedActivities = data.map(activity => ({
-          ...activity,
-          instructions: Array.isArray(activity.instructions) ? activity.instructions : [],
-          encouragement_text: Array.isArray(activity.encouragement_text) ? activity.encouragement_text : []
-        }));
-        console.log('Loaded body balance exercises:', formattedActivities.length);
-        setActivities(formattedActivities);
-      }
+      const bodyBalanceActivities = getActivitiesByPillar('body_balance');
+      setActivities(bodyBalanceActivities);
     } catch (error) {
       console.error('Error loading activities:', error);
     } finally {
