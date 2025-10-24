@@ -27,10 +27,23 @@ export async function getRecommendations(userId: string): Promise<string[]> {
 
 class SmartPatternsService {
   async getSuggestions(userId: string): Promise<SmartSuggestion[]> {
-    // Placeholder for smart suggestions
     return [
       { id: '1', title: '25-minute focus', duration: 25, type: 'pomodoro', confidence: 0.9 },
       { id: '2', title: '45-minute deep work', duration: 45, type: 'deep_work', confidence: 0.7 }
+    ];
+  }
+
+  async getUserPatterns(userId: string): Promise<Pattern[]> {
+    return analyzeUserPatterns(userId);
+  }
+
+  getSmartDefaultDuration(patterns: Pattern[]): number {
+    return 25;
+  }
+
+  async getSmartSuggestions(userId: string): Promise<Array<{ id: string; message: string; duration: number }>> {
+    return [
+      { id: '1', message: 'Based on your morning routine, try a 25-minute session', duration: 25 }
     ];
   }
 
