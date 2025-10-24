@@ -102,13 +102,20 @@ export default function BodyBalancePage() {
         .eq('is_active', true)
         .order('sort_order');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading activities:', error);
+        throw error;
+      }
 
-      setActivities(data.map(activity => ({
-        ...activity,
-        instructions: Array.isArray(activity.instructions) ? activity.instructions : [],
-        encouragement_text: Array.isArray(activity.encouragement_text) ? activity.encouragement_text : []
-      })));
+      if (data) {
+        const formattedActivities = data.map(activity => ({
+          ...activity,
+          instructions: Array.isArray(activity.instructions) ? activity.instructions : [],
+          encouragement_text: Array.isArray(activity.encouragement_text) ? activity.encouragement_text : []
+        }));
+        console.log('Loaded body balance exercises:', formattedActivities.length);
+        setActivities(formattedActivities);
+      }
     } catch (error) {
       console.error('Error loading activities:', error);
     } finally {
@@ -214,16 +221,22 @@ export default function BodyBalancePage() {
         )}
 
         {/* Activities Grid */}
-        <div className="grid gap-4 md:grid-cols-2">
-          {activities.map(activity => (
-            <ActivityCard
-              key={activity.id}
-              activity={activity}
-              onStart={() => handleStartActivity(activity)}
-              completed={completedToday.has(activity.id)}
-            />
-          ))}
-        </div>
+        {activities.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-slate-600">No exercises available at the moment.</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {activities.map(activity => (
+              <ActivityCard
+                key={activity.id}
+                activity={activity}
+                onStart={() => handleStartActivity(activity)}
+                completed={completedToday.has(activity.id)}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Safety Notice */}
         <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
