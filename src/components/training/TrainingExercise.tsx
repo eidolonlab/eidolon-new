@@ -38,7 +38,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     },
     'executive-function': {
       title: 'Executive Function',
-      instruction: 'Sort the tasks by priority and complete them in order',
+      instruction: 'Practice prioritizing tasks - tap them in order from highest to lowest priority',
     },
     'micro-attention': {
       title: 'Micro-Attention Drill',
@@ -67,10 +67,43 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       setTargetShape(target);
       showRandomShapes();
     } else if (moduleId === 'executive-function') {
-      const newTasks = Array.from({ length: 4 }, (_, i) => ({
+      const taskSets = [
+        [
+          { text: 'Urgent client call', priority: 1 },
+          { text: 'Review budget report', priority: 3 },
+          { text: 'Prepare presentation', priority: 2 },
+          { text: 'Reply to emails', priority: 4 }
+        ],
+        [
+          { text: 'Complete project deadline', priority: 1 },
+          { text: 'Schedule team meeting', priority: 4 },
+          { text: 'Review documents', priority: 2 },
+          { text: 'Update status report', priority: 3 }
+        ],
+        [
+          { text: 'Fix critical bug', priority: 1 },
+          { text: 'Plan next sprint', priority: 3 },
+          { text: 'Code review PR', priority: 2 },
+          { text: 'Update documentation', priority: 4 }
+        ],
+        [
+          { text: 'Submit expense report', priority: 1 },
+          { text: 'Organize files', priority: 4 },
+          { text: 'Follow up with client', priority: 2 },
+          { text: 'Book travel', priority: 3 }
+        ],
+        [
+          { text: 'Handle urgent request', priority: 1 },
+          { text: 'Prepare for meeting', priority: 2 },
+          { text: 'Update spreadsheet', priority: 3 },
+          { text: 'Clear inbox', priority: 4 }
+        ]
+      ];
+      const selectedSet = taskSets[currentRound - 1] || taskSets[0];
+      const newTasks = selectedSet.map((task, i) => ({
         id: i,
-        text: ['Reply to emails', 'Prepare presentation', 'Review documents', 'Team meeting'][i],
-        priority: Math.floor(Math.random() * 4) + 1,
+        text: task.text,
+        priority: task.priority,
         completed: false
       }));
       setTasks(newTasks);
@@ -228,6 +261,11 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
           <div className="bg-violet-50 rounded-xl p-4 border border-violet-100">
             <h3 className="font-medium text-violet-900 mb-2">How It Works</h3>
             <p className="text-sm text-violet-800">{currentModule.instruction}</p>
+            {moduleId === 'executive-function' && (
+              <p className="text-xs text-violet-700 mt-2">
+                Example tasks shown - practice organizing by priority (P1 = highest)
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -359,10 +397,18 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     }
 
     if (moduleId === 'executive-function') {
+      const priorityColors = {
+        1: 'bg-red-500 text-white',
+        2: 'bg-orange-500 text-white',
+        3: 'bg-blue-500 text-white',
+        4: 'bg-slate-400 text-white'
+      };
+
       return (
         <div className="max-w-md w-full space-y-4">
-          <div className="text-center mb-6">
-            <div className="text-sm text-violet-600 font-medium">Complete tasks by priority (highest first)</div>
+          <div className="text-center mb-4">
+            <div className="text-sm text-violet-600 font-medium mb-2">Tap tasks in priority order</div>
+            <div className="text-xs text-slate-600">P1 (urgent) → P2 (high) → P3 (medium) → P4 (low)</div>
           </div>
           <div className="space-y-3">
             {tasks.map((task) => (
@@ -376,14 +422,17 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
                     : 'bg-white border-slate-200 hover:border-violet-400 hover:bg-violet-50 active:scale-98'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <span className={task.completed ? 'line-through text-slate-500' : 'text-slate-900'}>{task.text}</span>
-                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-violet-100 text-violet-700">
+                <div className="flex items-center gap-3">
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${priorityColors[task.priority as keyof typeof priorityColors]}`}>
                     P{task.priority}
                   </span>
+                  <span className={task.completed ? 'line-through text-slate-500' : 'text-slate-900 font-medium'}>{task.text}</span>
                 </div>
               </button>
             ))}
+          </div>
+          <div className="text-xs text-center text-slate-500 mt-4">
+            Example tasks to practice prioritization skills
           </div>
         </div>
       );
