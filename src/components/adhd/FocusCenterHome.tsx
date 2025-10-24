@@ -86,123 +86,102 @@ export default function FocusCenterHome() {
 
   async function loadSettings() {
     if (!user?.id) return;
+    try {
+      const { data } = await supabase
+        .from('focus_user_settings')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-    const { data } = await supabase
-      .from('focus_user_settings')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (data) {
-      setSettings(data);
-    } else {
-      const newSettings = {
-        user_id: user.id,
-        default_duration: 25,
-        body_double_enabled: false,
-        brown_noise_enabled: false,
-        last_task: ''
-      };
-      await supabase.from('focus_user_settings').insert(newSettings);
-      setSettings(newSettings);
+      if (data) {
+        setSettings(data);
+      }
+    } catch (error) {
+      console.warn('Could not load settings:', error);
     }
   }
 
   async function loadStats() {
     if (!user?.id) return;
+    try {
+      const { data } = await supabase
+        .from('adhd_user_stats')
+        .select('total_starts, total_finishes, total_focus_minutes, current_streak_days')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-    const { data } = await supabase
-      .from('adhd_user_stats')
-      .select('total_starts, total_finishes, total_focus_minutes, current_streak_days')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (data) {
-      setStats(data);
+      if (data) {
+        setStats(data);
+      }
+    } catch (error) {
+      console.warn('Could not load stats:', error);
     }
   }
 
   async function loadTodayWins() {
     if (!user?.id) return;
-
-    const { data } = await supabase
-      .from('meaningful_wins')
-      .select('id, win_text, completed')
-      .eq('user_id', user.id)
-      .eq('date', new Date().toISOString().split('T')[0])
-      .order('created_at', { ascending: true })
-      .limit(2);
-
-    if (data && data.length > 0) {
-      setTodayWins(data);
-    } else {
-      const aiWins = [
-        { win_text: 'Start one 5-minute focus block', suggested_by_ai: true },
-        { win_text: 'Complete smallest task on your list', suggested_by_ai: true }
-      ];
-
-      const { data: inserted } = await supabase
+    try {
+      const { data } = await supabase
         .from('meaningful_wins')
-        .insert(aiWins.map(w => ({
-          user_id: user.id,
-          ...w,
-          date: new Date().toISOString().split('T')[0]
-        })))
-        .select('id, win_text, completed');
+        .select('id, win_text, completed')
+        .eq('user_id', user.id)
+        .eq('date', new Date().toISOString().split('T')[0])
+        .order('created_at', { ascending: true })
+        .limit(2);
 
-      if (inserted) setTodayWins(inserted);
+      if (data && data.length > 0) {
+        setTodayWins(data);
+      }
+    } catch (error) {
+      console.warn('Could not load wins:', error);
     }
   }
 
   async function loadGamification() {
     if (!user?.id) return;
+    try {
+      const { data } = await supabase
+        .from('user_gamification')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-    const { data } = await supabase
-      .from('user_gamification')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (data) {
-      setGamification(data);
-    } else {
-      const newGamification = {
-        user_id: user.id,
-        current_xp: 0,
-        level: 1,
-        total_xp: 0,
-        streak_insurance_count: 0
-      };
-      await supabase.from('user_gamification').insert(newGamification);
-      setGamification(newGamification);
+      if (data) {
+        setGamification(data);
+      }
+    } catch (error) {
+      console.warn('Could not load gamification:', error);
     }
   }
 
   async function loadAchievements() {
     if (!user?.id) return;
+    try {
+      const { data: allAchievements } = await supabase
+        .from('achievements')
+        .select('*')
+        .order('category', { ascending: true });
 
-    const { data: allAchievements } = await supabase
-      .from('achievements')
-      .select('*')
-      .order('category', { ascending: true });
+      const { data: userAchievements } = await supabase
+        .from('user_achievements')
+        .select('achievement_id, earned_at')
+        .eq('user_id', user.id);
 
-    const { data: userAchievements } = await supabase
-      .from('user_achievements')
-      .select('achievement_id, earned_at')
-      .eq('user_id', user.id);
+      if (allAchievements) {
+        const earnedMap = new Map(
+          (userAchievements || []).map(ua => [ua.achievement_id, ua.earned_at])
+        );
 
-    if (allAchievements) {
-      const earnedMap = new Map(
-        (userAchievements || []).map(ua => [ua.achievement_id, ua.earned_at])
-      );
+        const enrichedAchievements = allAchievements.map(a => ({
+          ...a,
+          earned_at: earnedMap.get(a.id)
+        }));
 
-      const enrichedAchievements = allAchievements.map(a => ({
-        ...a,
-        earned_at: earnedMap.get(a.id)
-      }));
-
-      setAchievements(enrichedAchievements);
-      setEarnedAchievements(new Set(earnedMap.keys()));
+        setAchievements(enrichedAchievements);
+        setEarnedAchievements(new Set(earnedMap.keys()));
+      }
+    } catch (error) {
+      console.warn('Could not load achievements:', error);
     }
   }
 
@@ -213,10 +192,14 @@ export default function FocusCenterHome() {
       console.log('Haptics not available');
     }
 
-    await supabase
-      .from('meaningful_wins')
-      .update({ completed: !completed, completed_at: !completed ? new Date().toISOString() : null })
-      .eq('id', id);
+    try {
+      await supabase
+        .from('meaningful_wins')
+        .update({ completed: !completed, completed_at: !completed ? new Date().toISOString() : null })
+        .eq('id', id);
+    } catch (error) {
+      console.warn('Could not update win:', error);
+    }
 
     setTodayWins(prev => prev.map(w => w.id === id ? { ...w, completed: !completed } : w));
 

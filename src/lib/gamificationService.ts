@@ -26,47 +26,52 @@ function calculateLevelFromXP(totalXP: number): number {
 }
 
 export async function awardXP(userId: string, xp: number, reason: string): Promise<{ levelUp: boolean; newLevel: number }> {
-  const { data: gamification } = await supabase
-    .from('user_gamification')
-    .select('*')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  const currentTotalXP = gamification?.total_xp || 0;
-  const currentLevel = gamification?.level || 1;
-  const newTotalXP = currentTotalXP + xp;
-  const newLevel = calculateLevelFromXP(newTotalXP);
-  const levelUp = newLevel > currentLevel;
-
-  if (gamification) {
-    await supabase
+  try {
+    const { data: gamification } = await supabase
       .from('user_gamification')
-      .update({
-        current_xp: gamification.current_xp + xp,
-        total_xp: newTotalXP,
-        level: newLevel,
-        updated_at: new Date().toISOString()
-      })
-      .eq('user_id', userId);
-  } else {
-    await supabase
-      .from('user_gamification')
-      .insert({
-        user_id: userId,
-        current_xp: xp,
-        total_xp: xp,
-        level: newLevel,
-        streak_insurance_count: 0
-      });
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    const currentTotalXP = gamification?.total_xp || 0;
+    const currentLevel = gamification?.level || 1;
+    const newTotalXP = currentTotalXP + xp;
+    const newLevel = calculateLevelFromXP(newTotalXP);
+    const levelUp = newLevel > currentLevel;
+
+    if (gamification) {
+      await supabase
+        .from('user_gamification')
+        .update({
+          current_xp: gamification.current_xp + xp,
+          total_xp: newTotalXP,
+          level: newLevel,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', userId);
+    } else {
+      await supabase
+        .from('user_gamification')
+        .insert({
+          user_id: userId,
+          current_xp: xp,
+          total_xp: xp,
+          level: newLevel,
+          streak_insurance_count: 0
+        });
+    }
+
+    audioService.xpGain();
+
+    if (levelUp) {
+      audioService.levelUp();
+    }
+
+    return { levelUp, newLevel };
+  } catch (error) {
+    console.warn('Gamification service temporarily unavailable:', error);
+    return { levelUp: false, newLevel: 1 };
   }
-
-  audioService.xpGain();
-
-  if (levelUp) {
-    audioService.levelUp();
-  }
-
-  return { levelUp, newLevel };
 }
 
 export async function checkAndAwardAchievements(userId: string): Promise<Achievement[]> {

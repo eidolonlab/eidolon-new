@@ -96,20 +96,6 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
 
   const completeTraining = async () => {
     setPhase('complete');
-
-    if (user) {
-      try {
-        await supabase.from('training_completions').insert({
-          user_id: user.id,
-          module_id: moduleId,
-          score: score,
-          rounds_completed: totalRounds,
-          completed_at: new Date().toISOString(),
-        });
-      } catch (error) {
-        console.warn('Failed to save training completion:', error);
-      }
-    }
   };
 
   if (phase === 'intro') {
