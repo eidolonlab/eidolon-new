@@ -33,17 +33,23 @@ export default function StreakCalendar({ streakDays, insuranceCount, compact = f
     const startDate = new Date(today);
     startDate.setDate(startDate.getDate() - daysToShow);
 
-    const { data } = await supabase
-      .from('focus_session_completions')
-      .select('completed_at')
-      .eq('user_id', user?.id)
-      .gte('completed_at', startDate.toISOString());
+    let focusDates = new Set<string>();
 
-    const focusDates = new Set(
-      (data || []).map(session =>
-        new Date(session.completed_at).toISOString().split('T')[0]
-      )
-    );
+    try {
+      const { data } = await supabase
+        .from('focus_session_completions')
+        .select('completed_at')
+        .eq('user_id', user?.id)
+        .gte('completed_at', startDate.toISOString());
+
+      focusDates = new Set(
+        (data || []).map(session =>
+          new Date(session.completed_at).toISOString().split('T')[0]
+        )
+      );
+    } catch (error) {
+      console.warn('Could not load calendar data:', error);
+    }
 
     const calendarDays: DayData[] = [];
     for (let i = daysToShow; i >= 0; i--) {
