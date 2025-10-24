@@ -28,6 +28,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   const [misses, setMisses] = useState(0);
   const [newTaskText, setNewTaskText] = useState('');
   const [userTasks, setUserTasks] = useState<Array<{text: string; priority: number}>>([]);
+  const [lastReactionTime, setLastReactionTime] = useState<number | null>(null);
 
   const moduleDetails: Record<string, { title: string; instruction: string }> = {
     'working-memory': {
@@ -44,7 +45,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     },
     'micro-attention': {
       title: 'Micro-Attention Drill',
-      instruction: 'Quick focus challenge - stay locked in for 30 seconds',
+      instruction: 'Measure your reaction time - tap the moment the button turns green',
     },
   };
 
@@ -183,19 +184,26 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     } catch (e) {}
 
     const now = Date.now();
-    if (now >= reactionStartTime) {
+    if (now >= reactionStartTime && reactionStartTime > 0) {
       const reactionTime = now - reactionStartTime;
+      setLastReactionTime(reactionTime);
       audioService.success();
       const points = Math.max(10 - Math.floor(reactionTime / 100), 1);
       setScore(score + points);
 
+      setReactionStartTime(0);
+
       if (currentRound < totalRounds) {
-        setTimeout(() => setCurrentRound(currentRound + 1), 1000);
+        setTimeout(() => {
+          setLastReactionTime(null);
+          setCurrentRound(currentRound + 1);
+        }, 1500);
       } else {
         setTimeout(() => completeTraining(), 1000);
       }
-    } else {
+    } else if (reactionStartTime > 0) {
       audioService.error();
+      setScore(Math.max(0, score - 2));
     }
   };
 
@@ -542,24 +550,49 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
     }
 
     if (moduleId === 'micro-attention') {
-      const isReady = Date.now() >= reactionStartTime;
+      const isReady = reactionStartTime > 0 && Date.now() >= reactionStartTime;
+      const isWaiting = reactionStartTime > 0 && !isReady;
+
       return (
         <div className="max-w-md w-full space-y-6">
           <div className="text-center mb-8">
-            <div className="text-sm text-violet-600 font-medium mb-4">
-              {isReady ? 'TAP NOW!' : 'Wait for the signal...'}
-            </div>
+            {lastReactionTime !== null ? (
+              <div className="space-y-2">
+                <div className="text-2xl font-bold text-green-600">
+                  {lastReactionTime}ms
+                </div>
+                <div className="text-sm text-slate-600">
+                  {lastReactionTime < 300 ? 'Lightning fast!' : lastReactionTime < 500 ? 'Great reaction!' : 'Good effort!'}
+                </div>
+              </div>
+            ) : (
+              <div className="text-lg text-violet-600 font-medium">
+                {isReady ? 'TAP NOW!' : isWaiting ? 'Wait for it...' : 'Get ready...'}
+              </div>
+            )}
           </div>
           <button
             onClick={handleReactionClick}
-            className={`w-full h-64 rounded-2xl border-4 transition-all ${
-              isReady
-                ? 'bg-green-500 border-green-600 animate-pulse'
-                : 'bg-slate-200 border-slate-300'
+            disabled={lastReactionTime !== null}
+            className={`w-full h-64 rounded-2xl border-4 transition-all flex items-center justify-center ${
+              lastReactionTime !== null
+                ? 'bg-green-100 border-green-300 cursor-not-allowed'
+                : isReady
+                ? 'bg-green-500 border-green-600 animate-pulse shadow-lg shadow-green-500/50'
+                : 'bg-slate-200 border-slate-300 hover:bg-slate-300'
             }`}
           >
-            <Target className={`w-20 h-20 mx-auto ${isReady ? 'text-white' : 'text-slate-400'}`} />
+            <Target className={`w-20 h-20 ${
+              lastReactionTime !== null
+                ? 'text-green-600'
+                : isReady
+                ? 'text-white animate-pulse'
+                : 'text-slate-400'
+            }`} />
           </button>
+          <div className="text-center text-xs text-slate-500">
+            Tap as fast as you can when the button turns green
+          </div>
         </div>
       );
     }
