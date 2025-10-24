@@ -32,6 +32,7 @@ import TrainPage from './pages/TrainPage';
 import BoostsPage from './pages/BoostsPage';
 import ADHDInsightsPage from './pages/InsightsPage';
 import MorePage from './pages/MorePage';
+import TrainingExercise from './components/training/TrainingExercise';
 import { UserManagementProvider } from './contexts/UserManagementContext';
 import { CognitiveStateProvider } from './contexts/CognitiveStateContext';
 import { WeaveProvider } from './contexts/WeaveContext';
@@ -250,6 +251,14 @@ function AppContent() {
             {/* New ADHD-first routes with AppShell */}
             <Route path="/focus" element={<FocusPage />} />
             <Route path="/train" element={<TrainPage />} />
+            <Route path="/train/:moduleId" element={
+              <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-blue-50">
+                <TrainingExercise
+                  moduleId={location.pathname.split('/').pop() || 'working-memory'}
+                  onClose={() => navigate('/train')}
+                />
+              </div>
+            } />
             <Route path="/boosts/*" element={<BoostsPage />} />
             <Route path="/insights" element={<ADHDInsightsPage />} />
             <Route path="/more" element={<MorePage />} />
