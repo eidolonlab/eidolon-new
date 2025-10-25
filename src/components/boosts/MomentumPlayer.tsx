@@ -7,7 +7,7 @@ interface MomentumPlayerProps {
   onComplete: () => void;
 }
 
-type MomentumPhase = 'choose' | 'prepare' | 'act' | 'celebrate';
+type MomentumPhase = 'choose' | 'prepare' | 'act';
 
 const taskSuggestions = [
   "Reply to one email",
@@ -34,8 +34,7 @@ const MomentumPlayer: React.FC<MomentumPlayerProps> = ({ duration, onComplete })
           if (prev <= 1) {
             clearInterval(timer);
             audioService.celebration();
-            setPhase('celebrate');
-            setTimeout(onComplete, 3000);
+            setTimeout(onComplete, 500);
             return 0;
           }
           return prev - 1;
@@ -211,41 +210,6 @@ const MomentumPlayer: React.FC<MomentumPlayerProps> = ({ duration, onComplete })
                 {timeLeft <= 60 && timeLeft > 30 && "Halfway there! Keep that momentum"}
                 {timeLeft <= 30 && "Almost done! Finish strong!"}
               </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (phase === 'celebrate') {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] p-8">
-        <div className="w-full max-w-md text-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-in zoom-in duration-500">
-            <CheckCircle className="w-12 h-12 text-white" />
-          </div>
-
-          <h3 className="text-3xl font-bold text-slate-900 mb-2">You Did It! 🎉</h3>
-          <p className="text-lg text-slate-700 mb-6">Completed: {taskToUse}</p>
-
-          <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200 mb-6">
-            <p className="text-amber-900 font-medium mb-2">
-              See? You CAN do hard things!
-            </p>
-            <p className="text-sm text-amber-800">
-              That momentum you built? It's real. Keep riding it!
-            </p>
-          </div>
-
-          <div className="flex gap-2">
-            <div className="flex-1 bg-white rounded-xl p-4 border-2 border-amber-200">
-              <div className="text-2xl font-bold text-amber-600">+10</div>
-              <div className="text-xs text-slate-600">XP Earned</div>
-            </div>
-            <div className="flex-1 bg-white rounded-xl p-4 border-2 border-orange-200">
-              <div className="text-2xl font-bold text-orange-600">2:00</div>
-              <div className="text-xs text-slate-600">Focus Time</div>
             </div>
           </div>
         </div>

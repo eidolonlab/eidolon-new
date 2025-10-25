@@ -197,6 +197,23 @@ export default function ActivityPlayer() {
     );
   }
 
+  if (specializedPlayer && !showMoodCheck) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50">
+        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-orange-100 px-4 py-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-medium">Back</span>
+          </button>
+        </div>
+        {specializedPlayer}
+      </div>
+    );
+  }
+
   if (showMoodCheck && !moodAfter) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex items-center justify-center p-4">
@@ -236,23 +253,6 @@ export default function ActivityPlayer() {
             Skip
           </button>
         </div>
-      </div>
-    );
-  }
-
-  if (specializedPlayer && !isComplete) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50">
-        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-orange-100 px-4 py-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium">Back</span>
-          </button>
-        </div>
-        {specializedPlayer}
       </div>
     );
   }
