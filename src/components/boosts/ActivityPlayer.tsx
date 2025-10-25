@@ -9,6 +9,11 @@ import GroundingPlayer from './GroundingPlayer';
 import StretchGuidePlayer from './StretchGuidePlayer';
 import ObjectFocusPlayer from './ObjectFocusPlayer';
 import MomentumPlayer from './MomentumPlayer';
+import BalanceTimerPlayer from './BalanceTimerPlayer';
+import JumpResetPlayer from './JumpResetPlayer';
+import PatternThrowPlayer from './PatternThrowPlayer';
+import PlankHoldPlayer from './PlankHoldPlayer';
+import WallTouchSprintPlayer from './WallTouchSprintPlayer';
 
 interface BoostActivity {
   id: string;
@@ -134,6 +139,22 @@ export default function ActivityPlayer() {
     }
     if (activityName.includes('two minute') || activityName.includes('momentum')) {
       return <MomentumPlayer {...commonProps} />;
+    }
+
+    if (activityName.includes('single-leg') || activityName.includes('eyes-closed')) {
+      return <BalanceTimerPlayer {...commonProps} exerciseName={activity.name} />;
+    }
+    if (activityName.includes('jump')) {
+      return <JumpResetPlayer {...commonProps} />;
+    }
+    if (activityName.includes('pattern') || activityName.includes('throw')) {
+      return <PatternThrowPlayer {...commonProps} />;
+    }
+    if (activityName.includes('plank')) {
+      return <PlankHoldPlayer {...commonProps} />;
+    }
+    if (activityName.includes('wall') || activityName.includes('sprint')) {
+      return <WallTouchSprintPlayer {...commonProps} />;
     }
 
     return null;
