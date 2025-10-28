@@ -313,130 +313,152 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
           </ErrorBoundary>
         ) : showAdvancedFeatures ? (
           <ErrorBoundary fallback={<LoadingSpinner message="Loading advanced features..." />}>
-          <div className="space-y-8 pb-32 max-h-[85vh] overflow-y-auto">
-            {/* Quantum Mode Introduction */}
-            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 sm:p-6">
-              <div className="flex items-start space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Brain className="w-5 h-5 text-white" />
+          <div className="space-y-6 pb-32">
+
+            {/* QUANTUM MODE: Memory Input Section - ALWAYS VISIBLE AT TOP */}
+            <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-2xl p-6 shadow-xl">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                  <Brain className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Quantum Memory Analysis Active</h3>
-                  <p className="text-sm text-gray-700 mb-3">
-                    This advanced mode analyzes your memory using quantum-inspired cognitive models
-                    to maximize retention and recall strength.
-                  </p>
-                  <div className="text-sm text-purple-900 bg-purple-100 rounded-lg p-3">
-                    <strong>💡 To activate quantum enhancements:</strong> Fill in your memory seed and sensory details below.
-                    The quantum engine will analyze coherence, entanglement, and superposition in real-time.
-                  </div>
+                  <h2 className="text-2xl font-bold">🧠 Quantum Memory Mode</h2>
+                  <p className="text-purple-100 text-sm">Advanced quantum-inspired memory enhancement</p>
                 </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <p className="text-white/90 text-sm leading-relaxed">
+                  <strong className="text-white">How it works:</strong> Enter your memory details below.
+                  As you type, our quantum engine analyzes coherence, entanglement, and superposition
+                  to optimize your memory encoding in real-time.
+                </p>
               </div>
             </div>
 
-            {/* Memory Input Fields */}
-            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Memory Input</h3>
+            {/* Memory Input Fields - PROMINENT SECTION */}
+            <div className="bg-white rounded-2xl border-2 border-purple-300 shadow-lg p-6 space-y-6">
+              <div className="flex items-center space-x-2 mb-6 pb-4 border-b-2 border-purple-200">
+                <Sparkles className="w-6 h-6 text-purple-600" />
+                <h3 className="text-xl font-bold text-gray-900">Enter Your Memory Details</h3>
+              </div>
 
               {/* Memory Seed */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Memory Seed (What happened?)
+              <div className="bg-purple-50 p-4 rounded-xl border border-purple-200">
+                <label className="block text-sm font-semibold text-purple-900 mb-2">
+                  ⭐ Memory Seed (What happened?)
                 </label>
                 <input
                   type="text"
                   value={seed}
                   onChange={(e) => setSeed(e.target.value)}
                   placeholder="e.g., Coffee with Sarah at the park"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 text-lg border-2 border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
                 />
               </div>
 
               {/* Title */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Memory Title
+              <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-200">
+                <label className="block text-sm font-semibold text-indigo-900 mb-2">
+                  📝 Memory Title
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g., Morning Coffee Chat"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 text-lg border-2 border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                 />
               </div>
 
               {/* Sensory Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-                    <Eye className="w-4 h-4" />
-                    <span>Visual Details</span>
-                  </label>
-                  <textarea
-                    value={sensoryDetails.visual}
-                    onChange={(e) => setSensoryDetails({...sensoryDetails, visual: e.target.value})}
-                    placeholder="What did you see?"
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                  />
-                </div>
+              <div className="space-y-4">
+                <h4 className="text-md font-semibold text-gray-800 flex items-center space-x-2">
+                  <Sparkles className="w-5 h-5 text-purple-500" />
+                  <span>Sensory Details (The more you add, the stronger the memory!)</span>
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <label className="flex items-center space-x-2 text-sm font-semibold text-blue-900 mb-2">
+                      <Eye className="w-4 h-4" />
+                      <span>👁️ Visual Details</span>
+                    </label>
+                    <textarea
+                      value={sensoryDetails.visual}
+                      onChange={(e) => setSensoryDetails({...sensoryDetails, visual: e.target.value})}
+                      placeholder="What did you see? Colors, lighting, people..."
+                      rows={3}
+                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-                    <Ear className="w-4 h-4" />
-                    <span>Auditory Details</span>
-                  </label>
-                  <textarea
-                    value={sensoryDetails.auditory}
-                    onChange={(e) => setSensoryDetails({...sensoryDetails, auditory: e.target.value})}
-                    placeholder="What did you hear?"
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                  />
-                </div>
+                  <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+                    <label className="flex items-center space-x-2 text-sm font-semibold text-green-900 mb-2">
+                      <Ear className="w-4 h-4" />
+                      <span>👂 Auditory Details</span>
+                    </label>
+                    <textarea
+                      value={sensoryDetails.auditory}
+                      onChange={(e) => setSensoryDetails({...sensoryDetails, auditory: e.target.value})}
+                      placeholder="What did you hear? Sounds, voices, music..."
+                      rows={3}
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none bg-white"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-                    <Heart className="w-4 h-4" />
-                    <span>Emotional Details</span>
-                  </label>
-                  <textarea
-                    value={sensoryDetails.emotional}
-                    onChange={(e) => setSensoryDetails({...sensoryDetails, emotional: e.target.value})}
-                    placeholder="How did you feel?"
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                  />
-                </div>
+                  <div className="bg-pink-50 p-3 rounded-lg border border-pink-200">
+                    <label className="flex items-center space-x-2 text-sm font-semibold text-pink-900 mb-2">
+                      <Heart className="w-4 h-4" />
+                      <span>❤️ Emotional Details</span>
+                    </label>
+                    <textarea
+                      value={sensoryDetails.emotional}
+                      onChange={(e) => setSensoryDetails({...sensoryDetails, emotional: e.target.value})}
+                      placeholder="How did you feel? Happy, excited, peaceful..."
+                      rows={3}
+                      className="w-full px-3 py-2 border-2 border-pink-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 resize-none bg-white"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-                    <Hand className="w-4 h-4" />
-                    <span>Tactile Details</span>
-                  </label>
-                  <textarea
-                    value={sensoryDetails.tactile}
-                    onChange={(e) => setSensoryDetails({...sensoryDetails, tactile: e.target.value})}
-                    placeholder="What did you touch/feel?"
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                  />
+                  <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                    <label className="flex items-center space-x-2 text-sm font-semibold text-amber-900 mb-2">
+                      <Hand className="w-4 h-4" />
+                      <span>✋ Tactile Details</span>
+                    </label>
+                    <textarea
+                      value={sensoryDetails.tactile}
+                      onChange={(e) => setSensoryDetails({...sensoryDetails, tactile: e.target.value})}
+                      placeholder="What did you touch/feel? Textures, temperatures..."
+                      rows={3}
+                      className="w-full px-3 py-2 border-2 border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 resize-none bg-white"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Narrative */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Narrative (Optional)
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <label className="block text-sm font-semibold text-slate-900 mb-2">
+                  📖 Full Narrative (Optional - Add more context)
                 </label>
                 <textarea
                   value={narrative}
                   onChange={(e) => setNarrative(e.target.value)}
-                  placeholder="Describe the full story..."
+                  placeholder="Tell the complete story with all the details you can remember..."
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 resize-none bg-white"
                 />
+              </div>
+            </div>
+
+            {/* VISUAL DIVIDER - Analysis Section Begins */}
+            <div className="relative py-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t-2 border-purple-200"></div>
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-gray-50 px-6 py-2 text-sm font-semibold text-purple-700 rounded-full border-2 border-purple-300 shadow-sm">
+                  ⚡ Real-Time Quantum Analysis Below
+                </span>
               </div>
             </div>
 
