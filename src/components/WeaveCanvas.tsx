@@ -1109,7 +1109,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             onClick={() => setStep(step + 1)}
             disabled={
               (step === 1) ||
-              (step === 2 && (!seed || !title)) ||
+              (step === 2 && !seed) ||
               (step === 3 && Object.values(sensoryDetails).every(d => d.length === 0))
             }
             variant="primary"
