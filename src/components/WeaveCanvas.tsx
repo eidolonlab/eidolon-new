@@ -5,6 +5,7 @@ import LoadingSpinner from './LoadingSpinner';
 import ConfirmDialog from './ConfirmDialog';
 import AccessibleButton from './AccessibleButton';
 import EnhancedTextInput from './EnhancedTextInput';
+import VoiceInputButton from './VoiceInputButton';
 import { useWeave } from '../contexts/WeaveContext';
 import CueLibrary from './CueLibrary';
 import BridgeBack from './BridgeBack';
