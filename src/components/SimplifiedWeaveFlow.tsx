@@ -200,18 +200,18 @@ const SimplifiedWeaveFlow: React.FC<SimplifiedWeaveFlowProps> = ({ onComplete, o
             <EnhancedTextInput
               type="input"
               value={weaveData.seed}
-              onChange={(e) => setWeaveData(prev => ({ ...prev, seed: e.target.value }))}
+              onChange={(value) => setWeaveData(prev => ({ ...prev, seed: value }))}
               placeholder="e.g., grandmother's kitchen, first day at work, sunset walk"
               className="text-lg"
               showVoiceButton={true}
               showAIEnhancement={true}
               aiContext="memory"
             />
-            
+
             <EnhancedTextInput
               type="input"
               value={weaveData.title}
-              onChange={(e) => setWeaveData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(value) => setWeaveData(prev => ({ ...prev, title: value }))}
               placeholder="Give your memory a title (optional)"
               showVoiceButton={true}
             />
@@ -261,7 +261,7 @@ const SimplifiedWeaveFlow: React.FC<SimplifiedWeaveFlowProps> = ({ onComplete, o
           <div className="space-y-4">
             <EnhancedTextInput
               value={weaveData[currentPrompt.key as keyof typeof weaveData] as string}
-              onChange={(e) => setWeaveData(prev => ({ ...prev, [currentPrompt.key]: e.target.value }))}
+              onChange={(value) => setWeaveData(prev => ({ ...prev, [currentPrompt.key]: value }))}
               placeholder={currentPrompt.placeholder}
               rows={4}
               className="text-lg"
