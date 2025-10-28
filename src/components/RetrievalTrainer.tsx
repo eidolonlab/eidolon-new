@@ -204,7 +204,7 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
 
         {/* Training Session */}
         {selectedWeave && (
-          <div className="bg-white rounded-xl border border-gray-200 p-8">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-8 max-h-[85vh] overflow-y-auto pb-safe">
             {sessionState === 'idle' && (
               <div className="text-center">
                 <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">

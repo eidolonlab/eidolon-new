@@ -209,7 +209,7 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
 
   if (phase === 'planning') {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 max-h-[85vh] overflow-y-auto pb-safe">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
             <Target className="w-5 h-5 text-white" />
@@ -349,7 +349,7 @@ const ExecutiveFunctionTrainer: React.FC<ExecutiveFunctionTrainerProps> = ({ onC
     const progressPercentage = (completedTasks.length / tasks.length) * 100;
 
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 max-h-[85vh] overflow-y-auto pb-safe">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">Execution Phase</h2>
           <div className="text-sm text-gray-600">

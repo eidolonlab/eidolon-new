@@ -251,7 +251,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   if (phase === 'intro') {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6">
+        <div className="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-6 max-h-[90vh] overflow-y-auto">
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">{currentModule.title}</h2>
@@ -328,7 +328,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6 my-8">
+        <div className="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-6 my-8 max-h-[90vh] overflow-y-auto">
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">Add Your Tasks</h2>
@@ -443,7 +443,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   if (phase === 'complete') {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6 text-center">
+        <div className="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-6 text-center max-h-[90vh] overflow-y-auto">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>

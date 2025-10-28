@@ -175,7 +175,7 @@ const NeurofeedbackTrainer: React.FC<NeurofeedbackTrainerProps> = ({ onComplete 
   const coherenceColor = getCoherenceColor();
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 max-h-[85vh] overflow-y-auto pb-safe">
       <div className="flex items-center space-x-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
           <Activity className="w-5 h-5 text-white" />
