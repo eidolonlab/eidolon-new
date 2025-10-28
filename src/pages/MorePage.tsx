@@ -53,13 +53,6 @@ export default function MorePage() {
       color: 'text-slate-600'
     },
     {
-      icon: FileText,
-      label: 'User Guide',
-      description: 'How to use Eidolon',
-      onClick: () => window.open('/user-guide.html', '_blank'),
-      color: 'text-emerald-600'
-    },
-    {
       icon: Shield,
       label: 'Privacy Policy',
       description: 'Your data protection',
