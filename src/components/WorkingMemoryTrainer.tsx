@@ -173,14 +173,6 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
         setStreakCount(0);
         setEncouragementMessage('');
         setGameState('feedback');
-        setTimeout(() => {
-          setAttempts(prev => prev + 1);
-          if (attempts >= 2) {
-            completeGame();
-          } else {
-            startRound();
-          }
-        }, 1500);
       }
     }
   };
@@ -715,40 +707,86 @@ const WorkingMemoryTrainer: React.FC<WorkingMemoryTrainerProps> = ({ onComplete 
               <div className="text-sm text-emerald-700">Moving to level {currentLevel + 1}</div>
             </div>
           ) : (
-            <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-              <XCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
-              <div className="font-semibold text-red-900">Not quite right</div>
-              <div className="text-sm text-red-700">
+            <div className="p-6 bg-red-50 rounded-lg border border-red-200">
+              <XCircle className="w-12 h-12 text-red-600 mx-auto mb-3" />
+              <div className="font-semibold text-red-900 text-lg mb-2">Not quite right</div>
+              <div className="text-sm text-red-700 mb-1">
+                Your sequence: {userInput.join(' → ')}
+              </div>
+              <div className="text-sm text-emerald-700 font-medium mb-6">
                 Correct sequence: {sequence.join(' → ')}
               </div>
-              <div className="mt-4 flex space-x-2">
+
+              <div className="space-y-3">
                 <button
                   onClick={() => {
-                    // Retry the same level
-                    setGameState('setup');
-                    setScore(0);
-                    setAttempts(0);
-                    setReactionTimes([]);
-                    // Keep current level
+                    setUserInput([]);
+                    setCurrentIndex(0);
+                    setGameState('showing');
+                    setShowSequence(true);
+
+                    let index = 0;
+                    const showInterval = setInterval(() => {
+                      setCurrentIndex(index);
+                      index++;
+
+                      if (index >= sequence.length) {
+                        clearInterval(showInterval);
+                        setTimeout(() => {
+                          setShowSequence(false);
+                          setGameState('testing');
+                          setStartTime(new Date());
+                        }, 500);
+                      }
+                    }, 800);
                   }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
                 >
-                  Try Level {currentLevel} Again
+                  <RotateCcw className="w-5 h-5" />
+                  Try This Sequence Again
                 </button>
+
                 <button
                   onClick={() => {
-                    // Drop down one level if above 3
-                    const newLevel = Math.max(3, currentLevel - 1);
-                    setCurrentLevel(newLevel);
-                    
+                    setAttempts(prev => prev + 1);
+                    if (attempts >= 9) {
+                      completeGame();
+                    } else {
+                      startRound();
+                    }
+                  }}
+                  className="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium flex items-center justify-center gap-2"
+                >
+                  <Play className="w-5 h-5" />
+                  Continue with Next Sequence
+                </button>
+
+                {currentLevel > 3 && (
+                  <button
+                    onClick={() => {
+                      const newLevel = currentLevel - 1;
+                      setCurrentLevel(newLevel);
+                      setGameState('setup');
+                      setScore(0);
+                      setAttempts(0);
+                      setReactionTimes([]);
+                    }}
+                    className="w-full px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
+                  >
+                    Restart at Easier Level {currentLevel - 1}
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
                     setGameState('setup');
                     setScore(0);
                     setAttempts(0);
                     setReactionTimes([]);
                   }}
-                  className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                  className="w-full px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                 >
-                  Try Level {Math.max(3, currentLevel - 1)}
+                  Back to Setup
                 </button>
               </div>
             </div>
