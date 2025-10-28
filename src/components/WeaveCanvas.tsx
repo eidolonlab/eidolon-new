@@ -630,7 +630,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                 <EnhancedTextInput
                   type="input"
                   value={seed}
-                  onChange={(e) => setSeed(e.target.value)}
+                  onChange={(value) => setSeed(value)}
                   placeholder={weaveType === 'past' ? 'e.g., "grandmother\'s kitchen", "first day at work"' : 'e.g., "job interview", "family dinner"'}
                   className="text-lg"
                   showVoiceButton={true}
@@ -638,7 +638,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                   aiContext="memory"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Title
@@ -646,7 +646,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
                 <EnhancedTextInput
                   type="input"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(value) => setTitle(value)}
                   placeholder="Give your weave a memorable title"
                   showVoiceButton={true}
                 />
@@ -973,7 +973,7 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
               
               <EnhancedTextInput
                 value={narrative}
-                onChange={(e) => setNarrative(e.target.value)}
+                onChange={(value) => setNarrative(value)}
                 placeholder="Write your narrative here, or use the Generate Draft button to create one from your sensory details..."
                 rows={8}
                 showVoiceButton={true}
