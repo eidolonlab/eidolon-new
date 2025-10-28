@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Clock, CheckCircle, XCircle, RotateCcw, Target, HelpCircle } from 'lucide-react';
 import { useWeave } from '../contexts/WeaveContext';
 import EnhancedTextInput from './EnhancedTextInput';
@@ -15,6 +16,7 @@ interface RetrievalTrainerProps {
 }
 
 const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
+  const navigate = useNavigate();
   const { weaves, addRetrievalSession } = useWeave();
   const [currentWeave, setCurrentWeave] = useState<string | null>(null);
   const [sessionState, setSessionState] = useState<'idle' | 'active' | 'completed'>('idle');
@@ -150,7 +152,7 @@ const RetrievalTrainer: React.FC<RetrievalTrainerProps> = ({ onBack }) => {
             Create some Memory Weaves first to start your retrieval training sessions.
           </p>
           <button
-            onClick={onBack}
+            onClick={() => navigate('/weave')}
             className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Create Memory Weaves
