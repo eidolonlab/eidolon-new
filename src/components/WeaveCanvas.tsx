@@ -261,29 +261,43 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
             Back to Dashboard
           </AccessibleButton>
           
-          <div className="flex items-center space-x-4">
-            <AccessibleButton
-              onClick={() => setUseSimplifiedFlow(false)}
-              variant="outline"
-              size="sm"
-            >
-              Advanced Mode
-            </AccessibleButton>
-            <AccessibleButton
-              onClick={() => setUsePerfectFlow(true)}
-              variant="primary"
-              size="sm"
-            >
-              Perfect Flow
-            </AccessibleButton>
-            <AccessibleButton
-              onClick={() => setShowAdvancedFeatures(!showAdvancedFeatures)}
-              variant="primary"
-              size="sm"
-            >
-              🧠 Quantum Mode
-            </AccessibleButton>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <h1 className="text-2xl font-bold text-gray-900">Create Memory Weave</h1>
+            <div className="flex flex-wrap gap-2">
+              <AccessibleButton
+                onClick={() => {
+                  setUseSimplifiedFlow(true);
+                  setUsePerfectFlow(false);
+                  setShowAdvancedFeatures(false);
+                }}
+                variant={useSimplifiedFlow && !usePerfectFlow && !showAdvancedFeatures ? "primary" : "outline"}
+                size="sm"
+              >
+                Simple Mode
+              </AccessibleButton>
+              <AccessibleButton
+                onClick={() => {
+                  setUsePerfectFlow(true);
+                  setShowAdvancedFeatures(false);
+                  setUseSimplifiedFlow(false);
+                }}
+                variant={usePerfectFlow ? "primary" : "outline"}
+                size="sm"
+              >
+                Perfect Flow
+              </AccessibleButton>
+              <AccessibleButton
+                onClick={() => {
+                  setShowAdvancedFeatures(!showAdvancedFeatures);
+                  setUsePerfectFlow(false);
+                  setUseSimplifiedFlow(false);
+                }}
+                variant={showAdvancedFeatures ? "primary" : "outline"}
+                size="sm"
+              >
+                🧠 Quantum Mode
+              </AccessibleButton>
+            </div>
           </div>
         </div>
         
@@ -299,7 +313,133 @@ const WeaveCanvas: React.FC<WeaveCanvasProps> = ({ onBack }) => {
           </ErrorBoundary>
         ) : showAdvancedFeatures ? (
           <ErrorBoundary fallback={<LoadingSpinner message="Loading advanced features..." />}>
-          <div className="space-y-8">
+          <div className="space-y-8 pb-32 max-h-[85vh] overflow-y-auto">
+            {/* Quantum Mode Introduction */}
+            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 sm:p-6">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Brain className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Quantum Memory Analysis Active</h3>
+                  <p className="text-sm text-gray-700 mb-3">
+                    This advanced mode analyzes your memory using quantum-inspired cognitive models
+                    to maximize retention and recall strength.
+                  </p>
+                  <div className="text-sm text-purple-900 bg-purple-100 rounded-lg p-3">
+                    <strong>💡 To activate quantum enhancements:</strong> Fill in your memory seed and sensory details below.
+                    The quantum engine will analyze coherence, entanglement, and superposition in real-time.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Memory Input Fields */}
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 space-y-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Memory Input</h3>
+
+              {/* Memory Seed */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Memory Seed (What happened?)
+                </label>
+                <input
+                  type="text"
+                  value={seed}
+                  onChange={(e) => setSeed(e.target.value)}
+                  placeholder="e.g., Coffee with Sarah at the park"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Memory Title
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g., Morning Coffee Chat"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Sensory Details */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
+                    <Eye className="w-4 h-4" />
+                    <span>Visual Details</span>
+                  </label>
+                  <textarea
+                    value={sensoryDetails.visual}
+                    onChange={(e) => setSensoryDetails({...sensoryDetails, visual: e.target.value})}
+                    placeholder="What did you see?"
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
+                    <Ear className="w-4 h-4" />
+                    <span>Auditory Details</span>
+                  </label>
+                  <textarea
+                    value={sensoryDetails.auditory}
+                    onChange={(e) => setSensoryDetails({...sensoryDetails, auditory: e.target.value})}
+                    placeholder="What did you hear?"
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
+                    <Heart className="w-4 h-4" />
+                    <span>Emotional Details</span>
+                  </label>
+                  <textarea
+                    value={sensoryDetails.emotional}
+                    onChange={(e) => setSensoryDetails({...sensoryDetails, emotional: e.target.value})}
+                    placeholder="How did you feel?"
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
+                    <Hand className="w-4 h-4" />
+                    <span>Tactile Details</span>
+                  </label>
+                  <textarea
+                    value={sensoryDetails.tactile}
+                    onChange={(e) => setSensoryDetails({...sensoryDetails, tactile: e.target.value})}
+                    placeholder="What did you touch/feel?"
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                  />
+                </div>
+              </div>
+
+              {/* Narrative */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Narrative (Optional)
+                </label>
+                <textarea
+                  value={narrative}
+                  onChange={(e) => setNarrative(e.target.value)}
+                  placeholder="Describe the full story..."
+                  rows={4}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                />
+              </div>
+            </div>
+
             {/* Cognitive State Optimizer */}
             <CognitiveStateOptimizer
               onStateChange={setCognitiveOptimization}
