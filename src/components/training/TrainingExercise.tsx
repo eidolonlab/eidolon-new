@@ -486,13 +486,13 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
   const renderExercise = () => {
     if (moduleId === 'working-memory') {
       return (
-        <div className="max-w-md w-full space-y-6">
+        <div className="max-w-md w-full space-y-3 sm:space-y-6">
           {showSequence && (
-            <div className="text-center mb-8">
-              <div className="text-lg text-violet-600 font-medium mb-4">Watch carefully...</div>
-              <div className="flex justify-center gap-3">
+            <div className="text-center mb-4 sm:mb-8">
+              <div className="text-base sm:text-lg text-violet-600 font-medium mb-3 sm:mb-4">Watch carefully...</div>
+              <div className="flex justify-center gap-2 sm:gap-3">
                 {sequenceToRemember.map((num, idx) => (
-                  <div key={idx} className="w-16 h-16 bg-violet-600 text-white rounded-xl flex items-center justify-center text-2xl font-bold animate-in fade-in zoom-in duration-300">{num}</div>
+                  <div key={idx} className="w-12 h-12 sm:w-16 sm:h-16 bg-violet-600 text-white rounded-xl flex items-center justify-center text-xl sm:text-2xl font-bold animate-in fade-in zoom-in duration-300">{num}</div>
                 ))}
               </div>
             </div>
@@ -504,17 +504,17 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
                   {feedback.message}
                 </div>
               )}
-              <div className="text-center mb-6">
-                <div className="text-sm text-violet-600 font-medium">Tap the numbers in order</div>
-                <div className="flex justify-center gap-2 mt-3">
+              <div className="text-center mb-4 sm:mb-6">
+                <div className="text-xs sm:text-sm text-violet-600 font-medium">Tap the numbers in order</div>
+                <div className="flex justify-center gap-1.5 sm:gap-2 mt-2 sm:mt-3">
                   {userInput.map((num, idx) => (
-                    <div key={idx} className="w-10 h-10 bg-violet-100 text-violet-600 rounded-lg flex items-center justify-center text-sm font-medium">{num}</div>
+                    <div key={idx} className="w-8 h-8 sm:w-10 sm:h-10 bg-violet-100 text-violet-600 rounded-lg flex items-center justify-center text-xs sm:text-sm font-medium">{num}</div>
                   ))}
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                  <button key={num} onClick={() => handleNumberClick(num)} className="aspect-square bg-white border-2 border-slate-200 rounded-xl text-2xl font-bold text-slate-900 hover:border-violet-400 hover:bg-violet-50 active:scale-95 transition-all">{num}</button>
+                  <button key={num} onClick={() => handleNumberClick(num)} className="aspect-square bg-white border-2 border-slate-200 rounded-xl text-xl sm:text-2xl font-bold text-slate-900 hover:border-violet-400 hover:bg-violet-50 active:scale-95 transition-all">{num}</button>
                 ))}
               </div>
             </>
@@ -614,38 +614,38 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       };
 
       return (
-        <div className="max-w-md w-full space-y-4">
+        <div className="max-w-md w-full space-y-3 sm:space-y-4">
           {feedback && (
             <div className={`text-center py-3 px-4 rounded-xl ${feedback.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
               {feedback.message}
             </div>
           )}
-          <div className="text-center mb-4">
-            <div className="text-sm text-violet-600 font-medium mb-2">Tap tasks in priority order</div>
+          <div className="text-center mb-3 sm:mb-4">
+            <div className="text-xs sm:text-sm text-violet-600 font-medium mb-1.5 sm:mb-2">Tap tasks in priority order</div>
             <div className="text-xs text-slate-600">P1 (urgent) → P2 (high) → P3 (medium) → P4 (low)</div>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {tasks.map((task) => (
               <button
                 key={task.id}
                 onClick={() => handleTaskClick(task.id)}
                 disabled={task.completed}
-                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                className={`w-full p-3 sm:p-4 rounded-xl border-2 text-left transition-all ${
                   task.completed
                     ? 'bg-green-50 border-green-200 opacity-50'
                     : 'bg-white border-slate-200 hover:border-violet-400 hover:bg-violet-50 active:scale-98'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${priorityColors[task.priority as keyof typeof priorityColors]}`}>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className={`text-xs font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${priorityColors[task.priority as keyof typeof priorityColors]}`}>
                     P{task.priority}
                   </span>
-                  <span className={task.completed ? 'line-through text-slate-500' : 'text-slate-900 font-medium'}>{task.text}</span>
+                  <span className={`text-sm sm:text-base ${task.completed ? 'line-through text-slate-500' : 'text-slate-900 font-medium'}`}>{task.text}</span>
                 </div>
               </button>
             ))}
           </div>
-          <div className="text-xs text-center text-slate-500 mt-4">
+          <div className="text-xs text-center text-slate-500 mt-3 sm:mt-4 mb-4">
             Tap tasks from highest priority (P1) to lowest (P4)
           </div>
         </div>
@@ -657,19 +657,19 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       const isWaiting = reactionStartTime > 0 && !isReady;
 
       return (
-        <div className="max-w-md w-full space-y-6">
-          <div className="text-center mb-8">
+        <div className="max-w-md w-full space-y-4 sm:space-y-6">
+          <div className="text-center mb-4 sm:mb-8">
             {lastReactionTime !== null ? (
               <div className="space-y-2">
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-xl sm:text-2xl font-bold text-green-600">
                   {lastReactionTime}ms
                 </div>
-                <div className="text-sm text-slate-600">
+                <div className="text-xs sm:text-sm text-slate-600">
                   {lastReactionTime < 300 ? 'Lightning fast!' : lastReactionTime < 500 ? 'Great reaction!' : 'Good effort!'}
                 </div>
               </div>
             ) : (
-              <div className="text-lg text-violet-600 font-medium">
+              <div className="text-base sm:text-lg text-violet-600 font-medium">
                 {isReady ? 'TAP NOW!' : isWaiting ? 'Wait for it...' : 'Get ready...'}
               </div>
             )}
@@ -677,7 +677,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
           <button
             onClick={handleReactionClick}
             disabled={lastReactionTime !== null}
-            className={`w-full h-64 rounded-2xl border-4 transition-all flex items-center justify-center ${
+            className={`w-full h-48 sm:h-64 rounded-2xl border-4 transition-all flex items-center justify-center ${
               lastReactionTime !== null
                 ? 'bg-green-100 border-green-300 cursor-not-allowed'
                 : isReady
@@ -685,7 +685,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
                 : 'bg-slate-200 border-slate-300 hover:bg-slate-300'
             }`}
           >
-            <Target className={`w-20 h-20 ${
+            <Target className={`w-16 h-16 sm:w-20 sm:h-20 ${
               lastReactionTime !== null
                 ? 'text-green-600'
                 : isReady
@@ -693,7 +693,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
                 : 'text-slate-400'
             }`} />
           </button>
-          <div className="text-center text-xs text-slate-500">
+          <div className="text-center text-xs text-slate-500 mb-4">
             Tap as fast as you can when the button turns green
           </div>
         </div>
