@@ -569,13 +569,13 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {shapes.map((shape) => (
               <button
                 key={shape}
                 onClick={() => handleShapeClick(shape)}
                 disabled={!currentShape}
-                className={`aspect-square bg-white border-2 rounded-xl flex items-center justify-center transition-all ${
+                className={`w-full h-24 sm:h-32 bg-white border-2 rounded-xl flex items-center justify-center transition-all ${
                   !currentShape
                     ? 'opacity-50 cursor-not-allowed'
                     : currentShape === shape
@@ -705,7 +705,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-violet-50 to-blue-50 flex flex-col z-50">
-      <div className="p-4 bg-white border-b border-slate-200">
+      <div className="p-4 bg-white border-b border-slate-200 flex-shrink-0">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div className="flex items-center gap-3">
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
@@ -721,7 +721,7 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
           </div>
         </div>
       </div>
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 overflow-y-auto flex items-center justify-center p-4">
         {renderExercise()}
       </div>
     </div>
