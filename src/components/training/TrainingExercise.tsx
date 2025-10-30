@@ -548,18 +548,18 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
       };
 
       return (
-        <div className="max-w-md w-full space-y-6">
-          <div className="bg-violet-50 rounded-xl p-4 border border-violet-200">
-            <div className="text-sm text-violet-900 font-medium mb-3 text-center">Target Shape</div>
-            <div className="w-24 h-24 mx-auto bg-white rounded-xl flex items-center justify-center border-2 border-violet-300 shadow-sm">
-              {renderShape(targetShape, 'w-16 h-16')}
+        <div className="max-w-md w-full space-y-3 sm:space-y-6">
+          <div className="bg-violet-50 rounded-xl p-3 sm:p-4 border border-violet-200">
+            <div className="text-xs sm:text-sm text-violet-900 font-medium mb-2 sm:mb-3 text-center">Target Shape</div>
+            <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto bg-white rounded-xl flex items-center justify-center border-2 border-violet-300 shadow-sm">
+              {renderShape(targetShape, 'w-14 h-14 sm:w-16 sm:h-16')}
             </div>
-            <div className="text-xs text-violet-700 mt-3 text-center font-medium">
+            <div className="text-xs text-violet-700 mt-2 sm:mt-3 text-center font-medium">
               Tap ONLY when you see this shape appear
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border-2 border-slate-200 min-h-[200px] flex items-center justify-center">
+          <div className="bg-white rounded-xl p-4 sm:p-6 border-2 border-slate-200 min-h-[150px] sm:min-h-[200px] flex items-center justify-center">
             {currentShape ? (
               <div className="animate-in fade-in zoom-in duration-200">
                 {renderShape(currentShape, 'w-24 h-24')}
@@ -569,13 +569,13 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
             {shapes.map((shape) => (
               <button
                 key={shape}
                 onClick={() => handleShapeClick(shape)}
                 disabled={!currentShape}
-                className={`w-full h-24 sm:h-32 bg-white border-2 rounded-xl flex items-center justify-center transition-all ${
+                className={`w-full h-20 sm:h-32 bg-white border-2 rounded-xl flex items-center justify-center transition-all ${
                   !currentShape
                     ? 'opacity-50 cursor-not-allowed'
                     : currentShape === shape
@@ -588,13 +588,13 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
             ))}
           </div>
 
-          <div className="flex justify-between text-sm bg-slate-50 rounded-lg p-3">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          <div className="flex justify-between text-xs sm:text-sm bg-slate-50 rounded-lg p-2 sm:p-3 mb-4">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
               <span className="text-slate-700">Correct: <strong>{hits}</strong></span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500"></div>
               <span className="text-slate-700">Wrong: <strong>{misses}</strong></span>
             </div>
             <div className="text-slate-600">
@@ -721,8 +721,10 @@ const TrainingExercise: React.FC<TrainingExerciseProps> = ({ moduleId, onClose }
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto flex items-center justify-center p-4">
-        {renderExercise()}
+      <div className="flex-1 overflow-y-auto p-4 pb-8">
+        <div className="min-h-full flex items-start sm:items-center justify-center">
+          {renderExercise()}
+        </div>
       </div>
     </div>
   );
